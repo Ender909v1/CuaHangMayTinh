@@ -24,9 +24,8 @@
         <div class="container mx-auto flex justify-between items-center py-4">
             <!-- Left section: Logo -->
             <a href="{{ url('/') }}" class="flex items-center">
-                <div>
-                    <img src="{{ asset('tailstore4-main/assets/images/template-white-logo.png') }}" alt="Logo" class="h-14 w-auto mr-4">
-                </div>
+                <img src="{{ asset('tailstore4-main/assets/images/shop-logo.png') }}" alt="Shop Logo" class="navbar-shop-logo">
+                <span class="text-white font-bold text-lg tracking-wide">Computer Store</span>
             </a>
 
             <!-- Hamburger menu (for mobile) -->

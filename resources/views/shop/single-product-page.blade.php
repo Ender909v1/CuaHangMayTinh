@@ -24,9 +24,8 @@
         <div class="container mx-auto flex justify-between items-center py-4">
             <!-- Left section: Logo -->
             <a href="index.html" class="flex items-center">
-              <div>
-                  <img src="assets/images/template-white-logo.png" alt="Logo" class="h-14 w-auto mr-4">
-              </div>
+              <img src="{{ asset('tailstore4-main/assets/images/shop-logo.png') }}" alt="Shop Logo" class="navbar-shop-logo">
+              <span class="text-white font-bold text-lg tracking-wide">Computer Store</span>
             </a>
 
             <!-- Hamburger menu (for mobile) -->
@@ -107,7 +106,7 @@
                   class="bg-primary border border-primary hover:bg-transparent text-white hover:text-primary font-semibold px-4 py-2 rounded-full inline-block">Login</a>
               <div class="relative group cart-wrapper">
                   <a href="/cart.html" >
-                      <img src="assets/images/cart-shopping.svg" alt="Cart" class="h-6 w-6 group-hover:scale-120">
+                      <img src="{{ asset('tailstore4-main/assets/images/cart-shopping.svg') }}" alt="Cart" class="h-6 w-6 group-hover:scale-120">
                   </a>
                   <!-- Cart dropdown -->
                   <div class="absolute right-0 mt-1 w-80 bg-white shadow-lg p-4 rounded hidden group-hover:block">
@@ -115,7 +114,7 @@
                           <!-- product item -->
                           <div class="flex items-center justify-between pb-4 border-b border-gray-line">
                               <div class="flex items-center">
-                                  <img src="/assets/images/single-product/1.jpg" alt="Product" class="h-12 w-12 object-cover rounded mr-2">
+                                  <img src="{{ asset('tailstore4-main/assets/images/single-product/1.jpg') }}" alt="Product" class="h-12 w-12 object-cover rounded mr-2">
                                   <div>
                                       <p class="font-semibold">Summer black dress</p>
                                       <p class="text-sm">Quantity: 1</p>
@@ -126,7 +125,7 @@
                           <!-- product item -->
                           <div class="flex items-center justify-between">
                             <div class="flex items-center">
-                                <img src="/assets/images/single-product/2.jpg" alt="Product" class="h-12 w-12 object-cover rounded mr-2">
+                                <img src="{{ asset('tailstore4-main/assets/images/single-product/2.jpg') }}" alt="Product" class="h-12 w-12 object-cover rounded mr-2">
                                 <div>
                                     <p class="font-semibold">Black suit</p>
                                     <p class="text-sm">Quantity: 1</p>
@@ -139,7 +138,7 @@
                   </div>
               </div>
               <a id="search-icon" href="javascript:void(0);" class="text-white hover:text-secondary group">
-                  <img src="assets/images/search-icon.svg" alt="Search"
+                  <img src="{{ asset('tailstore4-main/assets/images/search-icon.svg') }}" alt="Search"
                       class="h-6 w-6 transition-transform transform group-hover:scale-120">
               </a>
               <!-- Search field -->
@@ -237,7 +236,7 @@
                             <div id="main-image-container">
                                 <img id="main-image"
                                     class="h-auto w-full max-w-full rounded-lg object-cover object-center md:h-[480px]"
-                                    src="/assets/images/products/1.jpg"
+                                    src="{{ asset('tailstore4-main/assets/images/products/1.jpg') }}"
                                     alt="Main Product Image" />
                             </div>
                             <!-- Small Images -->
@@ -245,35 +244,35 @@
                                 <div>
                                     <img onclick="changeImage(this)"
                                     data-full="/assets/images/single-product/1.jpg"
-                                    src="/assets/images/single-product/1.jpg"
+                                    src="{{ asset('tailstore4-main/assets/images/single-product/1.jpg') }}"
                                     class="object-cover object-center max-h-30 max-w-full rounded-lg cursor-pointer"
                                     alt="Gallery Image 1" />
                                 </div>
                                 <div>
                                     <img onclick="changeImage(this)"
                                     data-full="/assets/images/single-product/2.jpg"
-                                    src="/assets/images/single-product/2.jpg"
+                                    src="{{ asset('tailstore4-main/assets/images/single-product/2.jpg') }}"
                                     class="object-cover object-center max-h-30 max-w-full rounded-lg cursor-pointer"
                                     alt="Gallery Image 2" />
                                 </div>
                                 <div>
                                     <img onclick="changeImage(this)"
                                     data-full="/assets/images/single-product/3.jpg"
-                                    src="/assets/images/single-product/3.jpg"
+                                    src="{{ asset('tailstore4-main/assets/images/single-product/3.jpg') }}"
                                     class="object-cover object-center max-h-30 max-w-full rounded-lg cursor-pointer"
                                     alt="Gallery Image 3" />
                                 </div>
                                 <div>
                                     <img onclick="changeImage(this)"
                                     data-full="/assets/images/single-product/4.jpg"
-                                    src="/assets/images/single-product/4.jpg"
+                                    src="{{ asset('tailstore4-main/assets/images/single-product/4.jpg') }}"
                                     class="object-cover object-center max-h-30 max-w-full rounded-lg cursor-pointer"
                                     alt="Gallery Image 4" />
                                 </div>
                                 <div>
                                     <img onclick="changeImage(this)"
                                     data-full="/assets/images/single-product/5.jpg"
-                                    src="/assets/images/single-product/5.jpg"
+                                    src="{{ asset('tailstore4-main/assets/images/single-product/5.jpg') }}"
                                     class="object-cover object-center max-h-30 max-w-full rounded-lg cursor-pointer"
                                     alt="Gallery Image 5" />
                                 </div>
@@ -312,23 +311,23 @@
                         <!-- Social sharing -->
                         <div class="flex space-x-4 my-6">
                             <a href="#" class="w-4 h-4 flex items-center justify-center">
-                                <img src="assets/images/social_icons/facebook.svg" alt="Facebook"
+                                <img src="{{ asset('tailstore4-main/assets/images/social_icons/facebook.svg') }}" alt="Facebook"
                                     class="w-4 h-4 transition-transform transform hover:scale-110">
                             </a>
                             <a href="#" class="w-4 h-4 flex items-center justify-center">
-                                <img src="assets/images/social_icons/instagram.svg" alt="Instagram"
+                                <img src="{{ asset('tailstore4-main/assets/images/social_icons/instagram.svg') }}" alt="Instagram"
                                     class="w-4 h-4 transition-transform transform hover:scale-110">
                             </a>
                             <a href="#" class="w-4 h-4 flex items-center justify-center">
-                                <img src="assets/images/social_icons/pinterest.svg" alt="Pinterest"
+                                <img src="{{ asset('tailstore4-main/assets/images/social_icons/pinterest.svg') }}" alt="Pinterest"
                                     class="w-4 h-4 transition-transform transform hover:scale-110">
                             </a>
                             <a href="#" class="w-4 h-4 flex items-center justify-center">
-                                <img src="assets/images/social_icons/twitter.svg" alt="Twitter"
+                                <img src="{{ asset('tailstore4-main/assets/images/social_icons/twitter.svg') }}" alt="Twitter"
                                     class="w-4 h-4 transition-transform transform hover:scale-110">
                             </a>
                             <a href="#" class="w-4 h-4 flex items-center justify-center">
-                                <img src="assets/images/social_icons/viber.svg" alt="Viber"
+                                <img src="{{ asset('tailstore4-main/assets/images/social_icons/viber.svg') }}" alt="Viber"
                                     class="w-4 h-4 transition-transform transform hover:scale-110">
                             </a>
                         </div>
@@ -625,7 +624,7 @@
                 <!-- Product 1 -->
                 <div class="w-full sm:w-1/2 lg:w-1/4 px-4 mb-8">
                   <div class="bg-white p-3 rounded-lg shadow-lg">
-                    <img src="assets/images/products/5.jpg" alt="Product 1" class="w-full object-cover mb-4 rounded-lg">
+                    <img src="{{ asset('tailstore4-main/assets/images/products/5.jpg') }}" alt="Product 1" class="w-full object-cover mb-4 rounded-lg">
                     <a href="#" class="text-lg font-semibold mb-2">Blue women's suit</a>
                     <p class=" my-2">Women</p>
                     <div class="flex items-center mb-4">
@@ -638,7 +637,7 @@
                 <!-- Product 2 -->
                 <div class="w-full sm:w-1/2 lg:w-1/4 px-4 mb-8">
                   <div class="bg-white p-3 rounded-lg shadow-lg">
-                    <img src="assets/images/products/6.jpg" alt="Product 2" class="w-full object-cover mb-4 rounded-lg">
+                    <img src="{{ asset('tailstore4-main/assets/images/products/6.jpg') }}" alt="Product 2" class="w-full object-cover mb-4 rounded-lg">
                     <a href="#" class="text-lg font-semibold mb-2">White shirt with long sleeves</a>
                     <p class=" my-2">Women</p>
                     <div class="flex items-center mb-4">
@@ -650,7 +649,7 @@
                 <!-- Product 3 -->
                 <div class="w-full sm:w-1/2 lg:w-1/4 px-4 mb-8">
                   <div class="bg-white p-3 rounded-lg shadow-lg">
-                    <img src="assets/images/products/7.jpg" alt="Product 3" class="w-full object-cover mb-4 rounded-lg">
+                    <img src="{{ asset('tailstore4-main/assets/images/products/7.jpg') }}" alt="Product 3" class="w-full object-cover mb-4 rounded-lg">
                     <a href="#" class="text-lg font-semibold mb-2">Yellow men's suit</a>
                     <p class="my-2">Men</p>
                     <div class="flex items-center mb-4">
@@ -663,7 +662,7 @@
                 <!-- Product 4 -->
                 <div class="w-full sm:w-1/2 lg:w-1/4 px-4 mb-8">
                   <div class="bg-white p-3 rounded-lg shadow-lg">
-                    <img src="assets/images/products/8.jpg" alt="Product 4" class="w-full object-cover mb-4 rounded-lg">
+                    <img src="{{ asset('tailstore4-main/assets/images/products/8.jpg') }}" alt="Product 4" class="w-full object-cover mb-4 rounded-lg">
                     <a href="#" class="text-lg font-semibold mb-2">Red dress</a>
                     <p class="my-2">Women</p>
                     <div class="flex items-center mb-4">
@@ -717,23 +716,23 @@
             <h3 class="text-lg font-semibold mb-4">Follow Us</h3>
             <ul>
                 <li class="flex items-center mb-2">
-                <img src="/assets/images/social_icons/facebook.svg" alt="Facebook" class="w-4 h-4 transition-transform transform hover:scale-110 mr-2">
+                <img src="{{ asset('tailstore4-main/assets/images/social_icons/facebook.svg') }}" alt="Facebook" class="w-4 h-4 transition-transform transform hover:scale-110 mr-2">
                 <a href="#" class="hover:text-primary">Facebook</a>
                 </li>
                 <li class="flex items-center mb-2">
-                <img src="/assets/images/social_icons/twitter.svg" alt="Twitter" class="w-4 h-4 transition-transform transform hover:scale-110 mr-2">
+                <img src="{{ asset('tailstore4-main/assets/images/social_icons/twitter.svg') }}" alt="Twitter" class="w-4 h-4 transition-transform transform hover:scale-110 mr-2">
                 <a href="#" class="hover:text-primary">Twitter</a>
                 </li>
                 <li class="flex items-center mb-2">
-                <img src="/assets/images/social_icons/instagram.svg" alt="Instagram" class="w-4 h-4 transition-transform transform hover:scale-110 mr-2">
+                <img src="{{ asset('tailstore4-main/assets/images/social_icons/instagram.svg') }}" alt="Instagram" class="w-4 h-4 transition-transform transform hover:scale-110 mr-2">
                 <a href="#" class="hover:text-primary">Instagram</a>
                 </li>
                 <li class="flex items-center mb-2">
-                <img src="/assets/images/social_icons/pinterest.svg" alt="Instagram" class="w-4 h-4 transition-transform transform hover:scale-110 mr-2">
+                <img src="{{ asset('tailstore4-main/assets/images/social_icons/pinterest.svg') }}" alt="Instagram" class="w-4 h-4 transition-transform transform hover:scale-110 mr-2">
                 <a href="#" class="hover:text-primary">Pinterest</a>
                 </li>
                 <li class="flex items-center mb-2">
-                <img src="/assets/images/social_icons/youtube.svg" alt="Instagram" class="w-4 h-4 transition-transform transform hover:scale-110 mr-2">
+                <img src="{{ asset('tailstore4-main/assets/images/social_icons/youtube.svg') }}" alt="Instagram" class="w-4 h-4 transition-transform transform hover:scale-110 mr-2">
                 <a href="#" class="hover:text-primary">YouTube</a>
                 </li>
             </ul>
@@ -741,7 +740,7 @@
             <!-- Contact Information -->
             <div class="w-full sm:w-2/6 px-4 mb-8">
             <h3 class="text-lg font-semibold mb-4">Contact Us</h3>
-            <p><img src="assets/images/template-logo.png" alt="Logo" class="h-[60px] mb-4"></p>
+            <p><img src="{{ asset('tailstore4-main/assets/images/template-logo.png') }}" alt="Logo" class="h-[60px] mb-4"></p>
             <p>123 Street Name, Paris, France</p>
             <p class="text-xl font-bold my-4">Phone: (123) 456-7890</p>
             <a href="mailto:info@company.com" class="underline">Email: info@company.com</a>
@@ -764,9 +763,9 @@
             </div>
             <!-- Payment Icons -->
             <div class="w-full lg:w-1/4 text-center lg:text-right">
-            <img src="/assets/images/social_icons/paypal.svg" alt="PayPal" class="inline-block h-8 mr-2">
-            <img src="/assets/images/social_icons/stripe.svg" alt="Stripe" class="inline-block h-8 mr-2">
-            <img src="/assets/images/social_icons/visa.svg" alt="Visa" class="inline-block h-8">
+            <img src="{{ asset('tailstore4-main/assets/images/social_icons/paypal.svg') }}" alt="PayPal" class="inline-block h-8 mr-2">
+            <img src="{{ asset('tailstore4-main/assets/images/social_icons/stripe.svg') }}" alt="Stripe" class="inline-block h-8 mr-2">
+            <img src="{{ asset('tailstore4-main/assets/images/social_icons/visa.svg') }}" alt="Visa" class="inline-block h-8">
             </div>
         </div>
         </div>
@@ -774,7 +773,7 @@
 
     <script src="node_modules/swiper/swiper-bundle.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
-    <script src="assets/js/script.js"></script>
+    <script src="{{ asset('tailstore4-main/assets/js/script.js') }}"></script>
 
 </body>
 
