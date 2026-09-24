@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product History</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800">
+    <div class="min-h-screen">
+        <nav class="bg-gray-900 text-white">
+            <div class="mx-auto max-w-7xl px-4 py-4 flex items-center justify-between">
+                <div>
+                    <h1 class="text-xl font-bold">Product History</h1>
+                </div>
+                <div class="flex items-center gap-4">
+                    <a href="{{ route('admin.dashboard') }}" class="hover:text-red-400">Dashboard</a>
+                    <a href="{{ route('admin.products.index') }}" class="hover:text-red-400">Products</a>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="rounded-full bg-red-600 px-4 py-2 text-sm font-semibold hover:bg-red-500">Logout</button>
+                    </form>
+                </div>
+            </div>
+        </nav>
+
+        <main class="mx-auto max-w-6xl px-4 py-10">
+            <div class="rounded-xl bg-white p-6 shadow">
+                <div class="mb-6">
+                    <h2 class="text-xl font-bold">History list</h2>
+                </div>
+
+                <div class="space-y-3">
+                    @foreach ($history as $entry)
+                        <div class="flex items-center justify-between rounded-lg border border-gray-200 p-4">
+                            <div>
+                                <p class="font-semibold">
+                                    @if ($entry->product)
+                                        {{ $entry->product->name }}
+                                    @else
+                                        Deleted product
+                                    @endif
+                                </p>
+                                <p class="text-sm text-gray-500">{{ $entry->details }}</p>
+                            </div>
+                            <div class="text-right text-sm text-gray-500">
+                                <p>{{ $entry->action }}</p>
+                                <p>{{ $entry->created_at ? $entry->created_at->format('d/m/Y H:i') : '' }}</p>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+
+                <div class="mt-6">
+                    {{ $history->links() }}
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
+
+

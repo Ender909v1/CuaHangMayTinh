@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Favicon -->
-    <link rel="icon" type="icon" href="assets/images/favicon.png" />
+    <link rel="icon" type="image/jpeg" href="{{ asset('tailstore4-main/logo/logo.jpg') }}" />
     <title>404 - Page not found</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,9 +13,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">    
-    <link rel="stylesheet" href="assets/css/styles.css">
-    <link rel="stylesheet" href="node_modules/swiper/swiper-bundle.css">
-    <link rel="stylesheet" href="assets/css/custom.css">
+    <link rel="stylesheet" href="{{ asset('tailstore4-main/assets/css/styles.css') }}">
+    <link rel="stylesheet" href="{{ asset('tailstore4-main/node_modules/swiper/swiper-bundle.css') }}">
+    <link rel="stylesheet" href="{{ asset('tailstore4-main/assets/css/custom.css') }}">
 </head>
 
 <body class="bg-gray-100 text-gray-900">
@@ -23,9 +23,9 @@
     <header class="bg-gray-dark sticky top-0 z-50">
         <div class="container mx-auto flex justify-between items-center py-4">
             <!-- Left section: Logo -->
-            <a href="index.html" class="flex items-center">
+            <a href="{{ route('cuahangmaytinh') }}" class="flex items-center">
               <div>
-                  <img src="assets/images/template-white-logo.png" alt="Logo" class="h-14 w-auto mr-4">
+                  <img src="{{ asset('tailstore4-main/assets/images/template-white-logo.png') }}" alt="Logo" class="h-14 w-auto mr-4">
               </div>
             </a>
 
@@ -42,12 +42,12 @@
             <!-- Center section: Menu -->
             <nav class="hidden lg:flex md:flex-grow justify-center">
               <ul class="flex justify-center space-x-4 text-white">
-                  <li><a href="index.html" class="hover:text-secondary font-semibold">Home</a></li>
+                  <li><a href="{{ route('cuahangmaytinh') }}" class="hover:text-secondary font-semibold">Home</a></li>
 
                   <!-- Men Dropdown -->
                   <li class="relative group" x-data="{ open: false }">
-                      <a href="shop.html" @mouseover="open = true" @mouseleave="open = false" href="#" class="hover:text-secondary font-semibold flex items-center">
-                          Men
+                      <a href="{{ route('shop') }}" @mouseover="open = true" @mouseleave="open = false" class="hover:text-secondary font-semibold flex items-center">
+                          PC Part
                           <i :class="open ? 'fas fa-chevron-up ml-1 text-xs' : 'fas fa-chevron-down ml-1 text-xs'"></i>
                       </a>
                       <ul 
@@ -62,16 +62,16 @@
                           x-transition:leave-start="opacity-100 scale-100"
                           x-transition:leave-end="opacity-0 scale-90"
                       >
-                          <li><a href="shop.html" class="min-w-40 block px-4 py-2 hover:bg-primary hover:text-white rounded">Men Item 1</a></li>
-                          <li><a href="shop.html" class="min-w-40 block px-4 py-2 hover:bg-primary hover:text-white rounded">Men Item 2</a></li>
-                          <li><a href="shop.html" class="min-w-40 block px-4 py-2 hover:bg-primary hover:text-white rounded">Men Item 3</a></li>
+                          <li><a href="{{ route('shop') }}" class="min-w-40 block px-4 py-2 hover:bg-primary hover:text-white rounded">CPU</a></li>
+                          <li><a href="{{ route('shop') }}" class="min-w-40 block px-4 py-2 hover:bg-primary hover:text-white rounded">GPU</a></li>
+                          <li><a href="{{ route('shop') }}" class="min-w-40 block px-4 py-2 hover:bg-primary hover:text-white rounded">Motherboard</a></li>
                       </ul>
                   </li>
 
                   <!-- Women Dropdown -->
                   <li class="relative group" x-data="{ open: false }">
-                      <a href="shop.html" @mouseover="open = true" @mouseleave="open = false" href="#" class="hover:text-secondary font-semibold flex items-center">
-                          Women
+                      <a href="{{ route('shop') }}" @mouseover="open = true" @mouseleave="open = false" class="hover:text-secondary font-semibold flex items-center">
+                          Laptop
                           <i :class="open ? 'fas fa-chevron-up ml-1 text-xs' : 'fas fa-chevron-down ml-1 text-xs'"></i>
                       </a>
                       <ul
@@ -86,28 +86,28 @@
                           x-transition:leave-start="opacity-100 scale-100"
                           x-transition:leave-end="opacity-0 scale-90"
                       >
-                          <li><a href="shop.html" class="min-w-40 block px-4 py-2 hover:bg-primary hover:text-white rounded">Women Item 1</a></li>
-                          <li><a href="shop.html" class="min-w-40 block px-4 py-2 hover:bg-primary hover:text-white rounded">Women Item 2</a></li>
-                          <li><a href="shop.html" class="min-w-40 block px-4 py-2 hover:bg-primary hover:text-white rounded">Women Item 3</a></li>
+                          <li><a href="{{ route('shop') }}" class="min-w-40 block px-4 py-2 hover:bg-primary hover:text-white rounded">Gaming</a></li>
+                          <li><a href="{{ route('shop') }}" class="min-w-40 block px-4 py-2 hover:bg-primary hover:text-white rounded">Business</a></li>
+                          <li><a href="{{ route('shop') }}" class="min-w-40 block px-4 py-2 hover:bg-primary hover:text-white rounded">Student</a></li>
                       </ul>
                   </li>
 
-                  <li><a href="shop.html" class="hover:text-secondary font-semibold">Shop</a></li>
-                  <li><a href="single-product-page.html" class="hover:text-secondary font-semibold">Product</a></li>
-                  <li><a href="404.html" class="hover:text-secondary font-semibold">404 page</a></li>
-                  <li><a href="checkout.html" class="hover:text-secondary font-semibold">Checkout</a></li>
+                  <li><a href="{{ route('shop') }}" class="hover:text-secondary font-semibold">Shop</a></li>
+                  <li><a href="{{ route('product') }}" class="hover:text-secondary font-semibold">Product</a></li>
+                  <li><a href="{{ route('not-found') }}" class="hover:text-secondary font-semibold">404 page</a></li>
+                  <li><a href="{{ route('checkout') }}" class="hover:text-secondary font-semibold">Checkout</a></li>
               </ul>
             </nav>
 
             <!-- Right section: Buttons (for desktop) -->
             <div class="hidden lg:flex items-center space-x-4 relative">
-              <a href="register.html"
+              <a href="{{ route('register') }}"
                   class="bg-primary border border-primary hover:bg-transparent text-white hover:text-primary font-semibold px-4 py-2 rounded-full inline-block">Register</a>
-              <a href="register.html"
+              <a href="{{ route('login') }}"
                   class="bg-primary border border-primary hover:bg-transparent text-white hover:text-primary font-semibold px-4 py-2 rounded-full inline-block">Login</a>
               <div class="relative group cart-wrapper">
-                  <a href="/cart.html" >
-                      <img src="assets/images/cart-shopping.svg" alt="Cart" class="h-6 w-6 group-hover:scale-120">
+                  <a href="{{ route('cart') }}" >
+                      <img src="{{ asset('tailstore4-main/assets/images/cart-shopping.svg') }}" alt="Cart" class="h-6 w-6 group-hover:scale-120">
                   </a>
                   <!-- Cart dropdown -->
                   <div class="absolute right-0 mt-1 w-80 bg-white shadow-lg p-4 rounded hidden group-hover:block">
@@ -115,9 +115,9 @@
                           <!-- product item -->
                           <div class="flex items-center justify-between pb-4 border-b border-gray-line">
                               <div class="flex items-center">
-                                  <img src="/assets/images/single-product/1.jpg" alt="Product" class="h-12 w-12 object-cover rounded mr-2">
+                                  <img src="{{ asset('tailstore4-main/laptop/laptop_asus_rtx3060.jpg') }}" alt="Product image" class="h-12 w-12 object-cover rounded mr-2">
                                   <div>
-                                      <p class="font-semibold">Summer black dress</p>
+                                      <p class="font-semibold">Gaming Laptop RTX 4060</p>
                                       <p class="text-sm">Quantity: 1</p>
                                   </div>
                               </div>
@@ -126,20 +126,20 @@
                           <!-- product item -->
                           <div class="flex items-center justify-between">
                             <div class="flex items-center">
-                                <img src="/assets/images/single-product/2.jpg" alt="Product" class="h-12 w-12 object-cover rounded mr-2">
+                                <img src="{{ asset('tailstore4-main/pc_part/rtx-4070.jpg') }}" alt="Product image" class="h-12 w-12 object-cover rounded mr-2">
                                 <div>
-                                    <p class="font-semibold">Black suit</p>
+                                    <p class="font-semibold">NVIDIA RTX 4070 GPU</p>
                                     <p class="text-sm">Quantity: 1</p>
                                 </div>
                             </div>
                             <p class="font-semibold">$125.00</p>
                         </div>
                       </div>
-                      <a href="/cart.html" class="block text-center mt-4 border border-primary bg-primary hover:bg-transparent text-white hover:text-primary py-2 rounded-full font-semibold">Go to Cart</a>
+                      <a href="{{ route('cart') }}" class="block text-center mt-4 border border-primary bg-primary hover:bg-transparent text-white hover:text-primary py-2 rounded-full font-semibold">Go to Cart</a>
                   </div>
               </div>
               <a id="search-icon" href="javascript:void(0);" class="text-white hover:text-secondary group">
-                  <img src="assets/images/search-icon.svg" alt="Search"
+                  <img src="{{ asset('tailstore4-main/assets/images/search-icon.svg') }}" alt="Search"
                       class="h-6 w-6 transition-transform transform group-hover:scale-120">
               </a>
               <!-- Search field -->
@@ -155,51 +155,51 @@
     <!-- Mobile menu -->
     <nav id="mobile-menu-placeholder" class="mobile-menu hidden flex flex-col items-center space-y-8 lg:hidden">
       <ul class="w-full">
-          <li><a href="index.html" class="hover:text-secondary font-bold block py-2">Home</a></li>
+          <li><a href="{{ route('cuahangmaytinh') }}" class="hover:text-secondary font-bold block py-2">Home</a></li>
 
           <!-- Men Dropdown -->
           <li class="relative group" x-data="{ open: false }">
               <a @click="open = !open; $event.preventDefault()" class="hover:text-secondary font-bold block py-2 flex justify-center items-center cursor-pointer">
-                <span>Men</span>
+                <span>PC Part</span>
                 <span @click.stop="open = !open">
                     <i :class="open ? 'fas fa-chevron-up text-xs ml-2' : 'fas fa-chevron-down text-xs ml-2'"></i>
                 </span>
               </a>
               <ul class="mobile-dropdown-menu" x-show="open" x-transition class="space-y-2">
-                  <li><a href="shop.html" class="hover:text-secondary font-bold block pt-2 pb-3">Shop Men</a></li>
-                  <li><a href="single-product-page.html" class="hover:text-secondary font-bold block py-2">Men item 1</a></li>
-                  <li><a href="single-product-page.html" class="hover:text-secondary font-bold block py-2">Men item 2</a></li>
-                  <li><a href="single-product-page.html" class="hover:text-secondary font-bold block py-2">Men item 3</a></li>
+                  <li><a href="{{ route('shop') }}" class="hover:text-secondary font-bold block pt-2 pb-3">Shop PC Part</a></li>
+                  <li><a href="{{ route('product') }}" class="hover:text-secondary font-bold block py-2">CPU</a></li>
+                  <li><a href="{{ route('product') }}" class="hover:text-secondary font-bold block py-2">GPU</a></li>
+                  <li><a href="{{ route('product') }}" class="hover:text-secondary font-bold block py-2">Motherboard</a></li>
               </ul>
           </li>
 
           <!-- Women Dropdown -->
           <li class="relative group" x-data="{ open: false }">
               <a @click="open = !open; $event.preventDefault()" class="hover:text-secondary font-bold block py-2 flex justify-center items-center cursor-pointer">
-                    <span>Women</span>
+                    <span>Laptop</span>
                     <span @click.stop="open = !open">
                         <i :class="open ? 'fas fa-chevron-up text-xs ml-2' : 'fas fa-chevron-down text-xs ml-2'"></i>
                     </span>
               </a>
               <ul class="mobile-dropdown-menu" x-show="open" x-transition class="pl-4 space-y-2">
-                  <li><a href="shop.html" class="hover:text-secondary font-bold block py-2">Shop Women</a></li>
-                  <li><a href="single-product-page.html" class="hover:text-secondary font-bold block py-2">Women item 1</a></li>
-                  <li><a href="single-product-page.html" class="hover:text-secondary font-bold block py-2">Women item 2</a></li>
-                  <li><a href="single-product-page.html" class="hover:text-secondary font-bold block py-2">Women item 3</a></li>
+                  <li><a href="{{ route('shop') }}" class="hover:text-secondary font-bold block py-2">Shop Laptop</a></li>
+                  <li><a href="{{ route('product') }}" class="hover:text-secondary font-bold block py-2">Gaming</a></li>
+                  <li><a href="{{ route('product') }}" class="hover:text-secondary font-bold block py-2">Business</a></li>
+                  <li><a href="{{ route('product') }}" class="hover:text-secondary font-bold block py-2">Student</a></li>
               </ul>
           </li>
 
-          <li><a href="shop.html" class="hover:text-secondary font-bold block py-2">Shop</a></li>
-          <li><a href="single-product-page.html" class="hover:text-secondary font-bold block py-2">Product</a></li>
-          <li><a href="404.html" class="hover:text-secondary font-bold block py-2">404 page</a></li>
-          <li><a href="checkout.html" class="hover:text-secondary font-bold block py-2">Checkout</a></li>
+          <li><a href="{{ route('shop') }}" class="hover:text-secondary font-bold block py-2">Shop</a></li>
+          <li><a href="{{ route('product') }}" class="hover:text-secondary font-bold block py-2">Product</a></li>
+          <li><a href="{{ route('not-found') }}" class="hover:text-secondary font-bold block py-2">404 page</a></li>
+          <li><a href="{{ route('checkout') }}" class="hover:text-secondary font-bold block py-2">Checkout</a></li>
       </ul>
       <div class="flex flex-col mt-6 space-y-2 items-center">
-          <a href="register.html"
+          <a href="{{ route('register') }}"
               class="bg-primary hover:bg-transparent text-white hover:text-primary border border-primary font-semibold px-4 py-2 rounded-full inline-block flex items-center justify-center min-w-[110px]">Register</a>
-          <a href="register.html"
+          <a href="{{ route('login') }}"
               class="bg-primary hover:bg-transparent text-white hover:text-primary border border-primary font-semibold px-4 py-2 rounded-full inline-block flex items-center justify-center min-w-[110px]">Login</a>
-          <a href="register.html"
+          <a href="{{ route('cart') }}"
               class="bg-primary hover:bg-transparent text-white hover:text-primary border border-primary font-semibold px-4 py-2 rounded-full inline-block flex items-center justify-center min-w-[110px]">Cart -&nbsp;<span>5</span>&nbsp;items</a>
       </div>
       <!-- Search field -->
@@ -223,7 +223,7 @@
                 <!-- content - end -->
                 <!-- image - start -->
                 <div class="relative h-80 overflow-hidden rounded-lg bg-gray-100 shadow-lg md:h-auto">
-                    <img src="assets/images/404.jpg" alt="Image" class="w-full h-auto">
+                    <img src="{{ asset('tailstore4-main/assets/images/404.jpg') }}" alt="Image" class="w-full h-auto">
                 </div>
                 <!-- image - end -->
             </div>
@@ -239,30 +239,30 @@
             <div class="w-full sm:w-1/6 px-4 mb-8">
             <h3 class="text-lg font-semibold mb-4">Shop</h3>
             <ul>
-                <li><a href="/shop.html" class="hover:text-primary">Shop</a></li>
-                <li><a href="/single-product-page.html" class="hover:text-primary">Women</a></li>
-                <li><a href="/shop.html" class="hover:text-primary">Men</a></li>
-                <li><a href="/single-product-page.html" class="hover:text-primary">Shoes</a></li>
-                <li><a href="/single-product-page.html" class="hover:text-primary">Accessories</a></li>
+                <li><a href="{{ route('shop') }}" class="hover:text-primary">Shop</a></li>
+                <li><a href="{{ route('product') }}" class="hover:text-primary">Laptop</a></li>
+                <li><a href="{{ route('shop') }}" class="hover:text-primary">PC Part</a></li>
+                <li><a href="{{ route('product') }}" class="hover:text-primary">Business Laptop</a></li>
+                <li><a href="{{ route('product') }}" class="hover:text-primary">Student Laptop</a></li>
             </ul>
             </div>
             <!-- Menu 2 -->
             <div class="w-full sm:w-1/6 px-4 mb-8">
             <h3 class="text-lg font-semibold mb-4">Pages</h3>
             <ul>
-                <li><a href="/shop.html" class="hover:text-primary">Shop</a></li>
-                <li><a href="/single-product-page.html" class="hover:text-primary">Product</a></li>
-                <li><a href="/checkout.html" class="hover:text-primary">Checkout</a></li>
-                <li><a href="/404.html" class="hover:text-primary">404</a></li>
+                <li><a href="{{ route('shop') }}" class="hover:text-primary">Shop</a></li>
+                <li><a href="{{ route('product') }}" class="hover:text-primary">Product</a></li>
+                <li><a href="{{ route('checkout') }}" class="hover:text-primary">Checkout</a></li>
+                <li><a href="{{ route('not-found') }}" class="hover:text-primary">404</a></li>
             </ul>
             </div>
             <!-- Menu 3 -->
             <div class="w-full sm:w-1/6 px-4 mb-8">
             <h3 class="text-lg font-semibold mb-4">Account</h3>
             <ul>
-                <li><a href="/cart.html" class="hover:text-primary">Cart</a></li>
-                <li><a href="/register.html" class="hover:text-primary">Registration</a></li>
-                <li><a href="/register.html" class="hover:text-primary">Login</a></li>
+                <li><a href="{{ route('cart') }}" class="hover:text-primary">Cart</a></li>
+                <li><a href="{{ route('register') }}" class="hover:text-primary">Registration</a></li>
+                <li><a href="{{ route('login') }}" class="hover:text-primary">Login</a></li>
             </ul>
             </div>
             <!-- Social Media -->
@@ -270,23 +270,23 @@
             <h3 class="text-lg font-semibold mb-4">Follow Us</h3>
             <ul>
                 <li class="flex items-center mb-2">
-                <img src="/assets/images/social_icons/facebook.svg" alt="Facebook" class="w-4 h-4 transition-transform transform hover:scale-110 mr-2">
+                <img src="{{ asset('tailstore4-main/assets/images/social_icons/facebook.svg') }}" alt="Facebook" class="w-4 h-4 transition-transform transform hover:scale-110 mr-2">
                 <a href="#" class="hover:text-primary">Facebook</a>
                 </li>
                 <li class="flex items-center mb-2">
-                <img src="/assets/images/social_icons/twitter.svg" alt="Twitter" class="w-4 h-4 transition-transform transform hover:scale-110 mr-2">
+                <img src="{{ asset('tailstore4-main/assets/images/social_icons/twitter.svg') }}" alt="Twitter" class="w-4 h-4 transition-transform transform hover:scale-110 mr-2">
                 <a href="#" class="hover:text-primary">Twitter</a>
                 </li>
                 <li class="flex items-center mb-2">
-                <img src="/assets/images/social_icons/instagram.svg" alt="Instagram" class="w-4 h-4 transition-transform transform hover:scale-110 mr-2">
+                <img src="{{ asset('tailstore4-main/assets/images/social_icons/instagram.svg') }}" alt="Instagram" class="w-4 h-4 transition-transform transform hover:scale-110 mr-2">
                 <a href="#" class="hover:text-primary">Instagram</a>
                 </li>
                 <li class="flex items-center mb-2">
-                <img src="/assets/images/social_icons/pinterest.svg" alt="Instagram" class="w-4 h-4 transition-transform transform hover:scale-110 mr-2">
+                <img src="{{ asset('tailstore4-main/assets/images/social_icons/pinterest.svg') }}" alt="Instagram" class="w-4 h-4 transition-transform transform hover:scale-110 mr-2">
                 <a href="#" class="hover:text-primary">Pinterest</a>
                 </li>
                 <li class="flex items-center mb-2">
-                <img src="/assets/images/social_icons/youtube.svg" alt="Instagram" class="w-4 h-4 transition-transform transform hover:scale-110 mr-2">
+                <img src="{{ asset('tailstore4-main/assets/images/social_icons/youtube.svg') }}" alt="Instagram" class="w-4 h-4 transition-transform transform hover:scale-110 mr-2">
                 <a href="#" class="hover:text-primary">YouTube</a>
                 </li>
             </ul>
@@ -294,7 +294,7 @@
             <!-- Contact Information -->
             <div class="w-full sm:w-2/6 px-4 mb-8">
             <h3 class="text-lg font-semibold mb-4">Contact Us</h3>
-            <p><img src="assets/images/template-logo.png" alt="Logo" class="h-[60px] mb-4"></p>
+            <p><img src="{{ asset('tailstore4-main/assets/images/template-logo.png') }}" alt="Logo" class="h-[60px] mb-4"></p>
             <p>123 Street Name, Paris, France</p>
             <p class="text-xl font-bold my-4">Phone: (123) 456-7890</p>
             <a href="mailto:info@company.com" class="underline">Email: info@company.com</a>
@@ -317,16 +317,21 @@
             </div>
             <!-- Payment Icons -->
             <div class="w-full lg:w-1/4 text-center lg:text-right">
-            <img src="/assets/images/social_icons/paypal.svg" alt="PayPal" class="inline-block h-8 mr-2">
-            <img src="/assets/images/social_icons/stripe.svg" alt="Stripe" class="inline-block h-8 mr-2">
-            <img src="/assets/images/social_icons/visa.svg" alt="Visa" class="inline-block h-8">
+            <img src="{{ asset('tailstore4-main/assets/images/social_icons/paypal.svg') }}" alt="PayPal" class="inline-block h-8 mr-2">
+            <img src="{{ asset('tailstore4-main/assets/images/social_icons/stripe.svg') }}" alt="Stripe" class="inline-block h-8 mr-2">
+            <img src="{{ asset('tailstore4-main/assets/images/social_icons/visa.svg') }}" alt="Visa" class="inline-block h-8">
             </div>
         </div>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
-    <script src="assets/js/script.js"></script>
+    <script src="{{ asset('tailstore4-main/assets/js/script.js') }}"></script>
 </body>
 
 </html>
+
+
+
+
+

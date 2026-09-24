@@ -10,7 +10,7 @@ class UserSeeder extends Seeder
 {
     public function run(): void
     {
-        $roles = ['customer', 'customer', 'customer', 'customer', 'customer', 'customer', 'customer', 'customer', 'staff', 'admin'];
+        $roles = ['customer', 'customer', 'customer', 'customer', 'customer', 'customer', 'customer', 'customer', 'staff'];
 
         foreach ($roles as $role) {
             DB::table('users')->insert([
@@ -18,11 +18,20 @@ class UserSeeder extends Seeder
                 'email' => fake()->unique()->safeEmail(),
                 'password_hash' => Hash::make('password'),
                 'phone' => fake()->phoneNumber(),
-                'address' => fake()->address(),
                 'role' => $role,
-                'is_active' => true,
                 'created_at' => now(),
             ]);
         }
+
+        DB::table('users')->updateOrInsert(
+            ['email' => 'Admin@pc.lap'],
+            [
+                'full_name' => 'Admin User',
+                'password_hash' => Hash::make('Admin_123'),
+                'phone' => '0900000000',
+                'role' => 'admin',
+                'created_at' => now(),
+            ]
+        );
     }
 }

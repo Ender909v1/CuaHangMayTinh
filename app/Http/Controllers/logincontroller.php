@@ -15,15 +15,24 @@ class logincontroller extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'email'    => ['required', 'email'],
+        $email = $request->input('email', $request->input('username'));
+
+        $request->validate([
+            'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
 
-        if (Auth::attempt($credentials, $request->boolean('remember'))) {
+        $user = \App\Models\User::where('email', $email)->first();
+
+        if ($user && \Illuminate\Support\Facades\Hash::check($request->password, $user->password_hash)) {
+            Auth::login($user, $request->boolean('remember'));
             $request->session()->regenerate();
 
-            return redirect()->intended('/dashboard');
+            if ($user->isAdmin()) {
+                return redirect()->intended('/admin');
+            }
+
+            return redirect()->intended('/');
         }
 
         return back()->withErrors([

@@ -24,11 +24,13 @@ class registercontroller extends Controller
         $user = User::create([
             'full_name' => $credentials['full_name'],
             'email'     => $credentials['email'],
-            'password'  => Hash::make($credentials['password']),
+            'password_hash' => Hash::make($credentials['password']),
+            'role' => 'customer',
+            'is_active' => true,
         ]);
 
         Auth::login($user);
 
-        return redirect()->intended('/dashboard');
+        return redirect()->intended('/');
     }
 }

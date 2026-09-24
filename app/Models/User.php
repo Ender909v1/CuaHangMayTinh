@@ -5,8 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class User extends Model
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
+
+class User extends Authenticatable
 {
+    use Notifiable;
+
     protected $table = 'users';
 
     public $timestamps = false;
@@ -69,5 +74,15 @@ class User extends Model
     public function aiConversations(): HasMany
     {
         return $this->hasMany(AiConversation::class);
+    }
+
+    public function getAuthPassword()
+    {
+        return $this->password_hash;
+    }
+
+    public function isAdmin(): bool
+    {
+        return strtolower((string) $this->role) === 'admin';
     }
 }

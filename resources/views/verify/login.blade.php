@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Favicon -->
-    <link rel="icon" type="icon" href="{{ asset('tailstore4-main/assets/images/favicon.png') }}" />
+    <link rel="icon" type="image/jpeg" href="{{ asset('tailstore4-main/logo/logo.jpg') }}" />
     <title>Login</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -43,14 +43,14 @@
             <nav class="hidden lg:flex md:flex-grow justify-center">
                 <ul class="flex justify-center space-x-4 text-white">
                     <li><a href="{{ url('/') }}" class="hover:text-secondary font-semibold">Home</a></li>
-                    <li><a href="{{ url('/shop') }}" class="hover:text-secondary font-semibold">Shop</a></li>
-                    <li><a href="{{ url('/checkout') }}" class="hover:text-secondary font-semibold">Checkout</a></li>
+                    <li><a href="{{ route('shop') }}" class="hover:text-secondary font-semibold">Shop</a></li>
+                    <li><a href="{{ route('checkout') }}" class="hover:text-secondary font-semibold">Checkout</a></li>
                 </ul>
             </nav>
 
             <!-- Right section -->
             <div class="hidden lg:flex items-center space-x-4 relative">
-                <a href="{{ url('/cart') }}">
+                <a href="{{ route('cart') }}">
                     <img src="{{ asset('tailstore4-main/assets/images/cart-shopping.svg') }}" alt="Cart" class="h-6 w-6">
                 </a>
             </div>
@@ -74,12 +74,12 @@
                         @csrf
 
                         <div class="mb-3">
-                            <label for="username" class="block">Username</label>
-                            <input type="text" name="username" id="username"
-                                value="{{ old('username') }}"
-                                class="w-full px-3 py-1 border rounded-full focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary @error('username') border-red-500 @enderror"
+                            <label for="email" class="block">Email</label>
+                            <input type="email" name="email" id="email"
+                                value="{{ old('email') }}"
+                                class="w-full px-3 py-1 border rounded-full focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary @error('email') border-red-500 @enderror"
                                 required autofocus>
-                            @error('username')
+                            @error('email')
                                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                             @enderror
                         </div>
@@ -134,3 +134,10 @@
 </body>
 
 </html>
+
+
+
+
+
+
+
