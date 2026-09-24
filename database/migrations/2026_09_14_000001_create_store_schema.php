@@ -37,11 +37,13 @@ return new class extends Migration
             $table->id();
             $table->string('full_name');
             $table->string('email')->unique();
+            $table->string('email_verified_at')->nullable();
             $table->string('password_hash');
             $table->string('phone')->nullable();
             $table->string('address')->nullable();
             $table->string('role')->default('customer'); // customer, admin, staff, etc.
             $table->boolean('is_active')->default(true);
+            $table->rememberToken();
             $table->timestamp('created_at')->useCurrent();
         });
 

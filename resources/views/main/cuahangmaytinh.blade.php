@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('tailstore4-main/assets/css/styles.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
-    <link rel="stylesheet" href="{{ asset('tailstore4-main/assets/css/custom.css') }}">
+    @vite('resources/assets/css/custom.css')
 </head>
 
 <body>
@@ -101,9 +101,9 @@
             </nav>
 
             <div class="hidden lg:flex items-center space-x-4 relative">
-                <a href="register.html"
+                <a href="{{ url('/register') }}"
                     class="bg-primary border border-primary hover:bg-transparent text-white hover:text-primary font-semibold px-4 py-2 rounded-full inline-block">Register</a>
-                <a href="register.html"
+                <a href="{{ url('/login') }}"
                     class="bg-primary border border-primary hover:bg-transparent text-white hover:text-primary font-semibold px-4 py-2 rounded-full inline-block">Login</a>
                 <div class="relative group cart-wrapper">
                     <a href="/cart.html">
@@ -221,9 +221,8 @@
                 <div class="swiper-slide">
                     <img src="{{ asset('tailstore4-main/assets/images/main-slider/5.jpg') }}" alt="Product 1">
                     <div class="swiper-slide-content">
-                        <h2 class="text-3xl md:text-7xl font-bold text-white mb-2 md:mb-4">Women</h2>
-                        <p class="mb-4 text-white md:text-2xl">Experience the best in sportswear with <br>our latest
-                            collection.</p>
+                        <h2 class="text-3xl md:text-7xl font-bold text-white mb-2 md:mb-4">Laptop</h2>
+                        <p class="mb-4 text-white md:text-2xl">Power through work and play with <br>high-performance gaming and business laptops.</p>
                         <a href="{{ url('/') }}"
                             class="bg-primary hover:bg-transparent text-white hover:text-white border border-transparent hover:border-white font-semibold px-4 py-2 rounded-full inline-block">Shop
                             now</a>
@@ -232,9 +231,8 @@
                 <div class="swiper-slide">
                     <img src="{{ asset('tailstore4-main/assets/images/main-slider/2.png') }}" alt="Product 2">
                     <div class="swiper-slide-content">
-                        <h2 class="text-3xl md:text-7xl font-bold text-white mb-2 md:mb-4">Men</h2>
-                        <p class="mb-4 text-white md:text-2xl">Discover the latest trends in Men`s <br>sportswear and
-                            casual fashion.</p>
+                        <h2 class="text-3xl md:text-7xl font-bold text-white mb-2 md:mb-4">PC Part</h2>
+                        <p class="mb-4 text-white md:text-2xl">Build your dream setup with premium CPUs, GPUs,<br>and motherboard essentials.</p>
                         <a href="{{ url('/') }}"
                             class="bg-white hover:bg-transparent text-black hover:text-white font-semibold px-4 py-2 rounded-full inline-block border border-transparent hover:border-white">Shop
                             now</a>
@@ -244,8 +242,7 @@
                     <img src="{{ asset('tailstore4-main/assets/images/main-slider/4.jpg') }}" alt="Product 3">
                     <div class="swiper-slide-content">
                         <h2 class="text-3xl md:text-7xl font-bold text-white mb-2 md:mb-4">Accessories</h2>
-                        <p class="mb-4 text-white md:text-2xl">Elevate your style with our latest <br>sportswear
-                            collection.</p>
+                        <p class="mb-4 text-white md:text-2xl">Upgrade your setup with essential gear<br>for cooling, storage, and productivity.</p>
                         <a href="{{ url('/') }}"
                             class="bg-primary hover:bg-transparent text-white hover:text-white border border-transparent hover:border-white font-semibold px-4 py-2 rounded-full inline-block">Shop
                             now</a>
@@ -267,7 +264,7 @@
                         <div class="absolute inset-0 bg-gray-light/50"></div>
                         <div
                             class="absolute inset-0 flex flex-col items-center justify-center text-center text-white p-4">
-                            <h2 class="text-2xl md:text-3xl font-bold mb-4">Men</h2>
+                            <h2 class="text-2xl md:text-3xl font-bold mb-4">Laptop</h2>
                             <a href="{{ url('/') }}"
                                 class="bg-primary hover:bg-transparent border border-transparent hover:border-white text-white hover:text-white font-semibold px-4 py-2 rounded-full inline-block">Shop
                                 now</a>
@@ -281,7 +278,7 @@
                         <div class="absolute inset-0 bg-gray-light/50"></div>
                         <div
                             class="category-text absolute inset-0 flex flex-col items-center justify-center text-center text-white p-4 transition duration-300">
-                            <h2 class="text-2xl md:text-3xl font-bold mb-4">Women</h2>
+                            <h2 class="text-2xl md:text-3xl font-bold mb-4">PC Part</h2>
                             <a href="{{ url('/') }}"
                                 class="bg-primary hover:bg-transparent border border-transparent hover:border-white text-white hover:text-white font-semibold px-4 py-2 rounded-full inline-block">Shop
                                 now</a>
