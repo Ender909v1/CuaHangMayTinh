@@ -71,15 +71,15 @@
                         <h3 class="text-lg font-semibold mb-6">Category</h3>
                         <div class="space-y-2">
                             <label class="flex items-center">
-                                <input type="checkbox" class="form-checkbox custom-checkbox">
+                                <input type="checkbox" class="form-checkbox custom-checkbox filter-checkbox" data-filter-type="category">
                                 <span class="ml-2">Laptop</span>
                             </label>
                             <label class="flex items-center">
-                                <input type="checkbox" class="form-checkbox custom-checkbox">
+                                <input type="checkbox" class="form-checkbox custom-checkbox filter-checkbox" data-filter-type="category">
                                 <span class="ml-2">PC Part</span>
                             </label>
                             <label class="flex items-center">
-                                <input type="checkbox" class="form-checkbox custom-checkbox">
+                                <input type="checkbox" class="form-checkbox custom-checkbox filter-checkbox" data-filter-type="category">
                                 <span class="ml-2">Accessories</span>
                             </label>
                         </div>
@@ -89,15 +89,15 @@
                         <h3 class="text-lg font-semibold mb-6">Specs</h3>
                         <div class="space-y-2">
                             <label class="flex items-center">
-                                <input type="checkbox" class="form-checkbox custom-checkbox">
+                                <input type="checkbox" class="form-checkbox custom-checkbox filter-checkbox" data-filter-type="spec" data-filter-value="Intel Core">
                                 <span class="ml-2">Intel Core</span>
                             </label>
                             <label class="flex items-center">
-                                <input type="checkbox" class="form-checkbox custom-checkbox">
+                                <input type="checkbox" class="form-checkbox custom-checkbox filter-checkbox" data-filter-type="spec" data-filter-value="AMD Ryzen">
                                 <span class="ml-2">AMD Ryzen</span>
                             </label>
                             <label class="flex items-center">
-                                <input type="checkbox" class="form-checkbox custom-checkbox">
+                                <input type="checkbox" class="form-checkbox custom-checkbox filter-checkbox" data-filter-type="spec" data-filter-value="RTX Graphics">
                                 <span class="ml-2">RTX Graphics</span>
                             </label>
                         </div>
@@ -107,15 +107,15 @@
                         <h3 class="text-lg font-semibold mb-6">Price</h3>
                         <div class="space-y-2">
                             <label class="flex items-center custom-color-checkbox" data-color="#ff0000">
-                                <input type="checkbox" class="form-checkbox custom-checkbox">
+                                <input type="checkbox" class="form-checkbox custom-checkbox filter-checkbox" data-filter-type="price" data-filter-value="0-500">
                                 <span class="ml-2">Under $500</span>
                             </label>
                             <label class="flex items-center custom-color-checkbox" data-color="#0000ff">
-                                <input type="checkbox" class="form-checkbox custom-checkbox">
+                                <input type="checkbox" class="form-checkbox custom-checkbox filter-checkbox" data-filter-type="price" data-filter-value="500-1000">
                                 <span class="ml-2">$500 - $1000</span>
                             </label>
                             <label class="flex items-center custom-color-checkbox" data-color="#00ff00">
-                                <input type="checkbox" class="form-checkbox custom-checkbox">
+                                <input type="checkbox" class="form-checkbox custom-checkbox filter-checkbox" data-filter-type="price" data-filter-value="1000-above">
                                 <span class="ml-2">Above $1000</span>
                             </label>
                         </div>
@@ -125,34 +125,16 @@
                         <h3 class="text-lg font-semibold mb-6">Brand</h3>
                         <div class="space-y-2">
                             <label class="flex items-center">
-                                <input type="checkbox" class="form-checkbox custom-checkbox">
+                                <input type="checkbox" class="form-checkbox custom-checkbox filter-checkbox" data-filter-type="brand" data-filter-value="ASUS">
                                 <span class="ml-2">ASUS</span>
                             </label>
                             <label class="flex items-center">
-                                <input type="checkbox" class="form-checkbox custom-checkbox">
+                                <input type="checkbox" class="form-checkbox custom-checkbox filter-checkbox" data-filter-type="brand" data-filter-value="MSI">
                                 <span class="ml-2">MSI</span>
                             </label>
                             <label class="flex items-center">
-                                <input type="checkbox" class="form-checkbox custom-checkbox">
+                                <input type="checkbox" class="form-checkbox custom-checkbox filter-checkbox" data-filter-type="brand" data-filter-value="NVIDIA">
                                 <span class="ml-2">NVIDIA</span>
-                            </label>
-                        </div>
-                    </div>
-                    <!-- Rating Filter -->
-                    <div class="mb-6">
-                        <h3 class="text-lg font-semibold mb-6">Rating</h3>
-                        <div class="space-y-2">
-                            <label class="flex items-center">
-                                <input type="checkbox" class="form-checkbox custom-checkbox">
-                                <span class="ml-2">â˜…â˜…â˜…â˜…â˜…</span>
-                            </label>
-                            <label class="flex items-center">
-                                <input type="checkbox" class="form-checkbox custom-checkbox">
-                                <span class="ml-2">â˜…â˜…â˜…â˜…â˜†</span>
-                            </label>
-                            <label class="flex items-center">
-                                <input type="checkbox" class="form-checkbox custom-checkbox">
-                                <span class="ml-2">â˜…â˜…â˜…â˜†â˜†</span>
                             </label>
                         </div>
                     </div>
@@ -162,7 +144,7 @@
                     <!-- Products grid -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                         <!-- Product 1 -->
-                        <div class="bg-white p-4 rounded-lg shadow">
+                        <div class="bg-white p-4 rounded-lg shadow product-card" data-category="Laptop" data-spec="RTX Graphics" data-price="999.99" data-brand="ASUS">
                             <img src="{{ asset('tailstore4-main/laptop/laptop_asus_rtx3060.jpg') }}" alt="Gaming Laptop RTX 4060"
                                 class="w-full object-cover mb-4 rounded-lg">
                             <a href="{{ route('product') }}" class="text-lg font-semibold mb-2">Gaming Laptop RTX 4060</a>
@@ -176,7 +158,7 @@
                                 to Cart</button>
                         </div>
                         <!-- Product 2 -->
-                        <div class="bg-white p-4 rounded-lg shadow">
+                        <div class="bg-white p-4 rounded-lg shadow product-card" data-category="PC Part" data-spec="RTX Graphics" data-price="599.99" data-brand="NVIDIA">
                             <img src="{{ asset('tailstore4-main/pc_part/rtx-4070.jpg') }}" alt="NVIDIA RTX 4070 GPU"
                                 class="w-full object-cover mb-4 rounded-lg">
                             <a href="{{ route('product') }}" class="text-lg font-semibold mb-2">NVIDIA RTX 4070 GPU</a>
@@ -189,7 +171,7 @@
                                 to Cart</button>
                         </div>
                         <!-- Product 3 -->
-                        <div class="bg-white p-4 rounded-lg shadow">
+                        <div class="bg-white p-4 rounded-lg shadow product-card" data-category="PC Part" data-spec="Intel Core" data-price="389.99" data-brand="Intel">
                             <img src="{{ asset('tailstore4-main/pc_part/intel-core-i7-13700k.jpg') }}" alt="Intel i7 13700K CPU"
                                 class="w-full object-cover mb-4 rounded-lg">
                             <a href="{{ route('product') }}" class="text-lg font-semibold mb-2">Intel i7 13700K CPU</a>
@@ -203,7 +185,7 @@
                                 to Cart</button>
                         </div>
                         <!-- Product 4 -->
-                        <div class="bg-white p-4 rounded-lg shadow">
+                        <div class="bg-white p-4 rounded-lg shadow product-card" data-category="Laptop" data-spec="Apple M3" data-price="349.99" data-brand="Apple">
                             <img src="{{ asset('tailstore4-main/laptop/Macbook_M13_pro_14inch.jpg') }}" alt="MacBook Pro M3 14-inch"
                                 class="w-full object-cover mb-4 rounded-lg">
                             <a href="{{ route('product') }}" class="text-lg font-semibold mb-2">MacBook Pro M3 14-inch</a>
@@ -217,7 +199,7 @@
                                 to Cart</button>
                         </div>
                         <!-- Product 5 -->
-                        <div class="bg-white p-4 rounded-lg shadow">
+                        <div class="bg-white p-4 rounded-lg shadow product-card" data-category="Laptop" data-spec="Intel Core" data-price="89.99" data-brand="ASUS">
                             <img src="{{ asset('tailstore4-main/laptop/slim_laptop.jpg') }}" alt="Slim Business Laptop"
                                 class="w-full object-cover mb-4 rounded-lg">
                             <a href="{{ route('product') }}" class="text-lg font-semibold">Slim Business Laptop</a>
@@ -231,7 +213,7 @@
                                 to Cart</button>
                         </div>
                         <!-- Product 6 -->
-                        <div class="bg-white p-4 rounded-lg shadow">
+                        <div class="bg-white p-4 rounded-lg shadow product-card" data-category="PC Part" data-spec="DDR5" data-price="15.99" data-brand="Corsair">
                             <img src="{{ asset('tailstore4-main/pc_part/Corsair_Vengeance_32G_DDR5.jpg') }}" alt="Corsair Vengeance 32GB DDR5"
                                 class="w-full object-cover mb-4 rounded-lg">
                             <a href="{{ route('product') }}" class="text-lg font-semibold mb-2">Corsair Vengeance 32GB DDR5</a>
@@ -244,28 +226,6 @@
                                 class="bg-primary border border-transparent hover:bg-transparent hover:border-primary text-white hover:text-primary font-semibold py-2 px-4 rounded-full w-full">Add
                                 to Cart</button>
                         </div>
-                    </div>
-                    <!-- Pagination -->
-                    <div class="flex justify-center mt-8">
-                        <nav aria-label="Page navigation">
-                            <ul class="inline-flex space-x-2">
-                                <li>
-                                    <a href="#"
-                                        class="bg-primary text-white w-10 h-10 flex items-center justify-center rounded-full">1</a>
-                                </li>
-                                <li>
-                                    <a href="#"
-                                        class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-primary hover:text-white">2</a>
-                                </li>
-                                <li>
-                                    <a href="#"
-                                        class="w-10 h-10 flex items-center justify-center rounded-full hover:bg-primary hover:text-white">3</a>
-                                </li>
-                                <li>
-                                    <a href="#" class="w-10 h-10 flex items-center justify-center rounded-full">Next</a>
-                                </li>
-                            </ul>
-                        </nav>
                     </div>
                 </div>
             </div>
@@ -393,6 +353,77 @@
 
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <script src="{{ asset('tailstore4-main/assets/js/script.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const allCheckboxes = document.querySelectorAll('#filters input[type="checkbox"]');
+            const productCards = document.querySelectorAll('.product-card');
+
+            allCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    // Get selected categories
+                    const categoryCheckboxes = document.querySelectorAll('#filters input[data-filter-type="category"]');
+                    const selectedCategories = Array.from(categoryCheckboxes)
+                        .filter(cb => cb.checked)
+                        .map(cb => cb.nextElementSibling.textContent.trim());
+
+                    // Get selected specs
+                    const specCheckboxes = document.querySelectorAll('#filters input[data-filter-type="spec"]');
+                    const selectedSpecs = Array.from(specCheckboxes)
+                        .filter(cb => cb.checked)
+                        .map(cb => cb.dataset.filterValue);
+
+                    // Get selected price ranges
+                    const priceCheckboxes = document.querySelectorAll('#filters input[data-filter-type="price"]');
+                    const selectedPrices = Array.from(priceCheckboxes)
+                        .filter(cb => cb.checked)
+                        .map(cb => cb.dataset.filterValue);
+
+                    // Get selected brands
+                    const brandCheckboxes = document.querySelectorAll('#filters input[data-filter-type="brand"]');
+                    const selectedBrands = Array.from(brandCheckboxes)
+                        .filter(cb => cb.checked)
+                        .map(cb => cb.dataset.filterValue);
+
+                    productCards.forEach(card => {
+                        const productCategory = card.dataset.category;
+                        const productSpec = card.dataset.spec;
+                        const productPrice = parseFloat(card.dataset.price);
+                        const productBrand = card.dataset.brand;
+
+                        let showProduct = true;
+
+                        // Check category filter
+                        if (selectedCategories.length > 0 && !selectedCategories.includes(productCategory)) {
+                            showProduct = false;
+                        }
+
+                        // Check spec filter
+                        if (selectedSpecs.length > 0 && !selectedSpecs.includes(productSpec)) {
+                            showProduct = false;
+                        }
+
+                        // Check price filter
+                        if (selectedPrices.length > 0) {
+                            let priceMatch = false;
+                            selectedPrices.forEach(range => {
+                                if (range === '0-500' && productPrice <= 500) priceMatch = true;
+                                if (range === '500-1000' && productPrice > 500 && productPrice <= 1000) priceMatch = true;
+                                if (range === '1000-above' && productPrice > 1000) priceMatch = true;
+                            });
+                            if (!priceMatch) showProduct = false;
+                        }
+
+                        // Check brand filter
+                        if (selectedBrands.length > 0 && !selectedBrands.includes(productBrand)) {
+                            showProduct = false;
+                        }
+
+                        card.style.display = showProduct ? 'block' : 'none';
+                    });
+                });
+            });
+        });
+    </script>
 </body>
 </html>
 

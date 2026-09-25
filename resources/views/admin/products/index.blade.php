@@ -34,6 +34,7 @@
             <div class="rounded-xl bg-white p-6 shadow">
                 <div class="mb-6 flex items-center justify-between">
                     <h2 class="text-xl font-bold">Product list</h2>
+                    <a href="{{ route('admin.products.create') }}" class="rounded-full bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-500">Add Product</a>
                 </div>
 
                 <div class="overflow-x-auto">

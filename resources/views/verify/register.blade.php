@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Favicon -->
     <link rel="icon" type="image/jpeg" href="{{ asset('tailstore4-main/logo/logo.jpg') }}" />
-    <title>Cart page</title>
+    <title>Register</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -44,7 +44,9 @@
                             <label for="remember-me" class="">Remember Me</label>
                         </div>
                         <div class="mb-3">
-                            <a href="#" class="text-primary hover:underline">Forgot Password?</a>
+                            @if (Route::has('password.request'))
+                                <a href="{{ route('password.request') }}" class="text-primary hover:underline">Forgot Password?</a>
+                            @endif
                         </div>
                         <button type="submit" class="bg-primary text-white border border-primary hover:bg-transparent hover:text-primary py-2 px-3 rounded-full w-full">Login</button>
                     </form>
@@ -61,7 +63,7 @@
                             </ul>
                         </div>
                     @endif
-                    <form method="POST" action="{{ url('/register') }}" id="register-form" novalidate>
+                    <form method="POST" action="{{ route('register.submit') }}" id="register-form" novalidate>
                         @csrf
                         <div class="mb-3">
                             <label for="register-name" class="block ">Full name</label>
@@ -110,9 +112,8 @@
             <h3 class="text-lg font-semibold mb-4">Shop</h3>
             <ul>
                 <li><a href="{{ route('shop') }}" class="hover:text-primary">Shop</a></li>
-                <li><a href="{{ route('product') }}" class="hover:text-primary">PC part</a></li>
+                <li><a href="{{ route('product') }}" class="hover:text-primary">PC Part</a></li>
                 <li><a href="{{ route('shop') }}" class="hover:text-primary">Laptop</a></li>
-                <li><a href="{{ route('product') }}" class="hover:text-primary">Shoes</a></li>
                 <li><a href="{{ route('product') }}" class="hover:text-primary">Accessories</a></li>
             </ul>
             </div>

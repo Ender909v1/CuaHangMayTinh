@@ -9,11 +9,28 @@ class BrandSeeder extends Seeder
 {
     public function run(): void
     {
-        for ($i = 0; $i < 10; $i++) {
+        $brands = [
+            'ASUS',
+            'Dell',
+            'HP',
+            'Lenovo',
+            'Acer',
+            'MSI',
+            'Apple',
+            'Samsung',
+            'Logitech',
+            'Corsair',
+            'Kingston',
+            'Intel',
+            'AMD',
+            'Gigabyte',
+        ];
+
+        foreach ($brands as $brand) {
             DB::table('brands')->insert([
-                'name' => fake()->unique()->company(),
-                'description' => fake()->sentence(12),
-                'logo_url' => fake()->imageUrl(200, 200, 'business'),
+                'name' => $brand,
+                'description' => 'Computer hardware and accessories brand for modern work and gaming setups.',
+                'logo_url' => 'https://placehold.co/200x200/111827/ffffff?text='.urlencode($brand),
             ]);
         }
     }

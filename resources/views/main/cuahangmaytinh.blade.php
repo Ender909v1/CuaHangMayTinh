@@ -24,30 +24,33 @@
         <div class="main-slider swiper-container">
             <div class="swiper-wrapper">
                 <div class="swiper-slide">
-                    <img src="{{ asset('tailstore4-main/carousel/banner_1.jpg') }}" alt="Laptop banner">
+                    <img src="{{ asset('tailstore4-main/carousel/banner_1.jpg') }}" alt="Laptop banner" style="filter: brightness(0.4);">
+                    <div class="absolute inset-0 bg-black/60"></div>
                     <div class="swiper-slide-content">
-                        <h2 class="text-3xl md:text-7xl font-bold text-white mb-2 md:mb-4">Laptop</h2>
-                        <p class="mb-4 text-white md:text-2xl">Power through work and play with <br>high-performance gaming and business laptops.</p>
+                        <h2 class="text-3xl md:text-7xl font-bold text-white mb-2 md:mb-4" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">Laptop</h2>
+                        <p class="mb-4 text-white md:text-2xl" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">Power through work and play with <br>high-performance gaming and business laptops.</p>
                         <a href="{{ url('/') }}"
                             class="bg-primary hover:bg-transparent text-white hover:text-white border border-transparent hover:border-white font-semibold px-4 py-2 rounded-full inline-block">Shop
                             now</a>
                     </div>
                 </div>
                 <div class="swiper-slide">
-                    <img src="{{ asset('tailstore4-main/carousel/banner_2.jpg') }}" alt="PC parts banner">
+                    <img src="{{ asset('tailstore4-main/carousel/banner_2.jpg') }}" alt="PC parts banner" style="filter: brightness(0.4);">
+                    <div class="absolute inset-0 bg-black/60"></div>
                     <div class="swiper-slide-content">
-                        <h2 class="text-3xl md:text-7xl font-bold text-white mb-2 md:mb-4">PC Part</h2>
-                        <p class="mb-4 text-white md:text-2xl">Build your dream setup with premium CPUs, GPUs,<br>and motherboard essentials.</p>
+                        <h2 class="text-3xl md:text-7xl font-bold text-white mb-2 md:mb-4" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">PC Part</h2>
+                        <p class="mb-4 text-white md:text-2xl" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">Build your dream setup with premium CPUs, GPUs,<br>and motherboard essentials.</p>
                         <a href="{{ url('/') }}"
                             class="bg-white hover:bg-transparent text-black hover:text-white font-semibold px-4 py-2 rounded-full inline-block border border-transparent hover:border-white">Shop
                             now</a>
                     </div>
                 </div>
                 <div class="swiper-slide">
-                    <img src="{{ asset('tailstore4-main/carousel/banner_3.jpg') }}" alt="Accessories banner">
+                    <img src="{{ asset('tailstore4-main/carousel/banner_3.jpg') }}" alt="Accessories banner" style="filter: brightness(0.4);">
+                    <div class="absolute inset-0 bg-black/60"></div>
                     <div class="swiper-slide-content">
-                        <h2 class="text-3xl md:text-7xl font-bold text-white mb-2 md:mb-4">Accessories</h2>
-                        <p class="mb-4 text-white md:text-2xl">Upgrade your setup with essential gear<br>for cooling, storage, and productivity.</p>
+                        <h2 class="text-3xl md:text-7xl font-bold text-white mb-2 md:mb-4" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">Accessories</h2>
+                        <p class="mb-4 text-white md:text-2xl" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">Upgrade your setup with essential gear<br>for cooling, storage, and productivity.</p>
                         <a href="{{ url('/') }}"
                             class="bg-primary hover:bg-transparent text-white hover:text-white border border-transparent hover:border-white font-semibold px-4 py-2 rounded-full inline-block">Shop
                             now</a>
@@ -64,7 +67,7 @@
             <div class="flex flex-wrap">
                 <div class="w-full sm:w-1/3 px-4 mb-8">
                     <div class="category-banner relative overflow-hidden rounded-lg shadow-lg group">
-                        <img src="{{ asset('tailstore4-main/assets/images/cat-image1.jpg') }}" alt="Category 1"
+                        <img src="{{ asset('tailstore4-main/logo/laptop.jpg') }}" alt="Category 1"
                             class="w-full h-auto">
                         <div class="absolute inset-0 bg-gray-light/50"></div>
                         <div
@@ -78,7 +81,7 @@
                 </div>
                 <div class="w-full sm:w-1/3 px-4 mb-8">
                     <div class="category-banner relative overflow-hidden rounded-lg shadow-lg group">
-                        <img src="{{ asset('tailstore4-main/assets/images/cat-image4.jpg') }}" alt="Category 2"
+                        <img src="{{ asset('tailstore4-main/logo/pc_part.jpg') }}" alt="Category 2"
                             class="w-full h-auto">
                         <div class="absolute inset-0 bg-gray-light/50"></div>
                         <div
@@ -92,7 +95,7 @@
                 </div>
                 <div class="w-full sm:w-1/3 px-4 mb-8">
                     <div class="category-banner relative overflow-hidden rounded-lg shadow-lg group">
-                        <img src="{{ asset('tailstore4-main/assets/images/cat-image5.jpg') }}" alt="Category 3"
+                        <img src="{{ asset('tailstore4-main/logo/accessories.jpg') }}" alt="Category 3"
                             class="w-full h-auto">
                         <div class="absolute inset-0 bg-gray-light/50"></div>
                         <div
@@ -121,140 +124,63 @@
         <div class="container mx-auto px-4">
             <h2 class="text-2xl font-bold mb-8">Popular products</h2>
             <div class="flex flex-wrap -mx-4">
-
-                <!-- Laptop 1 -->
-                <div class="w-full sm:w-1/2 lg:w-1/4 px-4 mb-8">
-                    <div class="bg-white p-3 rounded-lg shadow-lg">
-                        <img src="{{ asset('tailstore4-main/laptop/laptop_asus_rtx3060.jpg') }}" alt="Gaming Laptop"
-                            class="w-full object-cover mb-4 rounded-lg cursor-pointer"
-                            @click="showModal = true; modalTitle = 'Gaming Laptop RTX 4060'; modalCategory = 'Laptop'; modalPrice = '$999.99'; modalOldPrice = '$1199.99'; modalImg = '{{ asset('tailstore4-main/laptop/laptop_asus_rtx3060.jpg') }}'">
-                        <a href="{{ route('product') }}" class="text-lg font-semibold mb-2 block">Gaming Laptop RTX 4060</a>
-                        <p class="my-2 text-gray-500">Laptop</p>
-                        <div class="flex items-center mb-4">
-                            <span class="text-lg font-bold text-primary">$999.99</span>
-                            <span class="text-sm line-through ml-2 text-gray-400">$1199.99</span>
+                @foreach ($products->take(4) as $product)
+                    @php
+                        $imageUrl = $product->images->first()?->image_url ?? asset('tailstore4-main/logo/logo.jpg');
+                        $displayPrice = $product->discount_price ?? $product->price;
+                        $oldPrice = $product->discount_price ? $product->price : null;
+                    @endphp
+                    <div class="w-full sm:w-1/2 lg:w-1/4 px-4 mb-8">
+                        <div class="bg-white p-3 rounded-lg shadow-lg">
+                            <img src="{{ $imageUrl }}" alt="{{ $product->name }}"
+                                class="w-full object-cover mb-4 rounded-lg cursor-pointer"
+                                @click="showModal = true; modalTitle = '{{ addslashes($product->name) }}'; modalCategory = '{{ addslashes($product->category->name ?? 'Product') }}'; modalPrice = '${{ number_format((float) $displayPrice, 2) }}'; modalOldPrice = '{{ $oldPrice ? '$'.number_format((float) $oldPrice, 2) : '' }}'; modalImg = '{{ $imageUrl }}'">
+                            <a href="{{ route('product', $product) }}" class="text-lg font-semibold mb-2 block">{{ $product->name }}</a>
+                            <p class="my-2 text-gray-500">{{ $product->category->name ?? 'Product' }}</p>
+                            <div class="flex items-center mb-4">
+                                <span class="text-lg font-bold text-primary">${{ number_format((float) $displayPrice, 2) }}</span>
+                                @if ($oldPrice)
+                                    <span class="text-sm line-through ml-2 text-gray-400">${{ number_format((float) $oldPrice, 2) }}</span>
+                                @endif
+                            </div>
+                            <button class="bg-primary border border-transparent hover:bg-transparent hover:border-primary text-white hover:text-primary font-semibold py-2 px-4 rounded-full w-full">Add to Cart</button>
                         </div>
-                        <button
-                            class="bg-primary border border-transparent hover:bg-transparent hover:border-primary text-white hover:text-primary font-semibold py-2 px-4 rounded-full w-full">Add
-                            to Cart</button>
                     </div>
-                </div>
-
-                <!-- PC Part 1 -->
-                <div class="w-full sm:w-1/2 lg:w-1/4 px-4 mb-8">
-                    <div class="bg-white p-3 rounded-lg shadow-lg">
-                        <img src="{{ asset('tailstore4-main/pc_part/rtx-4070.jpg') }}" alt="NVIDIA RTX 4070"
-                            class="w-full object-cover mb-4 rounded-lg cursor-pointer"
-                            @click="showModal = true; modalTitle = 'NVIDIA RTX 4070 GPU'; modalCategory = 'PC Part'; modalPrice = '$599.99'; modalOldPrice = ''; modalImg = '{{ asset('tailstore4-main/pc_part/rtx-4070.jpg') }}'">
-                        <a href="{{ route('product') }}" class="text-lg font-semibold mb-2 block">NVIDIA RTX 4070 GPU</a>
-                        <p class="my-2 text-gray-500">PC Part</p>
-                        <div class="flex items-center mb-4">
-                            <span class="text-lg font-bold text-gray-900">$599.99</span>
-                        </div>
-                        <button
-                            class="bg-primary border border-transparent hover:bg-transparent hover:border-primary text-white hover:text-primary font-semibold py-2 px-4 rounded-full w-full">Add
-                            to Cart</button>
-                    </div>
-                </div>
-
-                <!-- PC Part 2 -->
-                <div class="w-full sm:w-1/2 lg:w-1/4 px-4 mb-8">
-                    <div class="bg-white p-3 rounded-lg shadow-lg">
-                        <img src="{{ asset('tailstore4-main/pc_part/intel-core-i7-13700k.jpg') }}" alt="Intel i7 13700K"
-                            class="w-full object-cover mb-4 rounded-lg cursor-pointer"
-                            @click="showModal = true; modalTitle = 'Intel i7 13700K CPU'; modalCategory = 'PC Part'; modalPrice = '$389.99'; modalOldPrice = '$429.99'; modalImg = '{{ asset('tailstore4-main/pc_part/intel-core-i7-13700k.jpg') }}'">
-                        <a href="{{ route('product') }}" class="text-lg font-semibold mb-2 block">Intel i7 13700K CPU</a>
-                        <p class="my-2 text-gray-500">PC Part</p>
-                        <div class="flex items-center mb-4">
-                            <span class="text-lg font-bold text-gray-900">$389.99</span>
-                            <span class="text-sm line-through ml-2 text-gray-400">$429.99</span>
-                        </div>
-                        <button
-                            class="bg-primary border border-transparent hover:bg-transparent hover:border-primary text-white hover:text-primary font-semibold py-2 px-4 rounded-full w-full">Add
-                            to Cart</button>
-                    </div>
-                </div>
-
-                <!-- Laptop 2 -->
-                <div class="w-full sm:w-1/2 lg:w-1/4 px-4 mb-8">
-                    <div class="bg-white p-3 rounded-lg shadow-lg">
-                        <img src="{{ asset('tailstore4-main/laptop/slim_laptop.jpg') }}"
-                            alt="Slim Business Laptop" class="w-full object-cover mb-4 rounded-lg cursor-pointer"
-                            @click="showModal = true; modalTitle = 'Slim Business Laptop'; modalCategory = 'Laptop'; modalPrice = '$749.99'; modalOldPrice = '$849.99'; modalImg = '{{ asset('tailstore4-main/laptop/slim_laptop.jpg') }}'">
-                        <a href="{{ route('product') }}" class="text-lg font-semibold mb-2 block">Slim Business Laptop</a>
-                        <p class="my-2 text-gray-500">Laptop</p>
-                        <div class="flex items-center mb-4">
-                            <span class="text-lg font-bold text-primary">$749.99</span>
-                            <span class="text-sm line-through ml-2 text-gray-400">$849.99</span>
-                        </div>
-                        <button
-                            class="bg-primary border border-transparent hover:bg-transparent hover:border-primary text-white hover:text-primary font-semibold py-2 px-4 rounded-full w-full">Add
-                            to Cart</button>
-                    </div>
-                </div>
-
+                @endforeach
             </div>
         </div>
-
     </section>
 
     <section id="latest-products" class="py-10">
         <div class="container mx-auto px-4">
             <h2 class="text-2xl font-bold mb-8">Latest products</h2>
             <div class="flex flex-wrap -mx-4">
-
-                <!-- PC Part 1 -->
-                <div class="w-full sm:w-1/2 lg:w-1/4 px-4 mb-8">
-                    <div class="bg-white p-3 rounded-lg shadow-lg">
-                        <img src="{{ asset('tailstore4-main/pc_part/AMD_ryzen7_7800X3D.jpg') }}"
-                            alt="AMD Ryzen 7 7800X3D" class="w-full object-cover mb-4 rounded-lg cursor-pointer"
-                            @click="showModal = true; modalTitle = 'AMD Ryzen 7 7800X3D'; modalCategory = 'PC Part'; modalPrice = '$384.00'; modalOldPrice = '$449.00'; modalImg = '{{ asset('tailstore4-main/pc_part/AMD_ryzen7_7800X3D.jpg') }}'">
-                        <a href="{{ route('product') }}" class="text-lg font-semibold mb-2 block">AMD Ryzen 7 7800X3D</a>
-                        <p class="my-2 text-gray-500">PC Part</p>
-                        <div class="flex items-center mb-4">
-                            <span class="text-lg font-bold text-primary">$384.00</span>
-                            <span class="text-sm line-through ml-2 text-gray-400">$449.00</span>
+                @foreach ($products->slice(4, 4) as $product)
+                    @php
+                        $imageUrl = $product->images->first()?->image_url ?? asset('tailstore4-main/logo/logo.jpg');
+                        $displayPrice = $product->discount_price ?? $product->price;
+                        $oldPrice = $product->discount_price ? $product->price : null;
+                    @endphp
+                    <div class="w-full sm:w-1/2 lg:w-1/4 px-4 mb-8">
+                        <div class="bg-white p-3 rounded-lg shadow-lg">
+                            <img src="{{ $imageUrl }}" alt="{{ $product->name }}"
+                                class="w-full object-cover mb-4 rounded-lg cursor-pointer"
+                                @click="showModal = true; modalTitle = '{{ addslashes($product->name) }}'; modalCategory = '{{ addslashes($product->category->name ?? 'Product') }}'; modalPrice = '${{ number_format((float) $displayPrice, 2) }}'; modalOldPrice = '{{ $oldPrice ? '$'.number_format((float) $oldPrice, 2) : '' }}'; modalImg = '{{ $imageUrl }}'">
+                            <a href="{{ route('product', $product) }}" class="text-lg font-semibold mb-2 block">{{ $product->name }}</a>
+                            <p class="my-2 text-gray-500">{{ $product->category->name ?? 'Product' }}</p>
+                            <div class="flex items-center mb-4">
+                                <span class="text-lg font-bold text-primary">${{ number_format((float) $displayPrice, 2) }}</span>
+                                @if ($oldPrice)
+                                    <span class="text-sm line-through ml-2 text-gray-400">${{ number_format((float) $oldPrice, 2) }}</span>
+                                @endif
+                            </div>
+                            <button class="bg-primary border border-transparent hover:bg-transparent hover:border-primary text-white hover:text-primary font-semibold py-2 px-4 rounded-full w-full">Add to Cart</button>
                         </div>
-                        <button
-                            class="bg-primary border border-transparent hover:bg-transparent hover:border-primary text-white hover:text-primary font-semibold py-2 px-4 rounded-full w-full">Add
-                            to Cart</button>
                     </div>
-                </div>
-
-                <!-- Laptop 1 -->
-                <div class="w-full sm:w-1/2 lg:w-1/4 px-4 mb-8">
-                    <div class="bg-white p-3 rounded-lg shadow-lg">
-                        <img src="{{ asset('tailstore4-main/laptop/zephyrus_G16.jpg') }}"
-                            alt="ASUS ROG Zephyrus G16" class="w-full object-cover mb-4 rounded-lg cursor-pointer"
-                            @click="showModal = true; modalTitle = 'ASUS ROG Zephyrus G16'; modalCategory = 'Laptop'; modalPrice = '$1449.99'; modalOldPrice = ''; modalImg = '{{ asset('tailstore4-main/laptop/zephyrus_G16.jpg') }}'">
-                        <a href="{{ route('product') }}" class="text-lg font-semibold mb-2 block">ASUS ROG Zephyrus G16</a>
-                        <p class="my-2 text-gray-500">Laptop</p>
-                        <div class="flex items-center mb-4">
-                            <span class="text-lg font-bold text-gray-900">$1449.99</span>
-                        </div>
-                        <button
-                            class="bg-primary border border-transparent hover:bg-transparent hover:border-primary text-white hover:text-primary font-semibold py-2 px-4 rounded-full w-full">Add
-                            to Cart</button>
-                    </div>
-                </div>
-
-                <!-- PC Part 2 -->
-                <div class="w-full sm:w-1/2 lg:w-1/4 px-4 mb-8">
-                    <div class="bg-white p-3 rounded-lg shadow-lg">
-                        <img src="{{ asset('tailstore4-main/pc_part/Corsair_Vengeance_32G_DDR5.jpg') }}"
-                            alt="Corsair Vengeance 32GB DDR5"
-                            class="w-full object-cover mb-4 rounded-lg cursor-pointer"
-                            @click="showModal = true; modalTitle = 'Corsair Vengeance 32GB DDR5'; modalCategory = 'PC Part'; modalPrice = '$115.99'; modalOldPrice = '$139.99'; modalImg = '{{ asset('tailstore4-main/pc_part/Corsair_Vengeance_32G_DDR5.jpg') }}'">
-                        <a href="{{ route('product') }}" class="text-lg font-semibold mb-2 block">Corsair Vengeance 32GB DDR5</a>
-                        <p class="my-2 text-gray-500">PC Part</p>
-                        <div class="flex items-center mb-4">
-                            <span class="text-lg font-bold text-gray-900">$115.99</span>
-                            <span class="text-sm line-through ml-2 text-gray-400">$139.99</span>
-                        </div>
-                        <button
-                            class="bg-primary border border-transparent hover:bg-transparent hover:border-primary text-white hover:text-primary font-semibold py-2 px-4 rounded-full w-full">Add
-                            to Cart</button>
-                    </div>
+                @endforeach
+            </div>
+        </div>
+    </section>
                 </div>
 
                 <!-- Laptop 2 -->
@@ -321,41 +247,21 @@
             </div>
     </section>
 
-    <section id="banner" class="relative my-16">
-        <div class="container mx-auto px-4 py-20 rounded-lg relative bg-cover bg-center"
-            style="background-image: url('{{ asset('tailstore4-main/assets/images/banner1.jpg') }}');">
-            <div class="absolute inset-0 bg-black opacity-40 rounded-lg"></div>
-            <div class="relative flex flex-col items-center justify-center h-full text-center text-white py-20">
-                <h2 class="text-4xl font-bold mb-4">Welcome to Our Shop</h2>
-                <div class="flex space-x-4">
-                    <a href="#"
-                        class="bg-primary hover:bg-transparent text-white hover:text-primary border border-transparent hover:border-primary font-semibold px-4 py-2 rounded-full inline-block">Shop
-                        Now</a>
-                    <a href="#"
-                        class="bg-primary hover:bg-transparent text-white hover:text-primary border border-transparent hover:border-primary font-semibold px-4 py-2 rounded-full inline-block">New
-                        Arrivals</a>
-                    <a href="#"
-                        class="bg-primary hover:bg-transparent text-white hover:text-primary border border-transparent hover:border-primary font-semibold px-4 py-2 rounded-full inline-block">Sale</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
     <section class="py-16">
         <div class="text-center mb-12 lg:mb-20">
-            <h2 class="text-5xl font-bold mb-4">Discover <span class="text-primary">Our</span> Blog</h2>
-            <p class="my-7">Stay updated with the latest trends, tips, and stories in the world of fashion</p>
+            <h2 class="text-5xl font-bold mb-4">Discover <span class="text-primary">Our</span> Tech Blog</h2>
+            <p class="my-7">Stay updated with the latest technology trends, hardware reviews, and PC building tips</p>
         </div>
         <div class="relative items-center w-full px-5 py-12 mx-auto md:px-12 lg:px-24 max-w-7xl">
             <div class="grid w-full grid-cols-1 gap-6 mx-auto lg:grid-cols-3">
                 <div class="flex flex-col p-6 bg-white rounded-xl shadow-lg">
                     <img class="object-cover object-center w-full mb-8 rounded-xl"
                         src="{{ asset('tailstore4-main/assets/images/fashion-trends.jpg') }}" alt="blog">
-                    <h2 class="mb-2 text-xs font-semibold tracking-widest text-primary uppercase">Fashion Trends</h2>
+                    <h2 class="mb-2 text-xs font-semibold tracking-widest text-primary uppercase">Hardware</h2>
                     <h1 class="mb-4 text-2xl font-semibold leading-none tracking-tighter text-gray-dark lg:text-3xl">
-                        Latest Shirt Trends for 2024</h1>
-                    <p class="flex-grow text-base font-medium leading-relaxed text-gray-txt">Explore the hottest shirt
-                        trends of 2024. From bold prints to classic styles, stay ahead of the fashion curve with our
+                        Latest GPU Trends for 2024</h1>
+                    <p class="flex-grow text-base font-medium leading-relaxed text-gray-txt">Explore the newest graphics cards
+                        and performance benchmarks. From RTX 40 series to AMD RDNA3, stay ahead of the gaming curve with our
                         expert insights.</p>
                     <div class="mt-8">
                         <a href="#"
@@ -366,12 +272,12 @@
                 <div class="flex flex-col p-6 bg-white rounded-xl shadow-lg">
                     <img class="object-cover object-center w-full mb-8 rounded-xl"
                         src="{{ asset('tailstore4-main/assets/images/stylisng-tips.jpg') }}" alt="blog">
-                    <h2 class="mb-2 text-xs font-semibold tracking-widest text-primary uppercase">Styling Tips</h2>
+                    <h2 class="mb-2 text-xs font-semibold tracking-widest text-primary uppercase">PC Building</h2>
                     <h1 class="mb-4 text-2xl font-semibold leading-none tracking-tighter text-gray-dark lg:text-3xl">
-                        How to Style Your Shirt for Any Occasion</h1>
-                    <p class="flex-grow text-base font-medium leading-relaxed text-gray-txt">Learn how to style your
-                        shirt for different occasions, whether it's a casual day out or a formal event. Get tips from
-                        fashion experts.</p>
+                        How to Build Your First Gaming PC</h1>
+                    <p class="flex-grow text-base font-medium leading-relaxed text-gray-txt">Learn how to assemble your
+                        own gaming PC from scratch. From choosing the right components to cable management, get tips from
+                        hardware experts.</p>
                     <div class="mt-8">
                         <a href="#"
                             class="bg-primary border border-transparent hover:bg-transparent hover:border-primary text-white hover:text-primary font-semibold py-2 px-4 rounded-full w-full">Read
@@ -381,12 +287,11 @@
                 <div class="flex flex-col p-6 bg-white rounded-xl shadow-lg">
                     <img class="object-cover object-center w-full mb-8 rounded-xl"
                         src="{{ asset('tailstore4-main/assets/images/customer-stories.jpg') }}" alt="blog">
-                    <h2 class="mb-2 text-xs font-semibold tracking-widest text-primary uppercase">Customer Stories</h2>
+                    <h2 class="mb-2 text-xs font-semibold tracking-widest text-primary uppercase">Reviews</h2>
                     <h1 class="mb-4 text-2xl font-semibold leading-none tracking-tighter text-gray-dark lg:text-3xl">
-                        Real Stories from Our Happy Customers</h1>
+                        Real Reviews from Our Happy Customers</h1>
                     <p class="flex-grow text-base font-medium leading-relaxed text-gray-txt">Read about the experiences
-                        of our customers. Discover how our shirts have made a difference in their lives and their
-                        personal style.</p>
+                        of our customers. Discover how our products have improved their gaming and productivity setups.</p>
                     <div class="mt-8">
                         <a href="#"
                             class="bg-primary border border-transparent hover:bg-transparent hover:border-primary text-white hover:text-primary font-semibold py-2 px-4 rounded-full w-full">Read
@@ -424,9 +329,8 @@
                     <h3 class="text-lg font-semibold mb-4">Shop</h3>
                     <ul>
                         <li><a href="{{ route('shop') }}" class="hover:text-primary">Shop</a></li>
-                        <li><a href="{{ route('product') }}" class="hover:text-primary">PC part</a></li>
+                        <li><a href="{{ route('product') }}" class="hover:text-primary">PC Part</a></li>
                         <li><a href="{{ route('shop') }}" class="hover:text-primary">Laptop</a></li>
-                        <li><a href="{{ route('product') }}" class="hover:text-primary">Shoes</a></li>
                         <li><a href="{{ route('product') }}" class="hover:text-primary">Accessories</a></li>
                     </ul>
                 </div>

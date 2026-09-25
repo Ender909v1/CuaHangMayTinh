@@ -4,11 +4,18 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\logincontroller;
 use App\Http\Controllers\registercontroller;
+use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('main.cuahangmaytinh');
+    $products = Product::with(['brand', 'category', 'images'])
+        ->where('is_active', true)
+        ->orderByDesc('created_at')
+        ->take(8)
+        ->get();
+
+    return view('main.cuahangmaytinh', compact('products'));
 })->name('cuahangmaytinh');
 
 // Guests see the register page; logged-in users are sent to account management.
@@ -33,8 +40,14 @@ Route::get('/shop', function () {
     return view('shop.shop');
 })->name('shop');
 
-Route::get('/product', function () {
-    return view('shop.single-product-page');
+Route::get('/product/{product?}', function (?Product $product = null) {
+    $product ??= Product::with(['brand', 'category', 'images', 'specifications'])
+        ->where('is_active', true)
+        ->firstOrFail();
+
+    $product->load(['brand', 'category', 'images', 'specifications']);
+
+    return view('shop.single-product-page', compact('product'));
 })->name('product');
 
 Route::get('/cart', function () {
@@ -62,11 +75,21 @@ Route::middleware(['auth'])->group(function () {
 
     Route::middleware('admin')->group(function () {
         Route::get('/admin', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+        Route::get('/admin/products/create', [AdminController::class, 'create'])->name('admin.products.create');
+        Route::post('/admin/products', [AdminController::class, 'store'])->name('admin.products.store');
         Route::get('/admin/products', [AdminController::class, 'products'])->name('admin.products.index');
         Route::get('/admin/products/{product}', [AdminController::class, 'show'])->name('admin.products.show');
         Route::get('/admin/products/{product}/edit', [AdminController::class, 'edit'])->name('admin.products.edit');
         Route::put('/admin/products/{product}', [AdminController::class, 'update'])->name('admin.products.update');
         Route::delete('/admin/products/{product}', [AdminController::class, 'destroy'])->name('admin.products.destroy');
+
+        Route::get('/admin/categories', [AdminController::class, 'categories'])->name('admin.categories.index');
+        Route::get('/admin/categories/create', [AdminController::class, 'createCategory'])->name('admin.categories.create');
+        Route::post('/admin/categories', [AdminController::class, 'storeCategory'])->name('admin.categories.store');
+        Route::get('/admin/categories/{category}/edit', [AdminController::class, 'editCategory'])->name('admin.categories.edit');
+        Route::put('/admin/categories/{category}', [AdminController::class, 'updateCategory'])->name('admin.categories.update');
+        Route::delete('/admin/categories/{category}', [AdminController::class, 'destroyCategory'])->name('admin.categories.destroy');
+
         Route::get('/admin/history', [AdminController::class, 'history'])->name('admin.history');
     });
 });
