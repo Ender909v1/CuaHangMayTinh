@@ -23,7 +23,7 @@ class logincontroller extends Controller
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
 
-            if ($user->isAdmin()) {
+            if (Auth::user()->isAdmin()) {
                 return redirect()->intended('/admin');
             }
 

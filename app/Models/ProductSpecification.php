@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ProductSpecification extends Model
 {
+    public $timestamps = false;
+
     protected $fillable = [
         'product_id', 'spec_name', 'spec_value',
     ];

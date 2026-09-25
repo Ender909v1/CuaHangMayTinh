@@ -4,41 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\ProductHistory;
-<<<<<<< HEAD
-use Closure;
-use Illuminate\Http\Request;
-use Illuminate\Routing\Controllers\HasMiddleware;
-use Illuminate\Support\Facades\Auth;
-
-class AdminController extends Controller implements HasMiddleware
-{
-    public static function middleware(): array
-    {
-        return [
-            function (Request $request, Closure $next) {
-=======
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware(function ($request, $next) {
->>>>>>> 07e3ef880b20a27898947149096f7c1a02933c6f
-            if (!Auth::check() || !Auth::user()->isAdmin()) {
-                abort(403, 'Access denied. Admin only.');
-            }
-
-            return $next($request);
-<<<<<<< HEAD
-            },
-        ];
-=======
-        });
->>>>>>> 07e3ef880b20a27898947149096f7c1a02933c6f
-    }
-
     public function dashboard()
     {
         $totalProducts = Product::count();

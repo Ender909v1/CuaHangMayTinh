@@ -20,41 +20,7 @@
 
 <body>
     <!-- Header -->
-    <header class="bg-gray-dark sticky top-0 z-50">
-        <div class="container mx-auto flex justify-between items-center py-4">
-            <!-- Left section: Logo -->
-            <a href="{{ url('/') }}" class="flex items-center">
-                <img src="{{ asset('tailstore4-main/assets/images/shop-logo.png') }}" alt="Shop Logo" class="navbar-shop-logo">
-                <span class="text-white font-bold text-lg tracking-wide">Computer Store</span>
-            </a>
-
-            <!-- Hamburger menu (for mobile) -->
-            <div class="flex lg:hidden">
-                <button id="hamburger" class="text-white focus:outline-none">
-                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 6h16M4 12h16m-7 6h7"></path>
-                    </svg>
-                </button>
-            </div>
-
-            <!-- Center section: Menu -->
-            <nav class="hidden lg:flex md:flex-grow justify-center">
-                <ul class="flex justify-center space-x-4 text-white">
-                    <li><a href="{{ url('/') }}" class="hover:text-secondary font-semibold">Home</a></li>
-                    <li><a href="{{ route('shop') }}" class="hover:text-secondary font-semibold">Shop</a></li>
-                    <li><a href="{{ route('checkout') }}" class="hover:text-secondary font-semibold">Checkout</a></li>
-                </ul>
-            </nav>
-
-            <!-- Right section -->
-            <div class="hidden lg:flex items-center space-x-4 relative">
-                <a href="{{ route('cart') }}">
-                    <img src="{{ asset('tailstore4-main/assets/images/cart-shopping.svg') }}" alt="Cart" class="h-6 w-6">
-                </a>
-            </div>
-        </div>
-    </header>
+    @include('partials.store-header')
 
     <!-- Login -->
     <section id="login-page" class="bg-white py-16">
@@ -74,11 +40,7 @@
 
                         <div class="mb-3">
                             <label for="email" class="block">Email</label>
-<<<<<<< HEAD
                             <input type="email" name="email" id="email"
-=======
-                            <input type="text" name="email" id="email"
->>>>>>> 07e3ef880b20a27898947149096f7c1a02933c6f
                                 value="{{ old('email') }}"
                                 class="w-full px-3 py-1 border rounded-full focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary @error('email') border-red-500 @enderror"
                                 required autofocus>

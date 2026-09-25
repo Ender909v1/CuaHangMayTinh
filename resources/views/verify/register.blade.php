@@ -21,213 +21,7 @@
 
 <body>
     <!-- Header -->
-    <header class="bg-gray-dark sticky top-0 z-50">
-        <div class="container mx-auto flex justify-between items-center py-4">
-            <!-- Left section: Logo -->
-<<<<<<< HEAD
-            <a href="{{ url('/') }}" class="flex items-center">
-              <div>
-                  <img src="{{ asset('tailstore4-main/assets/images/template-white-logo.png') }}" alt="Logo" class="h-14 w-auto mr-4">
-              </div>
-=======
-            <a href="index.html" class="flex items-center">
-              <img src="{{ asset('tailstore4-main/assets/images/shop-logo.png') }}" alt="Shop Logo" class="navbar-shop-logo">
-              <span class="text-white font-bold text-lg tracking-wide">Computer Store</span>
->>>>>>> b12be9f2e4f8abd3c829492c7f905a8340a67590
-            </a>
-
-            <!-- Hamburger menu (for mobile) -->
-            <div class="flex lg:hidden">
-                <button id="hamburger" class="text-white focus:outline-none">
-                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 6h16M4 12h16m-7 6h7"></path>
-                    </svg>
-                </button>
-            </div>
-
-            <!-- Center section: Menu -->
-            <nav class="hidden lg:flex md:flex-grow justify-center">
-              <ul class="flex justify-center space-x-4 text-white">
-                  <li><a href="{{ url('/') }}" class="hover:text-secondary font-semibold">Home</a></li>
-
-                  <!-- Men Dropdown -->
-                  <li class="relative group" x-data="{ open: false }">
-                      <a href="{{ route('shop') }}" @mouseover="open = true" @mouseleave="open = false" class="hover:text-secondary font-semibold flex items-center">
-                          Men
-                          <i :class="open ? 'fas fa-chevron-up ml-1 text-xs' : 'fas fa-chevron-down ml-1 text-xs'"></i>
-                      </a>
-                      <ul 
-                          x-show="open"
-                          @mouseover="open = true"
-                          @mouseleave="open = false"
-                          class="absolute left-0 bg-white text-black space-y-2 mt-1 p-2 rounded shadow-lg"
-                          x-transition:enter="transition ease-out duration-100"
-                          x-transition:enter-start="opacity-0 scale-90"
-                          x-transition:enter-end="opacity-100 scale-100"
-                          x-transition:leave="transition ease-in duration-100"
-                          x-transition:leave-start="opacity-100 scale-100"
-                          x-transition:leave-end="opacity-0 scale-90"
-                      >
-                          <li><a href="{{ route('shop') }}" class="min-w-40 block px-4 py-2 hover:bg-primary hover:text-white rounded">Men Item 1</a></li>
-                          <li><a href="{{ route('shop') }}" class="min-w-40 block px-4 py-2 hover:bg-primary hover:text-white rounded">Men Item 2</a></li>
-                          <li><a href="{{ route('shop') }}" class="min-w-40 block px-4 py-2 hover:bg-primary hover:text-white rounded">Men Item 3</a></li>
-                      </ul>
-                  </li>
-
-                  <!-- Women Dropdown -->
-                  <li class="relative group" x-data="{ open: false }">
-                      <a href="{{ route('shop') }}" @mouseover="open = true" @mouseleave="open = false" class="hover:text-secondary font-semibold flex items-center">
-                          Women
-                          <i :class="open ? 'fas fa-chevron-up ml-1 text-xs' : 'fas fa-chevron-down ml-1 text-xs'"></i>
-                      </a>
-                      <ul
-                          x-show="open"
-                          @mouseover="open = true"
-                          @mouseleave="open = false"
-                          class="absolute left-0 bg-white text-black space-y-2 mt-1 p-2 rounded shadow-lg"
-                          x-transition:enter="transition ease-out duration-100"
-                          x-transition:enter-start="opacity-0 scale-90"
-                          x-transition:enter-end="opacity-100 scale-100"
-                          x-transition:leave="transition ease-in duration-100"
-                          x-transition:leave-start="opacity-100 scale-100"
-                          x-transition:leave-end="opacity-0 scale-90"
-                      >
-                          <li><a href="{{ route('shop') }}" class="min-w-40 block px-4 py-2 hover:bg-primary hover:text-white rounded">Women Item 1</a></li>
-                          <li><a href="{{ route('shop') }}" class="min-w-40 block px-4 py-2 hover:bg-primary hover:text-white rounded">Women Item 2</a></li>
-                          <li><a href="{{ route('shop') }}" class="min-w-40 block px-4 py-2 hover:bg-primary hover:text-white rounded">Women Item 3</a></li>
-                      </ul>
-                  </li>
-
-                  <li><a href="{{ route('shop') }}" class="hover:text-secondary font-semibold">Shop</a></li>
-                  <li><a href="{{ route('product') }}" class="hover:text-secondary font-semibold">Product</a></li>
-                  <li><a href="{{ route('not-found') }}" class="hover:text-secondary font-semibold">404 page</a></li>
-                  <li><a href="{{ route('checkout') }}" class="hover:text-secondary font-semibold">Checkout</a></li>
-              </ul>
-            </nav>
-
-            <!-- Right section: Buttons (for desktop) -->
-            <div class="hidden lg:flex items-center space-x-4 relative">
-              <a href="{{ url('/register') }}"
-                  class="bg-primary border border-primary hover:bg-transparent text-white hover:text-primary font-semibold px-4 py-2 rounded-full inline-block">Register</a>
-              <a href="{{ url('/login') }}"
-                  class="bg-primary border border-primary hover:bg-transparent text-white hover:text-primary font-semibold px-4 py-2 rounded-full inline-block">Login</a>
-              <div class="relative group cart-wrapper">
-<<<<<<< HEAD
-                  <a href="{{ route('cart') }}" >
-=======
-                  <a href="/cart.html" >
->>>>>>> b12be9f2e4f8abd3c829492c7f905a8340a67590
-                      <img src="{{ asset('tailstore4-main/assets/images/cart-shopping.svg') }}" alt="Cart" class="h-6 w-6 group-hover:scale-120">
-                  </a>
-                  <!-- Cart dropdown -->
-                  <div class="absolute right-0 mt-1 w-80 bg-white shadow-lg p-4 rounded hidden group-hover:block">
-                      <div class="space-y-4">
-                          <!-- product item -->
-                          <div class="flex items-center justify-between pb-4 border-b border-gray-line">
-                              <div class="flex items-center">
-<<<<<<< HEAD
-                                  <img src="{{ asset('tailstore4-main/laptop/laptop_asus_rtx3060.jpg') }}" alt="Product image" class="h-12 w-12 object-cover rounded mr-2">
-=======
-                                  <img src="{{ asset('tailstore4-main/assets/images/single-product/1.jpg') }}" alt="Product" class="h-12 w-12 object-cover rounded mr-2">
->>>>>>> b12be9f2e4f8abd3c829492c7f905a8340a67590
-                                  <div>
-                                      <p class="font-semibold">Gaming Laptop RTX 4060</p>
-                                      <p class="text-sm">Quantity: 1</p>
-                                  </div>
-                              </div>
-                              <p class="font-semibold">$25.00</p>
-                          </div>
-                          <!-- product item -->
-                          <div class="flex items-center justify-between">
-                            <div class="flex items-center">
-<<<<<<< HEAD
-                                <img src="{{ asset('tailstore4-main/pc_part/rtx-4070.jpg') }}" alt="Product image" class="h-12 w-12 object-cover rounded mr-2">
-=======
-                                <img src="{{ asset('tailstore4-main/assets/images/single-product/2.jpg') }}" alt="Product" class="h-12 w-12 object-cover rounded mr-2">
->>>>>>> b12be9f2e4f8abd3c829492c7f905a8340a67590
-                                <div>
-                                    <p class="font-semibold">NVIDIA RTX 4070 GPU</p>
-                                    <p class="text-sm">Quantity: 1</p>
-                                </div>
-                            </div>
-                            <p class="font-semibold">$125.00</p>
-                        </div>
-                      </div>
-                      <a href="{{ route('cart') }}" class="block text-center mt-4 border border-primary bg-primary hover:bg-transparent text-white hover:text-primary py-2 rounded-full font-semibold">Go to Cart</a>
-                  </div>
-              </div>
-              <a id="search-icon" href="javascript:void(0);" class="text-white hover:text-secondary group">
-                  <img src="{{ asset('tailstore4-main/assets/images/search-icon.svg') }}" alt="Search"
-                      class="h-6 w-6 transition-transform transform group-hover:scale-120">
-              </a>
-              <!-- Search field -->
-              <div id="search-field"
-                  class="hidden absolute top-full right-0 mt-2 w-full bg-white shadow-lg p-2 rounded">
-                  <input type="text" class="w-full p-2 border border-gray-300 rounded"
-                      placeholder="Search for products...">
-              </div>
-          </div>
-        </div>
-    </header>
-
-    <!-- Mobile menu -->
-    <nav id="mobile-menu-placeholder" class="mobile-menu hidden flex-col items-center space-y-8 lg:hidden">
-      <ul class="w-full">
-          <li><a href="{{ url('/') }}" class="hover:text-secondary font-bold block py-2">Home</a></li>
-
-          <!-- Men Dropdown -->
-          <li class="relative group" x-data="{ open: false }">
-              <a @click="open = !open; $event.preventDefault()" class="hover:text-secondary font-bold py-2 flex justify-center items-center cursor-pointer">
-                <span>Men</span>
-                <span @click.stop="open = !open">
-                    <i :class="open ? 'fas fa-chevron-up text-xs ml-2' : 'fas fa-chevron-down text-xs ml-2'"></i>
-                </span>
-              </a>
-              <ul class="mobile-dropdown-menu" x-show="open" x-transition class="space-y-2">
-                  <li><a href="{{ route('shop') }}" class="hover:text-secondary font-bold block pt-2 pb-3">Shop Men</a></li>
-                  <li><a href="{{ route('product') }}" class="hover:text-secondary font-bold block py-2">Men item 1</a></li>
-                  <li><a href="{{ route('product') }}" class="hover:text-secondary font-bold block py-2">Men item 2</a></li>
-                  <li><a href="{{ route('product') }}" class="hover:text-secondary font-bold block py-2">Men item 3</a></li>
-              </ul>
-          </li>
-
-          <!-- Women Dropdown -->
-          <li class="relative group" x-data="{ open: false }">
-              <a @click="open = !open; $event.preventDefault()" class="hover:text-secondary font-bold py-2 flex justify-center items-center cursor-pointer">
-                    <span>Women</span>
-                    <span @click.stop="open = !open">
-                        <i :class="open ? 'fas fa-chevron-up text-xs ml-2' : 'fas fa-chevron-down text-xs ml-2'"></i>
-                    </span>
-              </a>
-              <ul class="mobile-dropdown-menu" x-show="open" x-transition class="pl-4 space-y-2">
-                  <li><a href="{{ route('shop') }}" class="hover:text-secondary font-bold block py-2">Shop Women</a></li>
-                  <li><a href="{{ route('product') }}" class="hover:text-secondary font-bold block py-2">Women item 1</a></li>
-                  <li><a href="{{ route('product') }}" class="hover:text-secondary font-bold block py-2">Women item 2</a></li>
-                  <li><a href="{{ route('product') }}" class="hover:text-secondary font-bold block py-2">Women item 3</a></li>
-              </ul>
-          </li>
-
-          <li><a href="{{ route('shop') }}" class="hover:text-secondary font-bold block py-2">Shop</a></li>
-          <li><a href="{{ route('product') }}" class="hover:text-secondary font-bold block py-2">Product</a></li>
-          <li><a href="{{ route('not-found') }}" class="hover:text-secondary font-bold block py-2">404 page</a></li>
-          <li><a href="{{ route('checkout') }}" class="hover:text-secondary font-bold block py-2">Checkout</a></li>
-      </ul>
-      <div class="flex flex-col mt-6 space-y-2 items-center">
-          <a href="{{ url('/register') }}"
-              class="bg-primary hover:bg-transparent text-white hover:text-primary border border-primary font-semibold px-4 py-2 rounded-full flex items-center justify-center min-w-[110px]">Register</a>
-          <a href="{{ url('/login') }}"
-              class="bg-primary hover:bg-transparent text-white hover:text-primary border border-primary font-semibold px-4 py-2 rounded-full flex items-center justify-center min-w-[110px]">Login</a>
-          <a href="{{ route('cart') }}"
-              class="bg-primary hover:bg-transparent text-white hover:text-primary border border-primary font-semibold px-4 py-2 rounded-full flex items-center justify-center min-w-[110px]">Cart -&nbsp;<span>5</span>&nbsp;items</a>
-      </div>
-      <!-- Search field -->
-      <div 
-          class="  top-full right-0 mt-2 w-full bg-white shadow-lg p-2 rounded">
-          <input type="text" class="w-full p-2 border border-gray-300 rounded"
-              placeholder="Search for products...">
-      </div>
-    </nav>
+    @include('partials.store-header')
 
     <!-- Register and login -->
     <section id="register-login-page" class="bg-white py-16">
@@ -257,21 +51,49 @@
                 </div>
                 <div class="w-full lg:w-1/2 lg:max-w-md bg-white rounded-lg shadow-md p-4 md:p-10">
                     <h2 class="text-2xl font-semibold mb-4">Register</h2>
-                    <form method="POST" action="{{ url('/register') }}">
+                    @if ($errors->any())
+                        <div class="mb-4 rounded-lg border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">
+                            <p class="font-semibold mb-1">Please fix the following:</p>
+                            <ul class="list-disc list-inside space-y-1">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+                    <form method="POST" action="{{ url('/register') }}" id="register-form" novalidate>
                         @csrf
                         <div class="mb-3">
+                            <label for="register-name" class="block ">Full name</label>
+                            <input type="text" name="full_name" id="register-name" value="{{ old('full_name') }}" class="w-full px-3 py-1 border focus:border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-primary @error('full_name') border-red-500 @enderror" required autocomplete="name">
+                            @error('full_name')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
+                        <div class="mb-3">
                             <label for="register-email" class="block ">Email</label>
-                            <input type="email" name="email" id="register-email" class="w-full px-3 py-1 border focus:border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-primary" required>
+                            <input type="email" name="email" id="register-email" value="{{ old('email') }}" class="w-full px-3 py-1 border focus:border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-primary @error('email') border-red-500 @enderror" required autocomplete="email">
+                            @error('email')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
                         </div>
                         <div class="mb-3">
                             <label for="register-password" class="block ">Password</label>
-                            <input type="password" name="password" id="register-password" class="w-full px-3 py-1 border focus:border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-primary" required>
+                            <input type="password" name="password" id="register-password" aria-describedby="password-requirements password-announcer" class="w-full px-3 py-1 border focus:border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-primary @error('password') border-red-500 @enderror" required autocomplete="new-password">
+                            <p id="password-announcer" class="sr-only" role="status" aria-live="polite"></p>
+                            <ul id="password-requirements" class="mt-2 space-y-1 text-sm">
+                                <li id="req-length" class="flex items-center gap-2 text-gray-500"><span class="req-icon" aria-hidden="true">○</span> At least 6 characters</li>
+                                <li id="req-match" class="flex items-center gap-2 text-gray-500"><span class="req-icon" aria-hidden="true">○</span> Passwords match</li>
+                            </ul>
+                            @error('password')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
                         </div>
                         <div class="mb-3">
                             <label for="register-confirm-password" class="block ">Confirm Password</label>
-                            <input type="password" name="password_confirmation" id="register-confirm-password" class="w-full px-3 py-1 border focus:border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-primary" required>
+                            <input type="password" name="password_confirmation" id="register-confirm-password" class="w-full px-3 py-1 border focus:border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-primary" required autocomplete="new-password">
                         </div>
-                        <button type="submit" class="bg-primary text-white border border-primary hover:bg-transparent hover:text-primary py-2 px-3 rounded-full w-full">Register</button>
+                        <button type="submit" id="register-submit" class="bg-primary text-white border border-primary hover:bg-transparent hover:text-primary py-2 px-3 rounded-full w-full disabled:opacity-50 disabled:cursor-not-allowed">Register</button>
                     </form>
                 </div>
             </div>
@@ -309,8 +131,7 @@
             <h3 class="text-lg font-semibold mb-4">Account</h3>
             <ul>
                 <li><a href="{{ route('cart') }}" class="hover:text-primary">Cart</a></li>
-                <li><a href="{{ url('/register') }}" class="hover:text-primary">Registration</a></li>
-                <li><a href="{{ url('/login') }}" class="hover:text-primary">Login</a></li>
+                @include('partials.footer-account')
             </ul>
             </div>
             <!-- Social Media -->
@@ -375,6 +196,94 @@
 
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <script src="{{ asset('tailstore4-main/assets/js/script.js') }}"></script>
+    <script>
+        (function () {
+            const passwordInput = document.getElementById('register-password');
+            const confirmInput = document.getElementById('register-confirm-password');
+            const announcer = document.getElementById('password-announcer');
+            const submitBtn = document.getElementById('register-submit');
+            const form = document.getElementById('register-form');
+            if (!passwordInput || !confirmInput || !announcer) return;
+
+            const rules = {
+                'req-length': (pw) => pw.length >= 6,
+                'req-match': (pw, confirm) => pw.length > 0 && pw === confirm,
+            };
+
+            const messages = {
+                'req-length': 'at least 6 characters',
+                'req-match': 'matching passwords',
+            };
+
+            function setRowState(id, passed) {
+                const li = document.getElementById(id);
+                if (!li) return;
+                const icon = li.querySelector('.req-icon');
+                li.classList.remove('text-gray-500', 'text-green-600', 'text-red-600');
+                if (passwordInput.value.length === 0 && id !== 'req-match') {
+                    li.classList.add('text-gray-500');
+                    if (icon) icon.textContent = '○';
+                    return;
+                }
+                if (passed) {
+                    li.classList.add('text-green-600');
+                    if (icon) icon.textContent = '●';
+                } else {
+                    li.classList.add('text-red-600');
+                    if (icon) icon.textContent = '○';
+                }
+            }
+
+            function validate(live) {
+                const pw = passwordInput.value;
+                const confirm = confirmInput.value;
+                const missing = [];
+
+                Object.keys(rules).forEach((id) => {
+                    const passed = id === 'req-match'
+                        ? rules[id](pw, confirm)
+                        : rules[id](pw);
+                    setRowState(id, passed);
+                    if (!passed) missing.push(messages[id]);
+                });
+
+                const allPassed = missing.length === 0;
+
+                // Screen-reader + visual announcer (turn-back condition when typing)
+                if (pw.length === 0 && confirm.length === 0) {
+                    announcer.textContent = '';
+                    announcer.className = 'sr-only';
+                } else if (allPassed) {
+                    announcer.textContent = 'Password looks good. All requirements met.';
+                    announcer.className = 'mt-2 text-sm text-green-600';
+                } else {
+                    announcer.textContent = 'Password still needs: ' + missing.join(', ') + '.';
+                    announcer.className = 'mt-2 text-sm text-red-600';
+                }
+
+                // Turn back invalid typing state on inputs
+                passwordInput.classList.toggle('border-red-500', pw.length > 0 && !allPassed);
+                confirmInput.classList.toggle('border-red-500', confirm.length > 0 && pw !== confirm);
+
+                if (submitBtn) submitBtn.disabled = live ? false : submitBtn.disabled;
+
+                return allPassed;
+            }
+
+            passwordInput.addEventListener('input', () => validate(true));
+            confirmInput.addEventListener('input', () => validate(true));
+
+            form.addEventListener('submit', (e) => {
+                if (!validate(false)) {
+                    e.preventDefault();
+                    announcer.textContent = 'Please fix your password: ' + announcer.textContent;
+                    passwordInput.focus();
+                }
+            });
+
+            validate(true);
+        })();
+    </script>
 </body>
 
 </html>

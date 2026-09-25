@@ -21,213 +21,7 @@
 
 <body>
     <!-- Header -->
-    <header class="bg-gray-dark sticky top-0 z-50">
-        <div class="container mx-auto flex justify-between items-center py-4">
-            <!-- Left section: Logo -->
-<<<<<<< HEAD
-            <a href="{{ route('cuahangmaytinh') }}" class="flex items-center">
-              <div>
-                  <img src="{{ asset('tailstore4-main/assets/images/template-white-logo.png') }}" alt="Logo" class="h-14 w-auto mr-4">
-              </div>
-=======
-            <a href="index.html" class="flex items-center">
-              <img src="{{ asset('tailstore4-main/assets/images/shop-logo.png') }}" alt="Shop Logo" class="navbar-shop-logo">
-              <span class="text-white font-bold text-lg tracking-wide">Computer Store</span>
->>>>>>> b12be9f2e4f8abd3c829492c7f905a8340a67590
-            </a>
-
-            <!-- Hamburger menu (for mobile) -->
-            <div class="flex lg:hidden">
-                <button id="hamburger" class="text-white focus:outline-none">
-                    <svg class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M4 6h16M4 12h16m-7 6h7"></path>
-                    </svg>
-                </button>
-            </div>
-
-            <!-- Center section: Menu -->
-            <nav class="hidden lg:flex md:flex-grow justify-center">
-              <ul class="flex justify-center space-x-4 text-white">
-                  <li><a href="{{ route('cuahangmaytinh') }}" class="hover:text-secondary font-semibold">Home</a></li>
-
-                  <!-- Laptop Dropdown -->
-                  <li class="relative group" x-data="{ open: false }">
-                      <a href="{{ route('shop') }}" @mouseover="open = true" @mouseleave="open = false" class="hover:text-secondary font-semibold flex items-center">
-                          Laptop
-                          <i :class="open ? 'fas fa-chevron-up ml-1 text-xs' : 'fas fa-chevron-down ml-1 text-xs'"></i>
-                      </a>
-                      <ul
-                          x-show="open"
-                          @mouseover="open = true"
-                          @mouseleave="open = false"
-                          class="absolute left-0 bg-white text-black space-y-2 mt-1 p-2 rounded shadow-lg"
-                          x-transition:enter="transition ease-out duration-100"
-                          x-transition:enter-start="opacity-0 scale-90"
-                          x-transition:enter-end="opacity-100 scale-100"
-                          x-transition:leave="transition ease-in duration-100"
-                          x-transition:leave-start="opacity-100 scale-100"
-                          x-transition:leave-end="opacity-0 scale-90"
-                      >
-                          <li><a href="{{ route('shop') }}" class="min-w-40 block px-4 py-2 hover:bg-primary hover:text-white rounded">Gaming Laptop</a></li>
-                          <li><a href="{{ route('shop') }}" class="min-w-40 block px-4 py-2 hover:bg-primary hover:text-white rounded">Business Laptop</a></li>
-                          <li><a href="{{ route('shop') }}" class="min-w-40 block px-4 py-2 hover:bg-primary hover:text-white rounded">Student Laptop</a></li>
-                      </ul>
-                  </li>
-
-                  <!-- PC Part Dropdown -->
-                  <li class="relative group" x-data="{ open: false }">
-                      <a href="{{ route('shop') }}" @mouseover="open = true" @mouseleave="open = false" class="hover:text-secondary font-semibold flex items-center">
-                          PC Part
-                          <i :class="open ? 'fas fa-chevron-up ml-1 text-xs' : 'fas fa-chevron-down ml-1 text-xs'"></i>
-                      </a>
-                      <ul
-                          x-show="open"
-                          @mouseover="open = true"
-                          @mouseleave="open = false"
-                          class="absolute left-0 bg-white text-black space-y-2 mt-1 p-2 rounded shadow-lg"
-                          x-transition:enter="transition ease-out duration-100"
-                          x-transition:enter-start="opacity-0 scale-90"
-                          x-transition:enter-end="opacity-100 scale-100"
-                          x-transition:leave="transition ease-in duration-100"
-                          x-transition:leave-start="opacity-100 scale-100"
-                          x-transition:leave-end="opacity-0 scale-90"
-                      >
-                          <li><a href="{{ route('shop') }}" class="min-w-40 block px-4 py-2 hover:bg-primary hover:text-white rounded">CPU</a></li>
-                          <li><a href="{{ route('shop') }}" class="min-w-40 block px-4 py-2 hover:bg-primary hover:text-white rounded">GPU</a></li>
-                          <li><a href="{{ route('shop') }}" class="min-w-40 block px-4 py-2 hover:bg-primary hover:text-white rounded">Motherboard</a></li>
-                      </ul>
-                  </li>
-
-                  <li><a href="{{ route('shop') }}" class="hover:text-secondary font-semibold">Shop</a></li>
-                  <li><a href="{{ route('product') }}" class="hover:text-secondary font-semibold">Product</a></li>
-                  <li><a href="{{ route('not-found') }}" class="hover:text-secondary font-semibold">404 page</a></li>
-                  <li><a href="{{ route('checkout') }}" class="hover:text-secondary font-semibold">Checkout</a></li>
-              </ul>
-            </nav>
-
-            <!-- Right section: Buttons (for desktop) -->
-            <div class="hidden lg:flex items-center space-x-4 relative">
-              <a href="{{ route('register') }}"
-                  class="bg-primary border border-primary hover:bg-transparent text-white hover:text-primary font-semibold px-4 py-2 rounded-full inline-block">Register</a>
-              <a href="{{ route('login') }}"
-                  class="bg-primary border border-primary hover:bg-transparent text-white hover:text-primary font-semibold px-4 py-2 rounded-full inline-block">Login</a>
-              <div class="relative group cart-wrapper">
-<<<<<<< HEAD
-                  <a href="{{ route('cart') }}" >
-=======
-                  <a href="/cart.html" >
->>>>>>> b12be9f2e4f8abd3c829492c7f905a8340a67590
-                      <img src="{{ asset('tailstore4-main/assets/images/cart-shopping.svg') }}" alt="Cart" class="h-6 w-6 group-hover:scale-120">
-                  </a>
-                  <!-- Cart dropdown -->
-                  <div class="absolute right-0 mt-1 w-80 bg-white shadow-lg p-4 rounded hidden group-hover:block">
-                      <div class="space-y-4">
-                          <!-- product item -->
-                          <div class="flex items-center justify-between pb-4 border-b border-gray-line">
-                              <div class="flex items-center">
-<<<<<<< HEAD
-                                  <img src="{{ asset('tailstore4-main/laptop/laptop_asus_rtx3060.jpg') }}" alt="Product image" class="h-12 w-12 object-cover rounded mr-2">
-=======
-                                  <img src="{{ asset('tailstore4-main/assets/images/single-product/1.jpg') }}" alt="Product" class="h-12 w-12 object-cover rounded mr-2">
->>>>>>> b12be9f2e4f8abd3c829492c7f905a8340a67590
-                                  <div>
-                                      <p class="font-semibold">Gaming Laptop RTX 4060</p>
-                                      <p class="text-sm">Quantity: 1</p>
-                                  </div>
-                              </div>
-                              <p class="font-semibold">$25.00</p>
-                          </div>
-                          <!-- product item -->
-                          <div class="flex items-center justify-between">
-                            <div class="flex items-center">
-<<<<<<< HEAD
-                                <img src="{{ asset('tailstore4-main/pc_part/rtx-4070.jpg') }}" alt="Product image" class="h-12 w-12 object-cover rounded mr-2">
-=======
-                                <img src="{{ asset('tailstore4-main/assets/images/single-product/2.jpg') }}" alt="Product" class="h-12 w-12 object-cover rounded mr-2">
->>>>>>> b12be9f2e4f8abd3c829492c7f905a8340a67590
-                                <div>
-                                    <p class="font-semibold">NVIDIA RTX 4070 GPU</p>
-                                    <p class="text-sm">Quantity: 1</p>
-                                </div>
-                            </div>
-                            <p class="font-semibold">$125.00</p>
-                        </div>
-                      </div>
-                      <a href="{{ route('cart') }}" class="block text-center mt-4 border border-primary bg-primary hover:bg-transparent text-white hover:text-primary py-2 rounded-full font-semibold">Go to Cart</a>
-                  </div>
-              </div>
-              <a id="search-icon" href="javascript:void(0);" class="text-white hover:text-secondary group">
-                  <img src="{{ asset('tailstore4-main/assets/images/search-icon.svg') }}" alt="Search"
-                      class="h-6 w-6 transition-transform transform group-hover:scale-120">
-              </a>
-              <!-- Search field -->
-              <div id="search-field"
-                  class="hidden absolute top-full right-0 mt-2 w-full bg-white shadow-lg p-2 rounded">
-                  <input type="text" class="w-full p-2 border border-gray-300 rounded"
-                      placeholder="Search for products...">
-              </div>
-          </div>
-        </div>
-    </header>
-
-    <!-- Mobile menu -->
-    <nav id="mobile-menu-placeholder" class="mobile-menu hidden flex-col items-center space-y-8 lg:hidden">
-      <ul class="w-full">
-          <li><a href="{{ route('cuahangmaytinh') }}" class="hover:text-secondary font-bold block py-2">Home</a></li>
-
-          <!-- Laptop Dropdown -->
-          <li class="relative group" x-data="{ open: false }">
-              <a @click="open = !open; $event.preventDefault()" class="hover:text-secondary font-bold py-2 flex justify-center items-center cursor-pointer">
-                <span>Laptop</span>
-                <span @click.stop="open = !open">
-                    <i :class="open ? 'fas fa-chevron-up text-xs ml-2' : 'fas fa-chevron-down text-xs ml-2'"></i>
-                </span>
-              </a>
-              <ul class="mobile-dropdown-menu" x-show="open" x-transition class="space-y-2">
-                  <li><a href="{{ route('shop') }}" class="hover:text-secondary font-bold block pt-2 pb-3">Shop Laptop</a></li>
-                  <li><a href="{{ route('product') }}" class="hover:text-secondary font-bold block py-2">Gaming Laptop</a></li>
-                  <li><a href="{{ route('product') }}" class="hover:text-secondary font-bold block py-2">Business Laptop</a></li>
-                  <li><a href="{{ route('product') }}" class="hover:text-secondary font-bold block py-2">Ultrabook</a></li>
-              </ul>
-          </li>
-
-          <!-- PC Part Dropdown -->
-          <li class="relative group" x-data="{ open: false }">
-              <a @click="open = !open; $event.preventDefault()" class="hover:text-secondary font-bold py-2 flex justify-center items-center cursor-pointer">
-                    <span>PC Part</span>
-                    <span @click.stop="open = !open">
-                        <i :class="open ? 'fas fa-chevron-up text-xs ml-2' : 'fas fa-chevron-down text-xs ml-2'"></i>
-                    </span>
-              </a>
-              <ul class="mobile-dropdown-menu" x-show="open" x-transition class="pl-4 space-y-2">
-                  <li><a href="{{ route('shop') }}" class="hover:text-secondary font-bold block py-2">Shop PC Part</a></li>
-                  <li><a href="{{ route('product') }}" class="hover:text-secondary font-bold block py-2">CPU</a></li>
-                  <li><a href="{{ route('product') }}" class="hover:text-secondary font-bold block py-2">GPU</a></li>
-                  <li><a href="{{ route('product') }}" class="hover:text-secondary font-bold block py-2">Motherboard</a></li>
-              </ul>
-          </li>
-
-          <li><a href="{{ route('shop') }}" class="hover:text-secondary font-bold block py-2">Shop</a></li>
-          <li><a href="{{ route('product') }}" class="hover:text-secondary font-bold block py-2">Product</a></li>
-          <li><a href="{{ route('not-found') }}" class="hover:text-secondary font-bold block py-2">404 page</a></li>
-          <li><a href="{{ route('checkout') }}" class="hover:text-secondary font-bold block py-2">Checkout</a></li>
-      </ul>
-      <div class="flex flex-col mt-6 space-y-2 items-center">
-          <a href="{{ route('register') }}"
-              class="bg-primary hover:bg-transparent text-white hover:text-primary border border-primary font-semibold px-4 py-2 rounded-full flex items-center justify-center min-w-[110px]">Register</a>
-          <a href="{{ route('login') }}"
-              class="bg-primary hover:bg-transparent text-white hover:text-primary border border-primary font-semibold px-4 py-2 rounded-full flex items-center justify-center min-w-[110px]">Login</a>
-          <a href="{{ route('cart') }}"
-              class="bg-primary hover:bg-transparent text-white hover:text-primary border border-primary font-semibold px-4 py-2 rounded-full flex items-center justify-center min-w-[110px]">Cart -&nbsp;<span>5</span>&nbsp;items</a>
-      </div>
-      <!-- Search field -->
-      <div
-          class="  top-full right-0 mt-2 w-full bg-white shadow-lg p-2 rounded">
-          <input type="text" class="w-full p-2 border border-gray-300 rounded"
-              placeholder="Search for products...">
-      </div>
-    </nav>
+    @include('partials.store-header')
 
     <!-- Shop -->
     <section id="shop">
@@ -350,15 +144,15 @@
                         <div class="space-y-2">
                             <label class="flex items-center">
                                 <input type="checkbox" class="form-checkbox custom-checkbox">
-                                <span class="ml-2">★★★★★</span>
+                                <span class="ml-2">â˜…â˜…â˜…â˜…â˜…</span>
                             </label>
                             <label class="flex items-center">
                                 <input type="checkbox" class="form-checkbox custom-checkbox">
-                                <span class="ml-2">★★★★☆</span>
+                                <span class="ml-2">â˜…â˜…â˜…â˜…â˜†</span>
                             </label>
                             <label class="flex items-center">
                                 <input type="checkbox" class="form-checkbox custom-checkbox">
-                                <span class="ml-2">★★★☆☆</span>
+                                <span class="ml-2">â˜…â˜…â˜…â˜†â˜†</span>
                             </label>
                         </div>
                     </div>
@@ -369,11 +163,7 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                         <!-- Product 1 -->
                         <div class="bg-white p-4 rounded-lg shadow">
-<<<<<<< HEAD
                             <img src="{{ asset('tailstore4-main/laptop/laptop_asus_rtx3060.jpg') }}" alt="Gaming Laptop RTX 4060"
-=======
-                            <img src="{{ asset('tailstore4-main/assets/images/products/5.jpg') }}" alt="Product 1"
->>>>>>> b12be9f2e4f8abd3c829492c7f905a8340a67590
                                 class="w-full object-cover mb-4 rounded-lg">
                             <a href="{{ route('product') }}" class="text-lg font-semibold mb-2">Gaming Laptop RTX 4060</a>
                             <p class=" my-2">Laptop</p>
@@ -387,11 +177,7 @@
                         </div>
                         <!-- Product 2 -->
                         <div class="bg-white p-4 rounded-lg shadow">
-<<<<<<< HEAD
                             <img src="{{ asset('tailstore4-main/pc_part/rtx-4070.jpg') }}" alt="NVIDIA RTX 4070 GPU"
-=======
-                            <img src="{{ asset('tailstore4-main/assets/images/products/6.jpg') }}" alt="Product 2"
->>>>>>> b12be9f2e4f8abd3c829492c7f905a8340a67590
                                 class="w-full object-cover mb-4 rounded-lg">
                             <a href="{{ route('product') }}" class="text-lg font-semibold mb-2">NVIDIA RTX 4070 GPU</a>
                             <p class=" my-2">PC Part</p>
@@ -404,11 +190,7 @@
                         </div>
                         <!-- Product 3 -->
                         <div class="bg-white p-4 rounded-lg shadow">
-<<<<<<< HEAD
                             <img src="{{ asset('tailstore4-main/pc_part/intel-core-i7-13700k.jpg') }}" alt="Intel i7 13700K CPU"
-=======
-                            <img src="{{ asset('tailstore4-main/assets/images/products/7.jpg') }}" alt="Product 3"
->>>>>>> b12be9f2e4f8abd3c829492c7f905a8340a67590
                                 class="w-full object-cover mb-4 rounded-lg">
                             <a href="{{ route('product') }}" class="text-lg font-semibold mb-2">Intel i7 13700K CPU</a>
                             <p class="my-2">PC Part</p>
@@ -422,11 +204,7 @@
                         </div>
                         <!-- Product 4 -->
                         <div class="bg-white p-4 rounded-lg shadow">
-<<<<<<< HEAD
                             <img src="{{ asset('tailstore4-main/laptop/Macbook_M13_pro_14inch.jpg') }}" alt="MacBook Pro M3 14-inch"
-=======
-                            <img src="{{ asset('tailstore4-main/assets/images/products/8.jpg') }}" alt="Product 4"
->>>>>>> b12be9f2e4f8abd3c829492c7f905a8340a67590
                                 class="w-full object-cover mb-4 rounded-lg">
                             <a href="{{ route('product') }}" class="text-lg font-semibold mb-2">MacBook Pro M3 14-inch</a>
                             <p class="my-2">Laptop</p>
@@ -440,11 +218,7 @@
                         </div>
                         <!-- Product 5 -->
                         <div class="bg-white p-4 rounded-lg shadow">
-<<<<<<< HEAD
                             <img src="{{ asset('tailstore4-main/laptop/slim_laptop.jpg') }}" alt="Slim Business Laptop"
-=======
-                            <img src="{{ asset('tailstore4-main/assets/images/products/4.jpg') }}" alt="Product 4"
->>>>>>> b12be9f2e4f8abd3c829492c7f905a8340a67590
                                 class="w-full object-cover mb-4 rounded-lg">
                             <a href="{{ route('product') }}" class="text-lg font-semibold">Slim Business Laptop</a>
                             <p class="my-2">Laptop</p>
@@ -458,11 +232,7 @@
                         </div>
                         <!-- Product 6 -->
                         <div class="bg-white p-4 rounded-lg shadow">
-<<<<<<< HEAD
                             <img src="{{ asset('tailstore4-main/pc_part/Corsair_Vengeance_32G_DDR5.jpg') }}" alt="Corsair Vengeance 32GB DDR5"
-=======
-                            <img src="{{ asset('tailstore4-main/assets/images/products/3.jpg') }}" alt="Product 3"
->>>>>>> b12be9f2e4f8abd3c829492c7f905a8340a67590
                                 class="w-full object-cover mb-4 rounded-lg">
                             <a href="{{ route('product') }}" class="text-lg font-semibold mb-2">Corsair Vengeance 32GB DDR5</a>
                             <p class=" my-2">PC Part</p>
@@ -552,8 +322,7 @@
                     <h3 class="text-lg font-semibold mb-4">Account</h3>
                     <ul>
                         <li><a href="{{ route('cart') }}" class="hover:text-primary">Cart</a></li>
-                        <li><a href="{{ route('register') }}" class="hover:text-primary">Registration</a></li>
-                        <li><a href="{{ route('login') }}" class="hover:text-primary">Login</a></li>
+                        @include('partials.footer-account')
                     </ul>
                 </div>
                 <!-- Social Media -->

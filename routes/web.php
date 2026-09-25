@@ -1,19 +1,31 @@
 <?php
 
+use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\logincontroller;
 use App\Http\Controllers\registercontroller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('main.cuahangmaytinh');
 })->name('cuahangmaytinh');
 
+// Guests see the register page; logged-in users are sent to account management.
 Route::get('/register', function () {
+    if (Auth::check()) {
+        return redirect()->route('account')->with('status', 'You are already logged in.');
+    }
+
     return view('verify.register');
 })->name('register');
 
+// Guests see the login page; logged-in users are sent to account management.
 Route::get('/login', function () {
+    if (Auth::check()) {
+        return redirect()->route('account')->with('status', 'You are already logged in.');
+    }
+
     return view('verify.login');
 })->name('login');
 
@@ -45,13 +57,18 @@ Route::post('/login', [logincontroller::class, 'login'])->name('login.submit');
 Route::post('/logout', [logincontroller::class, 'logout'])->name('logout');
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/admin', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-    Route::get('/admin/products', [AdminController::class, 'products'])->name('admin.products.index');
-    Route::get('/admin/products/{product}', [AdminController::class, 'show'])->name('admin.products.show');
-    Route::get('/admin/products/{product}/edit', [AdminController::class, 'edit'])->name('admin.products.edit');
-    Route::put('/admin/products/{product}', [AdminController::class, 'update'])->name('admin.products.update');
-    Route::delete('/admin/products/{product}', [AdminController::class, 'destroy'])->name('admin.products.destroy');
-    Route::get('/admin/history', [AdminController::class, 'history'])->name('admin.history');
+    Route::get('/account', [AccountController::class, 'show'])->name('account');
+    Route::put('/account', [AccountController::class, 'update'])->name('account.update');
+
+    Route::middleware('admin')->group(function () {
+        Route::get('/admin', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+        Route::get('/admin/products', [AdminController::class, 'products'])->name('admin.products.index');
+        Route::get('/admin/products/{product}', [AdminController::class, 'show'])->name('admin.products.show');
+        Route::get('/admin/products/{product}/edit', [AdminController::class, 'edit'])->name('admin.products.edit');
+        Route::put('/admin/products/{product}', [AdminController::class, 'update'])->name('admin.products.update');
+        Route::delete('/admin/products/{product}', [AdminController::class, 'destroy'])->name('admin.products.destroy');
+        Route::get('/admin/history', [AdminController::class, 'history'])->name('admin.history');
+    });
 });
 
 Route::get('/{path}', function () {
