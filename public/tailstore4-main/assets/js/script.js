@@ -323,3 +323,124 @@ document.addEventListener('DOMContentLoaded', function () {
   });
   renderCart(readCart());
 });
+
+/* Product recommendations based on local browsing and cart activity. */
+document.addEventListener('DOMContentLoaded', function () {
+  const section = document.getElementById('recommended-products');
+  const list = document.getElementById('recommendation-list');
+  if (!section || !list) return;
+
+  const behaviorKey = 'computer-store-product-behavior';
+  const getProducts = () => Array.from(document.querySelectorAll('#popular-products .bg-white.p-3, #latest-products .bg-white.p-3'))
+    .map(card => {
+      const name = card.querySelector('a')?.textContent.trim();
+      const category = card.querySelector('p.my-2')?.textContent.trim();
+      const image = card.querySelector('img')?.getAttribute('src');
+      const priceText = card.querySelector('span.text-lg.font-bold')?.textContent || '';
+      const price = Number.parseFloat(priceText.replace(/[^\d.]/g, ''));
+      if (!name || !category || !image || !Number.isFinite(price)) return null;
+
+      return { id: `${name.toLowerCase()}|${image}`, name, category, image, price };
+    })
+    .filter(Boolean);
+
+  const readBehavior = () => {
+    try {
+      const behavior = JSON.parse(localStorage.getItem(behaviorKey) || '[]');
+      return Array.isArray(behavior) ? behavior : [];
+    } catch {
+      return [];
+    }
+  };
+
+  const recordBehavior = (product, action) => {
+    const behavior = readBehavior();
+    behavior.push({ id: product.id, name: product.name, category: product.category, action, time: Date.now() });
+    try {
+      localStorage.setItem(behaviorKey, JSON.stringify(behavior.slice(-40)));
+    } catch {
+      // Recommendations still work from the default popular product if storage is unavailable.
+    }
+  };
+
+  const words = value => new Set(value.toLowerCase().match(/[a-z0-9]+/g) || []);
+  const similarity = (first, second) => {
+    const firstWords = words(first.name);
+    const secondWords = words(second.name);
+    const sharedWords = [...firstWords].filter(word => secondWords.has(word)).length;
+    const allWords = new Set([...firstWords, ...secondWords]).size;
+    const nameSimilarity = allWords ? sharedWords / allWords : 0;
+    const categorySimilarity = first.category.toLowerCase() === second.category.toLowerCase() ? 1 : 0;
+    return categorySimilarity * 0.7 + nameSimilarity * 0.3;
+  };
+
+  const products = getProducts();
+  const popularProduct = document.querySelector('#popular-products .bg-white.p-3');
+  const defaultProduct = popularProduct ? getProductsFromCard(popularProduct) : null;
+  const behavior = readBehavior();
+  const interests = behavior.length ? behavior.slice(-20).reverse() : (defaultProduct ? [{ ...defaultProduct, action: 'default', time: Date.now() }] : []);
+  const previouslyInteracted = new Set(behavior.map(item => item.id));
+  if (!behavior.length && defaultProduct) previouslyInteracted.add(defaultProduct.id);
+
+  const recommendations = products
+    .filter(product => !previouslyInteracted.has(product.id))
+    .map(product => {
+      const score = interests.reduce((total, interest) => {
+        const actionWeight = interest.action === 'add' ? 3 : 1;
+        const ageInDays = Math.max(0, Date.now() - (interest.time || Date.now())) / 86400000;
+        return total + similarity(product, interest) * actionWeight * Math.exp(-ageInDays / 30);
+      }, 0);
+      return { ...product, score };
+    })
+    .filter(product => product.score > 0)
+    .sort((first, second) => second.score - first.score)
+    .slice(0, 4);
+
+  const message = document.getElementById('recommendation-message');
+  if (message && behavior.length) {
+    message.textContent = 'Based on products you viewed and added to your cart.';
+  }
+
+  const currency = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+  const productUrl = section.dataset.productUrl;
+  recommendations.forEach(product => {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'w-full sm:w-1/2 lg:w-1/4 px-4 mb-8';
+    wrapper.innerHTML = `
+      <div class="bg-white p-3 rounded-lg shadow-lg h-full flex flex-col">
+        <img src="${escapeText(product.image)}" alt="${escapeText(product.name)}" class="w-full mb-4 rounded-lg cursor-pointer" style="height: 16rem; object-fit: contain;">
+        <a href="${productUrl}" class="text-lg font-semibold mb-2 block" style="min-height: 3.5rem;">${escapeText(product.name)}</a>
+        <p class="my-2 text-gray-500" style="min-height: 2rem;">${escapeText(product.category)}</p>
+        <div class="flex items-center mb-4" style="min-height: 2rem;"><span class="text-lg font-bold text-primary">${currency.format(product.price)}</span></div>
+        <button type="button" class="bg-primary border border-transparent hover:bg-transparent hover:border-primary text-white hover:text-primary font-semibold py-2 px-4 rounded-full w-full" style="margin-top: auto;">Add to Cart</button>
+      </div>`;
+    list.appendChild(wrapper);
+  });
+
+  function getProductsFromCard(card) {
+    const name = card.querySelector('a')?.textContent.trim();
+    const category = card.querySelector('p.my-2')?.textContent.trim();
+    const image = card.querySelector('img')?.getAttribute('src');
+    const priceText = card.querySelector('span.text-lg.font-bold')?.textContent || '';
+    const price = Number.parseFloat(priceText.replace(/[^\d.]/g, ''));
+    return name && category && image && Number.isFinite(price)
+      ? { id: `${name.toLowerCase()}|${image}`, name, category, image, price }
+      : null;
+  }
+
+  function escapeText(value) {
+    return String(value).replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]);
+  }
+
+  document.addEventListener('click', event => {
+    const button = event.target.closest('button');
+    const card = event.target.closest('#popular-products .bg-white.p-3, #latest-products .bg-white.p-3, #recommendation-list .bg-white.p-3');
+    const product = card ? getProductsFromCard(card) : null;
+    if (!product) return;
+    if (button && /^(Add|Added) to Cart$/.test(button.textContent.trim().replace(/\s+/g, ' '))) {
+      recordBehavior(product, 'add');
+    } else if (event.target.closest('a, img')) {
+      recordBehavior(product, 'view');
+    }
+  });
+});
