@@ -15,6 +15,7 @@ class AdminDashboardTest extends TestCase
     {
         User::create([
             'full_name' => 'Admin User',
+<<<<<<< HEAD
             'email' => 'Admin@pc_lap',
             'password_hash' => Hash::make('Admin_123'),
             'role' => 'admin',
@@ -23,6 +24,16 @@ class AdminDashboardTest extends TestCase
 
         $response = $this->post('/login', [
             'email' => 'Admin@pc_lap',
+=======
+            'email' => 'Admin@pc.lap',
+            'password_hash' => Hash::make('Admin_123'),
+            'role' => 'admin',
+            'phone' => '0900000000',
+        ]);
+
+        $response = $this->post('/login', [
+            'email' => 'Admin@pc.lap',
+>>>>>>> 07e3ef880b20a27898947149096f7c1a02933c6f
             'password' => 'Admin_123',
         ]);
 

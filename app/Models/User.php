@@ -2,11 +2,10 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+
 
 class User extends Authenticatable
 {
@@ -17,8 +16,7 @@ class User extends Authenticatable
     public $timestamps = false;
 
     protected $fillable = [
-        'full_name', 'email', 'password_hash', 'phone',
-        'address', 'role', 'is_active', 'created_at',
+        'full_name', 'email', 'password_hash', 'phone', 'role', 'created_at'
     ];
 
     protected $hidden = [
@@ -27,7 +25,6 @@ class User extends Authenticatable
     ];
 
     protected $casts = [
-        'is_active' => 'boolean',
         'created_at' => 'datetime',
     ];
 

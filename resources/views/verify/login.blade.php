@@ -74,7 +74,11 @@
 
                         <div class="mb-3">
                             <label for="email" class="block">Email</label>
+<<<<<<< HEAD
                             <input type="email" name="email" id="email"
+=======
+                            <input type="text" name="email" id="email"
+>>>>>>> 07e3ef880b20a27898947149096f7c1a02933c6f
                                 value="{{ old('email') }}"
                                 class="w-full px-3 py-1 border rounded-full focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary @error('email') border-red-500 @enderror"
                                 required autofocus>

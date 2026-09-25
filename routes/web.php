@@ -37,6 +37,9 @@ Route::get('/404', function () {
     return view('error.404');
 })->name('not-found');
 
+Route::redirect('/register.html', '/register', 301);
+Route::redirect('/login.html', '/login', 301);
+
 Route::post('/register', [registercontroller::class, 'register'])->name('register.submit');
 Route::post('/login', [logincontroller::class, 'login'])->name('login.submit');
 Route::post('/logout', [logincontroller::class, 'logout'])->name('logout');
