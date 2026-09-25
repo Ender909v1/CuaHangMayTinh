@@ -108,6 +108,14 @@
         </div>
     </section>
 
+    <section id="recommended-products" class="bg-white py-10" data-product-url="{{ route('product') }}">
+        <div class="container mx-auto px-4">
+            <h2 class="text-2xl font-bold mb-2">Recommended for you</h2>
+            <p id="recommendation-message" class="text-gray-500 mb-6">Similar picks based on our popular products.</p>
+            <div id="recommendation-list" class="flex flex-wrap -mx-4"></div>
+        </div>
+    </section>
+
     <!-- index.blade.php (#popular-products) -->
     <section id="popular-products" x-data="{ showModal: false, modalTitle: '', modalCategory: '', modalPrice: '', modalOldPrice: '', modalImg: '' }">
         <div class="container mx-auto px-4">
@@ -509,7 +517,6 @@
 </body>
 
 </html>
-
 
 
 
