@@ -14,17 +14,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('tailstore4-main/assets/css/styles.css') }}">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
-    @vite('resources/assets/css/custom.css')
+    <link rel="stylesheet" href="{{ asset('tailstore4-main/assets/css/custom.css') }}">
 </head>
 
 <body>
     <header class="bg-gray-dark sticky top-0 z-50">
         <div class="container mx-auto flex justify-between items-center py-4">
             <a href="{{ url('/') }}" class="flex items-center">
-                <div>
-                    <img src="{{ asset('tailstore4-main/assets/images/template-white-logo.png') }}" alt="Logo"
-                        class="h-14 w-auto mr-4">
-                </div>
+                <img src="{{ asset('tailstore4-main/assets/images/shop-logo.png') }}" alt="Shop Logo"
+                    class="navbar-shop-logo">
+                <span class="text-white font-bold text-lg tracking-wide">Computer Store</span>
             </a>
 
             <div class="flex lg:hidden">

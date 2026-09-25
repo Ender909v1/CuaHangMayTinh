@@ -24,10 +24,16 @@
     <header class="bg-gray-dark sticky top-0 z-50">
         <div class="container mx-auto flex justify-between items-center py-4">
             <!-- Left section: Logo -->
+<<<<<<< HEAD
             <a href="{{ route('cuahangmaytinh') }}" class="flex items-center">
               <div>
                   <img src="{{ asset('tailstore4-main/assets/images/template-white-logo.png') }}" alt="Logo" class="h-14 w-auto mr-4">
               </div>
+=======
+            <a href="index.html" class="flex items-center">
+              <img src="{{ asset('tailstore4-main/assets/images/shop-logo.png') }}" alt="Shop Logo" class="navbar-shop-logo">
+              <span class="text-white font-bold text-lg tracking-wide">Computer Store</span>
+>>>>>>> b12be9f2e4f8abd3c829492c7f905a8340a67590
             </a>
 
             <!-- Hamburger menu (for mobile) -->
@@ -107,7 +113,11 @@
               <a href="{{ route('login') }}"
                   class="bg-primary border border-primary hover:bg-transparent text-white hover:text-primary font-semibold px-4 py-2 rounded-full inline-block">Login</a>
               <div class="relative group cart-wrapper">
+<<<<<<< HEAD
                   <a href="{{ route('cart') }}" >
+=======
+                  <a href="/cart.html" >
+>>>>>>> b12be9f2e4f8abd3c829492c7f905a8340a67590
                       <img src="{{ asset('tailstore4-main/assets/images/cart-shopping.svg') }}" alt="Cart" class="h-6 w-6 group-hover:scale-120">
                   </a>
                   <!-- Cart dropdown -->
@@ -116,7 +126,11 @@
                           <!-- product item -->
                           <div class="flex items-center justify-between pb-4 border-b border-gray-line">
                               <div class="flex items-center">
+<<<<<<< HEAD
                                   <img src="{{ asset('tailstore4-main/laptop/laptop_asus_rtx3060.jpg') }}" alt="Product image" class="h-12 w-12 object-cover rounded mr-2">
+=======
+                                  <img src="{{ asset('tailstore4-main/assets/images/single-product/1.jpg') }}" alt="Product" class="h-12 w-12 object-cover rounded mr-2">
+>>>>>>> b12be9f2e4f8abd3c829492c7f905a8340a67590
                                   <div>
                                       <p class="font-semibold">Gaming Laptop RTX 4060</p>
                                       <p class="text-sm">Quantity: 1</p>
@@ -127,7 +141,11 @@
                           <!-- product item -->
                           <div class="flex items-center justify-between">
                             <div class="flex items-center">
+<<<<<<< HEAD
                                 <img src="{{ asset('tailstore4-main/pc_part/rtx-4070.jpg') }}" alt="Product image" class="h-12 w-12 object-cover rounded mr-2">
+=======
+                                <img src="{{ asset('tailstore4-main/assets/images/single-product/2.jpg') }}" alt="Product" class="h-12 w-12 object-cover rounded mr-2">
+>>>>>>> b12be9f2e4f8abd3c829492c7f905a8340a67590
                                 <div>
                                     <p class="font-semibold">NVIDIA RTX 4070 GPU</p>
                                     <p class="text-sm">Quantity: 1</p>
@@ -351,7 +369,11 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                         <!-- Product 1 -->
                         <div class="bg-white p-4 rounded-lg shadow">
+<<<<<<< HEAD
                             <img src="{{ asset('tailstore4-main/laptop/laptop_asus_rtx3060.jpg') }}" alt="Gaming Laptop RTX 4060"
+=======
+                            <img src="{{ asset('tailstore4-main/assets/images/products/5.jpg') }}" alt="Product 1"
+>>>>>>> b12be9f2e4f8abd3c829492c7f905a8340a67590
                                 class="w-full object-cover mb-4 rounded-lg">
                             <a href="{{ route('product') }}" class="text-lg font-semibold mb-2">Gaming Laptop RTX 4060</a>
                             <p class=" my-2">Laptop</p>
@@ -365,7 +387,11 @@
                         </div>
                         <!-- Product 2 -->
                         <div class="bg-white p-4 rounded-lg shadow">
+<<<<<<< HEAD
                             <img src="{{ asset('tailstore4-main/pc_part/rtx-4070.jpg') }}" alt="NVIDIA RTX 4070 GPU"
+=======
+                            <img src="{{ asset('tailstore4-main/assets/images/products/6.jpg') }}" alt="Product 2"
+>>>>>>> b12be9f2e4f8abd3c829492c7f905a8340a67590
                                 class="w-full object-cover mb-4 rounded-lg">
                             <a href="{{ route('product') }}" class="text-lg font-semibold mb-2">NVIDIA RTX 4070 GPU</a>
                             <p class=" my-2">PC Part</p>
@@ -378,7 +404,11 @@
                         </div>
                         <!-- Product 3 -->
                         <div class="bg-white p-4 rounded-lg shadow">
+<<<<<<< HEAD
                             <img src="{{ asset('tailstore4-main/pc_part/intel-core-i7-13700k.jpg') }}" alt="Intel i7 13700K CPU"
+=======
+                            <img src="{{ asset('tailstore4-main/assets/images/products/7.jpg') }}" alt="Product 3"
+>>>>>>> b12be9f2e4f8abd3c829492c7f905a8340a67590
                                 class="w-full object-cover mb-4 rounded-lg">
                             <a href="{{ route('product') }}" class="text-lg font-semibold mb-2">Intel i7 13700K CPU</a>
                             <p class="my-2">PC Part</p>
@@ -392,7 +422,11 @@
                         </div>
                         <!-- Product 4 -->
                         <div class="bg-white p-4 rounded-lg shadow">
+<<<<<<< HEAD
                             <img src="{{ asset('tailstore4-main/laptop/Macbook_M13_pro_14inch.jpg') }}" alt="MacBook Pro M3 14-inch"
+=======
+                            <img src="{{ asset('tailstore4-main/assets/images/products/8.jpg') }}" alt="Product 4"
+>>>>>>> b12be9f2e4f8abd3c829492c7f905a8340a67590
                                 class="w-full object-cover mb-4 rounded-lg">
                             <a href="{{ route('product') }}" class="text-lg font-semibold mb-2">MacBook Pro M3 14-inch</a>
                             <p class="my-2">Laptop</p>
@@ -406,7 +440,11 @@
                         </div>
                         <!-- Product 5 -->
                         <div class="bg-white p-4 rounded-lg shadow">
+<<<<<<< HEAD
                             <img src="{{ asset('tailstore4-main/laptop/slim_laptop.jpg') }}" alt="Slim Business Laptop"
+=======
+                            <img src="{{ asset('tailstore4-main/assets/images/products/4.jpg') }}" alt="Product 4"
+>>>>>>> b12be9f2e4f8abd3c829492c7f905a8340a67590
                                 class="w-full object-cover mb-4 rounded-lg">
                             <a href="{{ route('product') }}" class="text-lg font-semibold">Slim Business Laptop</a>
                             <p class="my-2">Laptop</p>
@@ -420,7 +458,11 @@
                         </div>
                         <!-- Product 6 -->
                         <div class="bg-white p-4 rounded-lg shadow">
+<<<<<<< HEAD
                             <img src="{{ asset('tailstore4-main/pc_part/Corsair_Vengeance_32G_DDR5.jpg') }}" alt="Corsair Vengeance 32GB DDR5"
+=======
+                            <img src="{{ asset('tailstore4-main/assets/images/products/3.jpg') }}" alt="Product 3"
+>>>>>>> b12be9f2e4f8abd3c829492c7f905a8340a67590
                                 class="w-full object-cover mb-4 rounded-lg">
                             <a href="{{ route('product') }}" class="text-lg font-semibold mb-2">Corsair Vengeance 32GB DDR5</a>
                             <p class=" my-2">PC Part</p>

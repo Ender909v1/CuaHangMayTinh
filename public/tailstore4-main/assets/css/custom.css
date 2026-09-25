@@ -87,32 +87,76 @@ button:hover {
 }
 
 /* home page */
+#product-slider {
+    line-height: 0;
+    margin-bottom: 0;
+}
+#product-slider .swiper-slide-content {
+    line-height: 1.4;
+}
 .main-slider {
     position: relative;
     width: 100%;
+<<<<<<< HEAD
     max-width: 1280px;
     margin: 0 auto;
+=======
+    max-height: 440px;
+>>>>>>> b12be9f2e4f8abd3c829492c7f905a8340a67590
     overflow: hidden;
+    margin-bottom: 0;
 }
 
 .main-slider .swiper-slide {
     position: relative;
     text-align: center;
+<<<<<<< HEAD
     min-height: 380px;
     max-height: 520px;
+=======
+    max-height: 440px;
+    overflow: hidden;
+>>>>>>> b12be9f2e4f8abd3c829492c7f905a8340a67590
 }
 
 .main-slider .swiper-slide img {
     width: 100%;
+<<<<<<< HEAD
     height: 100%;
     max-height: 520px;
     object-fit: cover;
     object-position: center;
+=======
+    height: 340px;
+    max-height: 440px;
+    object-fit: cover;
+    display: block;
+    margin: 0;
+}
+
+@media(min-width:768px){
+    .main-slider,
+    .main-slider .swiper-slide {
+        max-height: 440px;
+    }
+    .main-slider .swiper-slide img {
+        height: 420px;
+    }
+>>>>>>> b12be9f2e4f8abd3c829492c7f905a8340a67590
 }
 
 @media(min-width:1400px){
+    .main-slider,
+    .main-slider .swiper-slide {
+        max-height: 440px;
+    }
     .main-slider .swiper-slide img {
+<<<<<<< HEAD
         max-height: 520px;
+=======
+        height: 420px;
+        max-height: 440px;
+>>>>>>> b12be9f2e4f8abd3c829492c7f905a8340a67590
     }
 }
 
@@ -152,6 +196,37 @@ button:hover {
         left: 10%;
         text-align: left;
     }
+}
+
+#product-banners {
+    margin-top: 0;
+    padding-top: 1.5rem;
+}
+#product-banners .container {
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+/* Navbar shop logo: keep small, round, visible on dark header */
+.navbar-shop-logo {
+    height: 2.75rem;
+    width: 2.75rem;
+    object-fit: contain;
+    background: #fff;
+    border-radius: 9999px;
+    padding: 4px;
+    margin-right: 0.75rem;
+    flex-shrink: 0;
+}
+
+/* Product cards: uniform image size, no empty/big gaps */
+#popular-products img,
+#latest-products img,
+#product-banners img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    display: block;
 }
 
 #product-slider .swiper-button-prev, #product-slider .swiper-button-next{

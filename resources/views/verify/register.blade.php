@@ -24,10 +24,16 @@
     <header class="bg-gray-dark sticky top-0 z-50">
         <div class="container mx-auto flex justify-between items-center py-4">
             <!-- Left section: Logo -->
+<<<<<<< HEAD
             <a href="{{ url('/') }}" class="flex items-center">
               <div>
                   <img src="{{ asset('tailstore4-main/assets/images/template-white-logo.png') }}" alt="Logo" class="h-14 w-auto mr-4">
               </div>
+=======
+            <a href="index.html" class="flex items-center">
+              <img src="{{ asset('tailstore4-main/assets/images/shop-logo.png') }}" alt="Shop Logo" class="navbar-shop-logo">
+              <span class="text-white font-bold text-lg tracking-wide">Computer Store</span>
+>>>>>>> b12be9f2e4f8abd3c829492c7f905a8340a67590
             </a>
 
             <!-- Hamburger menu (for mobile) -->
@@ -107,7 +113,11 @@
               <a href="{{ url('/login') }}"
                   class="bg-primary border border-primary hover:bg-transparent text-white hover:text-primary font-semibold px-4 py-2 rounded-full inline-block">Login</a>
               <div class="relative group cart-wrapper">
+<<<<<<< HEAD
                   <a href="{{ route('cart') }}" >
+=======
+                  <a href="/cart.html" >
+>>>>>>> b12be9f2e4f8abd3c829492c7f905a8340a67590
                       <img src="{{ asset('tailstore4-main/assets/images/cart-shopping.svg') }}" alt="Cart" class="h-6 w-6 group-hover:scale-120">
                   </a>
                   <!-- Cart dropdown -->
@@ -116,7 +126,11 @@
                           <!-- product item -->
                           <div class="flex items-center justify-between pb-4 border-b border-gray-line">
                               <div class="flex items-center">
+<<<<<<< HEAD
                                   <img src="{{ asset('tailstore4-main/laptop/laptop_asus_rtx3060.jpg') }}" alt="Product image" class="h-12 w-12 object-cover rounded mr-2">
+=======
+                                  <img src="{{ asset('tailstore4-main/assets/images/single-product/1.jpg') }}" alt="Product" class="h-12 w-12 object-cover rounded mr-2">
+>>>>>>> b12be9f2e4f8abd3c829492c7f905a8340a67590
                                   <div>
                                       <p class="font-semibold">Gaming Laptop RTX 4060</p>
                                       <p class="text-sm">Quantity: 1</p>
@@ -127,7 +141,11 @@
                           <!-- product item -->
                           <div class="flex items-center justify-between">
                             <div class="flex items-center">
+<<<<<<< HEAD
                                 <img src="{{ asset('tailstore4-main/pc_part/rtx-4070.jpg') }}" alt="Product image" class="h-12 w-12 object-cover rounded mr-2">
+=======
+                                <img src="{{ asset('tailstore4-main/assets/images/single-product/2.jpg') }}" alt="Product" class="h-12 w-12 object-cover rounded mr-2">
+>>>>>>> b12be9f2e4f8abd3c829492c7f905a8340a67590
                                 <div>
                                     <p class="font-semibold">NVIDIA RTX 4070 GPU</p>
                                     <p class="text-sm">Quantity: 1</p>
@@ -214,8 +232,8 @@
     <!-- Register and login -->
     <section id="register-login-page" class="bg-white py-16">
         <div class="container mx-auto px-4">
-            <div class="flex flex-col md:flex-row gap-4">
-                <div class="md:w-1/2 bg-white rounded-lg shadow-md p-4 md:p-10 md:m-10">
+            <div class="flex flex-col lg:flex-row justify-center items-stretch gap-6 max-w-5xl mx-auto">
+                <div class="w-full lg:w-1/2 lg:max-w-md bg-white rounded-lg shadow-md p-4 md:p-10">
                     <h2 class="text-2xl font-semibold mb-4">Login</h2>
                     <form method="POST" action="{{ route('login.submit') }}">
                         @csrf
@@ -237,7 +255,7 @@
                         <button type="submit" class="bg-primary text-white border border-primary hover:bg-transparent hover:text-primary py-2 px-3 rounded-full w-full">Login</button>
                     </form>
                 </div>
-                <div class="md:w-1/2 bg-white rounded-lg shadow-md p-4 md:p-10 md:m-10">
+                <div class="w-full lg:w-1/2 lg:max-w-md bg-white rounded-lg shadow-md p-4 md:p-10">
                     <h2 class="text-2xl font-semibold mb-4">Register</h2>
                     <form method="POST" action="{{ url('/register') }}">
                         @csrf
