@@ -101,9 +101,8 @@
             <h3 class="text-lg font-semibold mb-4">Shop</h3>
             <ul>
                 <li><a href="{{ route('shop') }}" class="hover:text-primary">Shop</a></li>
-                <li><a href="{{ route('product') }}" class="hover:text-primary">Women</a></li>
-                <li><a href="{{ route('shop') }}" class="hover:text-primary">Men</a></li>
-                <li><a href="{{ route('product') }}" class="hover:text-primary">Shoes</a></li>
+                <li><a href="{{ route('product') }}" class="hover:text-primary">PC part</a></li>
+                <li><a href="{{ route('shop') }}" class="hover:text-primary">Laptop</a></li>
                 <li><a href="{{ route('product') }}" class="hover:text-primary">Accessories</a></li>
             </ul>
             </div>

@@ -12,7 +12,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('tailstore4-main/assets/css/styles.css') }}">
     <link rel="stylesheet" href="{{ asset('tailstore4-main/node_modules/swiper/swiper-bundle.css') }}">
     <link rel="stylesheet" href="{{ asset('tailstore4-main/assets/css/custom.css') }}">
@@ -99,7 +99,7 @@
             </div>
         </div>
     </section>
-    
+
     <!-- Footer -->
     <footer class="border-t border-gray-line">
         <!-- Top part -->
@@ -110,8 +110,8 @@
             <h3 class="text-lg font-semibold mb-4">Shop</h3>
             <ul>
                 <li><a href="{{ route('shop') }}" class="hover:text-primary">Shop</a></li>
-                <li><a href="{{ route('product') }}" class="hover:text-primary">Women</a></li>
-                <li><a href="{{ route('shop') }}" class="hover:text-primary">Men</a></li>
+                <li><a href="{{ route('product') }}" class="hover:text-primary">PC part</a></li>
+                <li><a href="{{ route('shop') }}" class="hover:text-primary">Laptop</a></li>
                 <li><a href="{{ route('product') }}" class="hover:text-primary">Shoes</a></li>
                 <li><a href="{{ route('product') }}" class="hover:text-primary">Accessories</a></li>
             </ul>
