@@ -97,9 +97,69 @@ function toggleDropdown(id, show) {
 }
 
 function changeImage(element) {
-  var mainImage = document.getElementById('main-image');
+  var mainImage = document.getElementById('srcImg');
+  if (!mainImage) {
+    return;
+  }
+
   mainImage.src = element.getAttribute('data-full');
+  mainImage.dispatchEvent(new Event('zoomimagechange'));
 }
+
+/* product image zoom */
+document.addEventListener('DOMContentLoaded', function () {
+  const box = document.getElementById('zoomBox');
+  const img = document.getElementById('srcImg');
+  const lens = document.getElementById('lens');
+  const result = document.getElementById('result');
+
+  if (!box || !img || !lens || !result) {
+    return;
+  }
+
+  function initZoom() {
+    if (!img.naturalWidth || !img.naturalHeight) {
+      return;
+    }
+
+    const imageRatio = img.naturalWidth / img.naturalHeight;
+    box.style.aspectRatio = imageRatio;
+    result.style.aspectRatio = imageRatio;
+    result.style.backgroundImage = `url("${img.currentSrc || img.src}")`;
+    result.style.backgroundSize = '200% 200%';
+    result.style.backgroundPosition = '0% 0%';
+  }
+
+  function moveZoom(event) {
+    const rect = box.getBoundingClientRect();
+    const lensWidth = lens.offsetWidth;
+    const lensHeight = lens.offsetHeight;
+    let x = event.clientX - rect.left;
+    let y = event.clientY - rect.top;
+
+    x = Math.max(lensWidth / 2, Math.min(x, rect.width - lensWidth / 2));
+    y = Math.max(lensHeight / 2, Math.min(y, rect.height - lensHeight / 2));
+
+    lens.style.left = `${x - lensWidth / 2}px`;
+    lens.style.top = `${y - lensHeight / 2}px`;
+
+    const ratioX = (x - lensWidth / 2) / (rect.width - lensWidth);
+    const ratioY = (y - lensHeight / 2) / (rect.height - lensHeight);
+    result.style.backgroundPosition = `${ratioX * 100}% ${ratioY * 100}%`;
+    result.classList.remove('opacity-0');
+    result.classList.add('opacity-100');
+  }
+
+  img.addEventListener('load', initZoom);
+  img.addEventListener('zoomimagechange', initZoom);
+  box.addEventListener('mousemove', moveZoom);
+  box.addEventListener('mouseleave', function () {
+    result.classList.add('opacity-0');
+    result.classList.remove('opacity-100');
+  });
+
+  initZoom();
+});
 
 /* single page product count */
 document.addEventListener('DOMContentLoaded', function () {

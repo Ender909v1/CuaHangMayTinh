@@ -27,8 +27,7 @@
             @php
                 $productImages = $product->images->sortByDesc('is_primary')->values();
                 $primaryImage = $productImages->first();
-                $displayImage = $primaryImage ? $primaryImage->image_url : 'tailstore4-main/assets/images/placeholder.jpg';
-                $displayImage = preg_match('/^https?:\/\//', $displayImage) ? $displayImage : asset($displayImage);
+                $displayImage = $primaryImage?->resolvedUrl() ?? asset('tailstore4-main/logo/logo.jpg');
             @endphp
 
             <div class="rounded-xl bg-white p-6 shadow md:p-8">
@@ -51,7 +50,7 @@
                             <div class="grid grid-cols-5 gap-3">
                                 @foreach ($productImages as $image)
                                     @php
-                                        $imageUrl = preg_match('/^https?:\/\//', $image->image_url) ? $image->image_url : asset($image->image_url);
+                                        $imageUrl = $image->resolvedUrl();
                                     @endphp
                                     <button type="button" class="image-thumb overflow-hidden rounded-lg border bg-gray-100 p-1 transition {{ $loop->first ? 'ring-2 ring-red-500' : 'ring-1 ring-gray-200' }}"
                                         data-image="{{ $imageUrl }}">
@@ -165,5 +164,3 @@
     </script>
 </body>
 </html>
-
-

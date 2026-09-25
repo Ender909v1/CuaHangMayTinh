@@ -330,3 +330,23 @@ img.cursor-pointer:hover {
     border-color: #ff0042;
 }
 
+/* Product zoom stays desktop-only, without relying on generated responsive utilities. */
+.product-zoom-lens,
+.product-zoom-result {
+    display: none;
+}
+
+.product-zoom-lens {
+    width: 8rem;
+    height: 8rem;
+}
+
+@media (min-width: 1024px) {
+    .product-zoom-lens {
+        display: block;
+    }
+
+    .product-zoom-result {
+        display: block;
+    }
+}

@@ -87,7 +87,7 @@
                         <label class="mb-1 block text-sm font-medium">Product Image</label>
                         <input type="file" name="image" accept="image/*" class="w-full rounded-lg border px-3 py-2">
                         @if ($product->images->isNotEmpty())
-                            <p class="mt-2 text-xs text-gray-500">Current image: {{ $product->images->first()->image_url }}</p>
+                            <p class="mt-2 text-xs text-gray-500">Current image: {{ $product->images->first()->resolvedUrl() }}</p>
                         @endif
                     </div>
 
@@ -106,5 +106,4 @@
     </div>
 </body>
 </html>
-
 

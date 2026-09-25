@@ -1,26 +1,29 @@
 <?php
 
-namespace Database\Seeders;
-
-use Illuminate\Database\Seeder;
+use Illuminate\Database\Migrations\Migration;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
-class ProductImageSeeder extends Seeder
+return new class extends Migration
 {
-    public function run(): void
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
     {
-        $products = DB::table('products')->get(['id', 'name']);
+        $images = DB::table('product_images')
+            ->join('products', 'products.id', '=', 'product_images.product_id')
+            ->where('product_images.image_url', 'like', '%via.placeholder.com%')
+            ->get(['product_images.id', 'product_images.product_id', 'products.name']);
 
-        for ($i = 0; $i < 10; $i++) {
-            $product = $products->random();
-            $name = Str::lower($product->name);
+        foreach ($images as $image) {
+            $name = Str::lower($image->name);
             $folder = Str::contains($name, ['laptop', 'zenbook', 'xps', 'stealth', 'pavilion', 'predator', 'legion'])
                 ? 'laptop'
                 : (Str::contains($name, ['ryzen', 'intel', 'rtx', 'desktop', 'aurora', 'tuf', 'component'])
                     ? 'pc_part'
                     : 'logo');
-            $images = match ($folder) {
+            $files = match ($folder) {
                 'laptop' => [
                     'laptop_asus_rtx3060.jpg',
                     'laptop-hp-omen-16-2025.jpg',
@@ -38,11 +41,19 @@ class ProductImageSeeder extends Seeder
                 default => ['accessories.jpg'],
             };
 
-            DB::table('product_images')->insert([
-                'product_id' => $product->id,
-                'image_url' => 'tailstore4-main/'.$folder.'/'.$images[$product->id % count($images)],
-                'is_primary' => fake()->boolean(20),
-            ]);
+            DB::table('product_images')
+                ->where('id', $image->id)
+                ->update([
+                    'image_url' => 'tailstore4-main/'.$folder.'/'.$files[$image->product_id % count($files)],
+                ]);
         }
     }
-}
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        // Original placeholder URLs cannot be restored after replacement.
+    }
+};

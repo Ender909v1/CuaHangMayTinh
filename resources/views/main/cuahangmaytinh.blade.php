@@ -126,7 +126,7 @@
             <div class="flex flex-wrap -mx-4">
                 @foreach ($products->take(4) as $product)
                     @php
-                        $imageUrl = $product->images->first()?->image_url ?? asset('tailstore4-main/logo/logo.jpg');
+                        $imageUrl = $product->images->first()?->resolvedUrl() ?? asset('tailstore4-main/logo/logo.jpg');
                         $displayPrice = $product->discount_price ?? $product->price;
                         $oldPrice = $product->discount_price ? $product->price : null;
                     @endphp
@@ -157,7 +157,7 @@
             <div class="flex flex-wrap -mx-4">
                 @foreach ($products->slice(4, 4) as $product)
                     @php
-                        $imageUrl = $product->images->first()?->image_url ?? asset('tailstore4-main/logo/logo.jpg');
+                        $imageUrl = $product->images->first()?->resolvedUrl() ?? asset('tailstore4-main/logo/logo.jpg');
                         $displayPrice = $product->discount_price ?? $product->price;
                         $oldPrice = $product->discount_price ? $product->price : null;
                     @endphp
@@ -421,7 +421,6 @@
 </body>
 
 </html>
-
 
 
 
