@@ -4,10 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class logincontroller extends Controller
 {
-    //
     public function showForm()
     {
         return view('verify.login');
@@ -15,15 +15,22 @@ class logincontroller extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->validate([
-            'email'    => ['required', 'email'],
+        $request->validate([
+            'email' => ['required', 'string'],
             'password' => ['required'],
         ]);
 
-        if (Auth::attempt($credentials, $request->boolean('remember'))) {
+        $user = \App\Models\User::where('email', $request->email)->first();
+
+        if ($user && Hash::check($request->password, $user->password_hash)) {
+            Auth::login($user, $request->boolean('remember'));
             $request->session()->regenerate();
 
-            return redirect()->intended('/dashboard');
+            if ($user->isAdmin()) {
+                return redirect()->intended('/admin');
+            }
+
+            return redirect()->intended('/');
         }
 
         return back()->withErrors([

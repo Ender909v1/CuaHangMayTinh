@@ -73,12 +73,12 @@
                         @csrf
 
                         <div class="mb-3">
-                            <label for="username" class="block">Username</label>
-                            <input type="text" name="username" id="username"
-                                value="{{ old('username') }}"
-                                class="w-full px-3 py-1 border rounded-full focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary @error('username') border-red-500 @enderror"
+                            <label for="email" class="block">Email</label>
+                            <input type="text" name="email" id="email"
+                                value="{{ old('email') }}"
+                                class="w-full px-3 py-1 border rounded-full focus:border-transparent focus:outline-none focus:ring-2 focus:ring-primary @error('email') border-red-500 @enderror"
                                 required autofocus>
-                            @error('username')
+                            @error('email')
                                 <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
                             @enderror
                         </div>

@@ -2,18 +2,20 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Notifications\Notifiable;
 
-class User extends Model
+class User extends Authenticatable
 {
+    use Notifiable;
+
     protected $table = 'users';
 
     public $timestamps = false;
 
     protected $fillable = [
-        'full_name', 'email', 'password_hash', 'phone',
-        'address', 'role', 'is_active', 'created_at',
+        'full_name', 'email', 'password_hash', 'phone', 'role', 'created_at'
     ];
 
     protected $hidden = [
@@ -22,7 +24,6 @@ class User extends Model
     ];
 
     protected $casts = [
-        'is_active' => 'boolean',
         'created_at' => 'datetime',
     ];
 
@@ -69,5 +70,15 @@ class User extends Model
     public function aiConversations(): HasMany
     {
         return $this->hasMany(AiConversation::class);
+    }
+
+    public function getAuthPassword()
+    {
+        return $this->password_hash;
+    }
+
+    public function isAdmin(): bool
+    {
+        return strtolower((string) $this->role) === 'admin';
     }
 }
