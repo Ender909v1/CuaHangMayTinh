@@ -1,7 +1,7 @@
 <header class="bg-gray-dark sticky top-0 z-50">
     <div class="container mx-auto flex justify-between items-center py-4">
         <a href="{{ route('cuahangmaytinh') }}" class="flex items-center">
-            <img src="{{ asset('tailstore4-main/assets/images/shop-logo.png') }}" alt="Shop Logo" class="navbar-shop-logo">
+            <img src="{{ asset('tailstore4-main/logo/logo.jpg') }}" alt="Shop Logo" class="navbar-shop-logo">
             <span class="text-white font-bold text-lg tracking-wide">Computer Store</span>
         </a>
 
