@@ -350,3 +350,240 @@ img.cursor-pointer:hover {
         display: block;
     }
 }
+
+/* ---------------------------------------------------------------------------
+   Utilities missing from the bundled Tailwind build
+   tailstore4-main/assets/css/styles.css was generated from the template's own
+   markup, so components added later (header account menu, order alert badge,
+   account pages) reference utilities that file does not contain. They are kept
+   here - custom.css is loaded after styles.css - so no rebuild is needed and the
+   existing pages are untouched.
+--------------------------------------------------------------------------- */
+
+/* Alpine.js keeps elements with x-cloak hidden until it boots. */
+[x-cloak] {
+    display: none !important;
+}
+
+.-top-2 {
+    top: -0.5rem;
+}
+
+.-right-2 {
+    right: -0.5rem;
+}
+
+.h-5 {
+    height: 1.25rem;
+}
+
+.w-5 {
+    width: 1.25rem;
+}
+
+.w-56 {
+    width: 14rem;
+}
+
+.max-w-\[140px\] {
+    max-width: 140px;
+}
+
+.min-w-\[180px\] {
+    min-width: 180px;
+}
+
+.max-w-2xl {
+    max-width: 42rem;
+}
+
+.max-w-3xl {
+    max-width: 48rem;
+}
+
+.truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.divide-y > :not([hidden]) ~ :not([hidden]) {
+    border-top: 1px solid #e5e7eb;
+}
+
+.gap-3 {
+    gap: 0.75rem;
+}
+
+.p-5 {
+    padding: 1.25rem;
+}
+
+.p-8 {
+    padding: 2rem;
+}
+
+.mt-3 {
+    margin-top: 0.75rem;
+}
+
+.pt-4 {
+    padding-top: 1rem;
+}
+
+.border-gray-100 {
+    border-color: #f3f4f6;
+}
+
+.text-gray-500 {
+    color: #6b7280;
+}
+
+.text-gray-600 {
+    color: #4b5563;
+}
+
+.text-gray-800 {
+    color: #1f2937;
+}
+
+.bg-red-600 {
+    background-color: #dc2626;
+}
+
+.bg-green-100 {
+    background-color: #dcfce7;
+}
+
+.text-green-700 {
+    color: #15803d;
+}
+
+.bg-yellow-100 {
+    background-color: #fef9c3;
+}
+
+.text-yellow-700 {
+    color: #a16207;
+}
+
+.text-\[11px\] {
+    font-size: 11px;
+    line-height: 1;
+}
+
+.font-mono {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+}
+
+.tracking-wide {
+    letter-spacing: 0.025em;
+}
+
+/* Same reason as above: alert boxes, stock badges and cart/checkout layout used
+   by the shop, cart, checkout and account pages. */
+.left-2 {
+    left: 0.5rem;
+}
+
+.top-2 {
+    top: 0.5rem;
+}
+
+.bg-gray-900 {
+    background-color: #111827;
+}
+
+.border-gray-400 {
+    border-color: #9ca3af;
+}
+
+.text-gray-400 {
+    color: #9ca3af;
+}
+
+.bg-red-50 {
+    background-color: #fef2f2;
+}
+
+.border-red-200 {
+    border-color: #fecaca;
+}
+
+.border-red-300 {
+    border-color: #fca5a5;
+}
+
+.text-red-600 {
+    color: #dc2626;
+}
+
+.text-red-700 {
+    color: #b91c1c;
+}
+
+.bg-green-50 {
+    background-color: #f0fdf4;
+}
+
+.border-green-300 {
+    border-color: #86efac;
+}
+
+.list-disc {
+    list-style-type: disc;
+}
+
+.list-inside {
+    list-style-position: inside;
+}
+
+.pl-5 {
+    padding-left: 1.25rem;
+}
+
+.mb-1 {
+    margin-bottom: 0.25rem;
+}
+
+.font-normal {
+    font-weight: 400;
+}
+
+.space-y-1 > * + * {
+    margin-top: 0.25rem;
+}
+
+.space-y-3 > * + * {
+    margin-top: 0.75rem;
+}
+
+.w-20 {
+    width: 5rem;
+}
+
+.h-20 {
+    height: 5rem;
+}
+
+.opacity-80 {
+    opacity: 0.8;
+}
+
+.py-2\.5 {
+    padding-top: 0.625rem;
+    padding-bottom: 0.625rem;
+}
+
+.min-h-\[18rem\] {
+    min-height: 18rem;
+}
+
+.max-h-\[22rem\] {
+    max-height: 22rem;
+}
+
+.overflow-y-auto {
+    overflow-y: auto;
+}
+

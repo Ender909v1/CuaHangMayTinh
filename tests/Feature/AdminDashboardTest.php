@@ -179,6 +179,41 @@ class AdminDashboardTest extends TestCase
         $response->assertSee('Category');
     }
 
+    public function test_product_edit_form_shows_stock_as_read_only(): void
+    {
+        $admin = $this->makeAdmin();
+        $product = $this->makeProduct();
+
+        $response = $this->actingAs($admin)->get('/admin/products/'.$product->id.'/edit');
+
+        $response->assertOk();
+        $response->assertSee('Change in Inventory');
+        $response->assertDontSee('name="stock_qty"', false);
+    }
+
+    public function test_product_edit_form_cannot_change_stock(): void
+    {
+        $admin = $this->makeAdmin();
+        $product = $this->makeProduct();
+
+        $response = $this->actingAs($admin)->put('/admin/products/'.$product->id, [
+            'name' => 'Renamed Laptop',
+            'sku' => $product->sku,
+            'price' => 1099.99,
+            'discount_price' => null,
+            'stock_qty' => 50,
+            'type' => 'laptop',
+            'brand_id' => $product->brand_id,
+            'category_id' => $product->category_id,
+            'is_active' => 1,
+        ]);
+
+        $response->assertRedirect('/admin/products');
+        $this->assertEquals('Renamed Laptop', $product->fresh()->name);
+        $this->assertEquals(3, $product->fresh()->stock_qty);
+        $this->assertDatabaseMissing('product_histories', ['action' => 'stock_updated']);
+    }
+
     public function test_dashboard_uses_selected_tab_from_query_string(): void
     {
         $admin = $this->makeAdmin();
@@ -236,6 +271,100 @@ class AdminDashboardTest extends TestCase
         ]);
 
         $this->actingAs($customer)->get('/admin')->assertForbidden();
+    }
+
+    public function test_admin_can_change_stock_with_a_note_and_the_change_is_recorded(): void
+    {
+        $admin = $this->makeAdmin();
+        $product = $this->makeProduct();
+
+        $response = $this->actingAs($admin)->put("/admin/inventory/{$product->id}/stock", [
+            'stock_qty' => 12,
+            'note' => 'Received 9 extra units from the supplier.',
+        ]);
+
+        $response->assertRedirect();
+        $response->assertSessionHas('success');
+        $this->assertEquals(12, $product->fresh()->stock_qty);
+
+        $this->assertDatabaseHas('product_histories', [
+            'product_id' => $product->id,
+            'user_id' => $admin->id,
+            'action' => 'stock_updated',
+            'old_stock_qty' => 3,
+            'new_stock_qty' => 12,
+            'note' => 'Received 9 extra units from the supplier.',
+        ]);
+
+        // The inventory tab keeps the Edit/History buttons and shows the note in the history panel.
+        $inventoryTab = $this->actingAs($admin)->get('/admin?tab=inventory');
+
+        $inventoryTab->assertOk();
+        $inventoryTab->assertSee('/admin/inventory/'.$product->id.'/stock');
+        $inventoryTab->assertSee('History');
+        $inventoryTab->assertSee('Stock: 3 → 12');
+        $inventoryTab->assertSee('Received 9 extra units from the supplier.');
+    }
+
+    public function test_stock_change_requires_a_note(): void
+    {
+        $admin = $this->makeAdmin();
+        $product = $this->makeProduct();
+
+        $response = $this->actingAs($admin)->put("/admin/inventory/{$product->id}/stock", [
+            'stock_qty' => 9,
+        ]);
+
+        $response->assertSessionHasErrors('note');
+        $this->assertEquals(3, $product->fresh()->stock_qty);
+        $this->assertDatabaseCount('product_histories', 0);
+    }
+
+    public function test_stock_change_rejects_an_invalid_quantity(): void
+    {
+        $admin = $this->makeAdmin();
+        $product = $this->makeProduct();
+
+        $response = $this->actingAs($admin)->put("/admin/inventory/{$product->id}/stock", [
+            'stock_qty' => -2,
+            'note' => 'Typo on the supplier delivery form.',
+        ]);
+
+        $response->assertSessionHasErrors('stock_qty');
+        $this->assertEquals(3, $product->fresh()->stock_qty);
+        $this->assertDatabaseCount('product_histories', 0);
+    }
+
+    public function test_inventory_page_shows_edit_and_history_buttons_for_each_product(): void
+    {
+        $admin = $this->makeAdmin();
+        $product = $this->makeProduct();
+
+        $response = $this->actingAs($admin)->get('/admin/inventory');
+
+        $response->assertOk();
+        $response->assertSee('History');
+        $response->assertSee('Edit product');
+        $response->assertSee('/admin/inventory/'.$product->id.'/stock');
+    }
+
+    public function test_customer_cannot_change_stock(): void
+    {
+        $customer = User::create([
+            'full_name' => 'Minh Customer',
+            'email' => 'minh@example.com',
+            'password_hash' => Hash::make('secret123'),
+            'role' => 'customer',
+        ]);
+        $product = $this->makeProduct();
+
+        $this->actingAs($customer)->put("/admin/inventory/{$product->id}/stock", [
+            'stock_qty' => 99,
+            'note' => 'Trying to sneak stock in.',
+        ])->assertForbidden();
+
+        $this->assertEquals(3, $product->fresh()->stock_qty);
+        $this->assertDatabaseCount('product_histories', 0);
     }
 
     private function makeAdmin(): User

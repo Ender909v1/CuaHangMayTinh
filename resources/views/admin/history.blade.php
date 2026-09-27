@@ -42,6 +42,9 @@
                                     @endif
                                 </p>
                                 <p class="text-sm text-gray-500">{{ $entry->details }}</p>
+                                @if ($entry->note)
+                                    <p class="text-sm text-gray-700">Note: {{ $entry->note }}</p>
+                                @endif
                             </div>
                             <div class="text-right text-sm text-gray-500">
                                 <p>{{ $entry->action }}</p>

@@ -48,7 +48,11 @@
                         </div>
                         <div>
                             <label class="mb-1 block text-sm font-medium">Stock Quantity</label>
-                            <input type="number" name="stock_qty" value="{{ old('stock_qty', $product->stock_qty) }}" class="w-full rounded-lg border px-3 py-2" required>
+                            <div class="flex items-center gap-3">
+                                <span class="rounded-lg border border-gray-200 bg-gray-100 px-3 py-2 font-semibold text-gray-700">{{ $product->stock_qty }}</span>
+                                <a href="{{ route('admin.dashboard', ['tab' => 'inventory']) }}" class="text-sm font-semibold text-red-600 hover:underline">Change in Inventory</a>
+                            </div>
+                            <p class="mt-1 text-xs text-gray-500">Stock is read-only here. Use Edit in the Inventory tab so the change is logged with a note.</p>
                         </div>
                         <div>
                             <label class="mb-1 block text-sm font-medium">Type</label>

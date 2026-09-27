@@ -5,7 +5,7 @@
             <span>PC Part</span>
             <span @click.stop="open = !open"><i :class="open ? 'fas fa-chevron-up text-xs ml-2' : 'fas fa-chevron-down text-xs ml-2'"></i></span>
         </a>
-        <ul class="mobile-dropdown-menu" x-show="open" x-transition class="pl-4 space-y-2">
+        <ul x-cloak class="mobile-dropdown-menu pl-4 space-y-2" x-show="open" x-transition>
             <li><a href="{{ route('shop') }}" class="hover:text-secondary font-bold block py-2">Shop PC Part</a></li>
             <li><a href="{{ route('product') }}" class="hover:text-secondary font-bold block py-2">CPU</a></li>
             <li><a href="{{ route('product') }}" class="hover:text-secondary font-bold block py-2">GPU</a></li>
@@ -17,7 +17,7 @@
             <span>Laptop</span>
             <span @click.stop="open = !open"><i :class="open ? 'fas fa-chevron-up text-xs ml-2' : 'fas fa-chevron-down text-xs ml-2'"></i></span>
         </a>
-        <ul class="mobile-dropdown-menu" x-show="open" x-transition class="space-y-2">
+        <ul x-cloak class="mobile-dropdown-menu space-y-2" x-show="open" x-transition>
             <li><a href="{{ route('shop') }}" class="hover:text-secondary font-bold block py-2">Shop Laptop</a></li>
             <li><a href="{{ route('product') }}" class="hover:text-secondary font-bold block py-2">Gaming</a></li>
             <li><a href="{{ route('product') }}" class="hover:text-secondary font-bold block py-2">Business</a></li>

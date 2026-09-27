@@ -4,12 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductHistory;
+use App\Models\User;
+use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\Rule;
 
 class AdminController extends Controller
 {
@@ -19,8 +24,18 @@ class AdminController extends Controller
         $activeProducts = Product::where('is_active', true)->count();
         $lowStockProducts = Product::where('stock_qty', '<=', 5)->count();
         $history = ProductHistory::with(['user', 'product'])->latest()->take(8)->get();
+        // Dashboard tabs always show the FULL lists (no truncation, no "show all" buttons).
+        $products = Product::with(['brand', 'category'])->latest()->get();
+        $users = User::orderBy('id')->get();
+        $orders = Order::with(['user', 'items.product'])->latest('id')->get();
+        $inventory = Product::with(['brand', 'category', 'histories' => $this->stockHistory()])
+            ->orderBy('stock_qty')
+            ->get();
 
-        return view('admin.dashboard', compact('totalProducts', 'activeProducts', 'lowStockProducts', 'history'));
+        return view('admin.dashboard', compact(
+            'totalProducts', 'activeProducts', 'lowStockProducts', 'history',
+            'products', 'users', 'orders', 'inventory'
+        ));
     }
 
     public function products()
@@ -45,14 +60,17 @@ class AdminController extends Controller
             'sku' => ['required', 'string', 'max:100', 'unique:products,sku'],
             'description' => ['nullable', 'string'],
             'price' => ['required', 'numeric', 'min:0'],
-            'discount_price' => ['nullable', 'numeric', 'min:0'],
+            'discount_price' => ['nullable', 'numeric', 'min:0', 'lt:price'],
             'stock_qty' => ['required', 'integer', 'min:0'],
             'type' => ['required', 'string', 'max:100'],
             'brand_id' => ['required', 'exists:brands,id'],
             'category_id' => ['required', 'exists:categories,id'],
-            'is_active' => ['boolean'],
+            'is_active' => ['sometimes', 'boolean'],
             'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ]);
+
+        $validated['discount_price'] = $this->normalizeDiscountPrice($validated['discount_price'] ?? null);
+        $validated['is_active'] = $request->boolean('is_active');
 
         $product = Product::create($validated);
 
@@ -88,19 +106,22 @@ class AdminController extends Controller
 
     public function update(Request $request, Product $product)
     {
+        /** Stock is intentionally not updated here: it can only be changed from the Inventory tab, where a note is required. */
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'sku' => ['required', 'string', 'max:100', 'unique:products,sku,'.$product->id],
             'description' => ['nullable', 'string'],
             'price' => ['required', 'numeric', 'min:0'],
-            'discount_price' => ['nullable', 'numeric', 'min:0'],
-            'stock_qty' => ['required', 'integer', 'min:0'],
+            'discount_price' => ['nullable', 'numeric', 'min:0', 'lt:price'],
             'type' => ['required', 'string', 'max:100'],
             'brand_id' => ['nullable', 'exists:brands,id'],
             'category_id' => ['nullable', 'exists:categories,id'],
-            'is_active' => ['boolean'],
+            'is_active' => ['sometimes', 'boolean'],
             'image' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
         ]);
+
+        $validated['discount_price'] = $this->normalizeDiscountPrice($validated['discount_price'] ?? null);
+        $validated['is_active'] = $request->boolean('is_active');
 
         $product->update($validated);
 
@@ -193,6 +214,147 @@ class AdminController extends Controller
         return view('admin.history', compact('history'));
     }
 
+    public function orders()
+    {
+        $orders = Order::with(['user', 'items.product'])->latest('id')->paginate(15);
+
+        return view('admin.orders.index', compact('orders'));
+    }
+
+    public function showOrder(Order $order)
+    {
+        $order->load(['user', 'items.product']);
+
+        return view('admin.orders.show', compact('order'));
+    }
+
+    public function updateOrderStatus(Request $request, Order $order)
+    {
+        $validated = $request->validate([
+            'status' => ['required', Rule::in(Order::STATUSES)],
+        ]);
+
+        // Touch updated_at so customers get the "!" alert on their next visit.
+        // +1 second: DB datetimes have 1s precision, so without this an update
+        // in the same second as the customer's last view would be invisible.
+        $order->status = $validated['status'];
+        $order->updated_at = now()->addSecond();
+        $order->save();
+
+        return back()->with('success', "Order {$order->bill_code} marked as {$order->status}.");
+    }
+
+    public function users()
+    {
+        $users = User::orderBy('id')->paginate(20);
+
+        return view('admin.users.index', compact('users'));
+    }
+
+    public function editUser(User $user)
+    {
+        return view('admin.users.edit', compact('user'));
+    }
+
+    public function updateUser(Request $request, User $user)
+    {
+        if ($user->isAdmin()) {
+            return redirect()->route('admin.users.index')->withErrors(['user' => 'Admin accounts cannot be edited.']);
+        }
+
+        $validated = $request->validate([
+            'full_name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
+            'phone' => ['nullable', 'string', 'max:50'],
+            'address' => ['nullable', 'string', 'max:255'],
+            'role' => ['required', Rule::in(['customer', 'staff', 'admin'])],
+            'is_active' => ['sometimes', 'boolean'],
+            'password' => ['nullable', 'string', 'min:6', 'confirmed'],
+        ]);
+
+        $user->full_name = $validated['full_name'];
+        $user->email = $validated['email'];
+        $user->phone = $validated['phone'] ?? null;
+        $user->address = $validated['address'] ?? null;
+        $user->role = $validated['role'];
+        $user->is_active = $request->boolean('is_active');
+
+        if (! empty($validated['password'])) {
+            $user->password_hash = Hash::make($validated['password']);
+        }
+
+        $user->save();
+
+        return redirect()->route('admin.users.index')->with('success', 'User updated successfully.');
+    }
+
+    public function destroyUser(User $user)
+    {
+        if ($user->isAdmin()) {
+            return redirect()->route('admin.users.index')->withErrors(['user' => 'Admin accounts cannot be deleted.']);
+        }
+
+        if (Auth::id() === $user->id) {
+            return redirect()->route('admin.users.index')->withErrors(['user' => 'You cannot delete your own account.']);
+        }
+
+        $user->delete();
+
+        return redirect()->route('admin.users.index')->with('success', 'User deleted successfully.');
+    }
+
+    public function inventory()
+    {
+        $inventory = Product::with(['brand', 'category', 'histories' => $this->stockHistory()])
+            ->orderBy('stock_qty')
+            ->paginate(15);
+
+        return view('admin.inventory.index', compact('inventory'));
+    }
+
+    /**
+     * Inventory tab: change a product's stock number.
+     * A note is mandatory so every stock change is traceable in the product history.
+     */
+    public function updateStock(Request $request, Product $product)
+    {
+        $validated = $request->validate([
+            'stock_qty' => ['required', 'integer', 'min:0', 'max:1000000'],
+            'note' => ['required', 'string', 'min:3', 'max:1000'],
+        ], [
+            'note.required' => 'A note is required: explain why the stock number changed.',
+            'note.min' => 'The note must be at least 3 characters so the change stays traceable.',
+            'stock_qty.required' => 'Enter the new stock number.',
+            'stock_qty.integer' => 'The stock number must be a whole number.',
+            'stock_qty.min' => 'The stock number cannot be negative.',
+        ]);
+
+        $oldStock = (int) $product->stock_qty;
+        $newStock = (int) $validated['stock_qty'];
+
+        $product->update(['stock_qty' => $newStock]);
+
+        ProductHistory::create([
+            'product_id' => $product->id,
+            'user_id' => Auth::id(),
+            'action' => 'stock_updated',
+            'old_stock_qty' => $oldStock,
+            'new_stock_qty' => $newStock,
+            'details' => "Admin changed stock for {$product->name}: {$oldStock} to {$newStock}",
+            'note' => $validated['note'],
+        ]);
+
+        return back()->with('success', "Stock for {$product->name} updated: {$oldStock} → {$newStock}.");
+    }
+
+    /**
+     * Eager-load constraint for a product's history: newest first, with the admin who changed it.
+     */
+    private function stockHistory(): Closure
+    {
+        return fn ($query) => $query->with('user')->latest('id');
+    }
+
     private function storeProductImage(Product $product, UploadedFile $image): void
     {
         $filename = $product->sku.'-'.time().'.'.$image->getClientOriginalExtension();
@@ -202,5 +364,16 @@ class AdminController extends Controller
             'image_url' => 'storage/'.$path,
             'is_primary' => true,
         ]);
+    }
+
+    private function normalizeDiscountPrice(mixed $discountPrice): ?float
+    {
+        if ($discountPrice === null || $discountPrice === '') {
+            return null;
+        }
+
+        $normalized = (float) $discountPrice;
+
+        return $normalized <= 0 ? null : $normalized;
     }
 }

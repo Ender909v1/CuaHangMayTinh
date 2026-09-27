@@ -78,11 +78,11 @@
                             <div class="border-y border-gray-200 py-5">
                                 <div class="flex items-center gap-3">
                                     <p class="text-3xl font-bold text-red-600">
-                                        ${{ number_format((float) $product->price, 2) }}
+                                        ${{ number_format($product->effectivePrice(), 2) }}
                                     </p>
-                                    @if ($product->discount_price && $product->discount_price < $product->price)
+                                    @if ($product->hasDiscount())
                                         <span class="text-lg text-gray-400 line-through">
-                                            ${{ number_format((float) $product->discount_price, 2) }}
+                                            ${{ number_format((float) $product->originalPrice(), 2) }}
                                         </span>
                                     @endif
                                 </div>

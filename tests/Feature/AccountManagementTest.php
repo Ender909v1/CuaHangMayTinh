@@ -2,6 +2,9 @@
 
 namespace Tests\Feature;
 
+use App\Models\Brand;
+use App\Models\Category;
+use App\Models\Product;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
@@ -171,22 +174,48 @@ class AccountManagementTest extends TestCase
 
     public function test_guest_can_render_all_public_pages(): void
     {
-        foreach (['/', '/login', '/register', '/shop', '/product', '/cart', '/checkout', '/404'] as $url) {
+        foreach (['/', '/login', '/register', '/shop', '/cart', '/checkout', '/404'] as $url) {
             $this->get($url)->assertOk();
         }
+
+        // /product needs a real product id (route is /product/{product?} with fallback to first active).
+        $product = $this->makeProductForPageTest();
+        $this->get('/product')->assertOk();
+        $this->get('/product/'.$product->id)->assertOk();
     }
 
     public function test_user_can_render_all_public_pages_while_logged_in(): void
     {
         $user = $this->makeUser();
+        $product = $this->makeProductForPageTest();
 
-        foreach (['/', '/shop', '/product', '/cart', '/checkout', '/404', '/account'] as $url) {
+        foreach (['/', '/shop', '/product', '/product/'.$product->id, '/cart', '/checkout', '/404', '/account', '/my-orders'] as $url) {
             $response = $this->actingAs($user)->get($url);
 
             $response->assertOk();
             // Login/Register buttons must be gone from the header on every page.
             $response->assertDontSee('>Register</a>', false);
+            // The header account dropdown is an Alpine component, so every page
+            // rendering the header must load Alpine.js (or it stays stuck open).
+            $response->assertSee('alpinejs', false);
         }
+    }
+
+    private function makeProductForPageTest(): Product
+    {
+        $brand = Brand::create(['name' => 'PageTestBrand']);
+        $category = Category::create(['name' => 'PageTestCategory']);
+
+        return Product::create([
+            'name' => 'Page Test Laptop',
+            'sku' => 'PAGE-'.uniqid(),
+            'price' => 999.99,
+            'stock_qty' => 5,
+            'type' => 'laptop',
+            'brand_id' => $brand->id,
+            'category_id' => $category->id,
+            'is_active' => true,
+        ]);
     }
 
     private function makeUser(string $email = 'minh@example.com'): User

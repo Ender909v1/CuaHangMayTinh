@@ -60,8 +60,9 @@
                         </div>
 
                         <div>
-                            <label class="mb-1 block text-sm font-medium">Stock Quantity</label>
+                            <label class="mb-1 block text-sm font-medium">Initial Stock Quantity</label>
                             <input type="number" name="stock_qty" value="{{ old('stock_qty', 0) }}" class="w-full rounded-lg border px-3 py-2" required>
+                            <p class="mt-1 text-xs text-gray-500">Starting stock only. Later changes are made in the Inventory tab with a note.</p>
                         </div>
 
                         <div>

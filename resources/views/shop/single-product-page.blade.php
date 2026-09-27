@@ -42,35 +42,23 @@
         <div class="container mx-auto px-4">
             <div class="py-6">
                 <div class="flex flex-col lg:flex-row gap-6">
-                    <div class="w-full lg:w-3/5">
+                    <div class="w-full lg:w-1/2">
                         <div class="grid gap-4">
-                            <div class="flex flex-col gap-4 lg:flex-row">
-                                <div id="zoomBox"
-                                    class="relative min-h-80 aspect-[4/3] w-full overflow-hidden rounded-lg border border-gray-line bg-white lg:cursor-crosshair lg:w-1/2">
+                            <div id="main-image-container">
                                 @php
-                                    $primaryImage = $product->images->first()?->resolvedUrl() ?? asset('tailstore4-main/logo/logo.jpg');
+                                    $primaryImage = $product->images->first()?->image_url ?? asset('tailstore4-main/logo/logo.jpg');
                                 @endphp
-                                    <img id="srcImg"
-                                        class="h-full w-full max-w-full rounded-lg object-contain object-center"
-                                        src="{{ $primaryImage }}"
-                                        alt="{{ $product->name }}" />
-                                    <div id="lens"
-                                        class="product-zoom-lens pointer-events-none absolute border-2 border-primary bg-primary/10"
-                                        style="width: 8rem; height: 8rem;">
-                                    </div>
-                                </div>
-                                <div id="result"
-                                    class="product-zoom-result min-h-80 aspect-[4/3] w-full shrink-0 rounded-lg border border-gray-line bg-no-repeat bg-white opacity-0 transition-opacity lg:w-1/2"
-                                    aria-label="Zoomed product image">
-                                    <span class="sr-only">Move pointer over product image to view zoom</span>
-                                </div>
+                                <img id="main-image"
+                                    class="h-auto w-full max-w-full rounded-lg object-cover object-center md:h-[480px]"
+                                    src="{{ $primaryImage }}"
+                                    alt="{{ $product->name }}" />
                             </div>
                             <div class="grid grid-cols-5 gap-4">
                                 @foreach ($product->images->take(5) as $image)
                                     <div>
                                         <img onclick="changeImage(this)"
-                                            data-full="{{ $image->resolvedUrl() }}"
-                                            src="{{ $image->resolvedUrl() }}"
+                                            data-full="{{ $image->image_url }}"
+                                            src="{{ $image->image_url }}"
                                             class="object-cover object-center max-h-30 max-w-full rounded-lg cursor-pointer"
                                             alt="{{ $product->name }}" />
                                     </div>
@@ -79,7 +67,7 @@
                         </div>
                     </div>
 
-                    <div class="w-full lg:w-2/5 flex flex-col justify-between">
+                    <div class="w-full lg:w-1/2 flex flex-col justify-between">
                         <div class="pb-8 border-b border-gray-line">
                             <h1 class="text-3xl font-bold mb-4">{{ $product->name }}</h1>
                             <div class="flex items-center mb-8">
@@ -90,11 +78,11 @@
                             <div class="mb-4 pb-4 border-b border-gray-line">
                                 <p class="mb-2">Category:<strong><a href="{{ route('shop') }}" class="hover:text-primary"> {{ $product->category->name ?? 'Product' }}</a></strong></p>
                                 <p class="mb-2">Product code:<strong> {{ $product->sku }}</strong></p>
-                                <p class="mb-2">Availability:<strong> {{ $product->stock_qty > 0 ? 'In Stock' : 'Out of Stock' }}</strong></p>
+                                <p class="mb-2">Availability:<strong> {{ $product->stock_qty > 0 ? 'In Stock ('.$product->stock_qty.' left)' : 'Out of Stock' }}</strong></p>
                             </div>
                             @php
-                                $displayPrice = $product->discount_price ?? $product->price;
-                                $oldPrice = $product->discount_price ? $product->price : null;
+                                $displayPrice = $product->effectivePrice();
+                                $oldPrice = $product->originalPrice();
                             @endphp
                             <div class="text-2xl font-semibold mb-8">${{ number_format((float) $displayPrice, 2) }}</div>
                             @if ($oldPrice)
@@ -109,7 +97,11 @@
                                 <button id="increase"
                                     class="bg-primary hover:bg-transparent border border-transparent hover:border-primary text-white hover:text-primary font-semibold  w-10 h-10 rounded-full focus:outline-none">+</button>
                             </div>
-                            <button class="bg-primary border border-transparent hover:bg-transparent hover:border-primary text-white hover:text-primary font-semibold py-2 px-4 rounded-full">Add to Cart</button>
+                            @if ($product->stock_qty <= 0)
+                                <div class="mb-6 rounded-lg border border-gray-300 bg-gray-100 p-3 text-sm font-semibold text-gray-600">Out of stock — details only, purchase disabled.</div>
+                            @else
+                                <button class="bg-primary border border-transparent hover:bg-transparent hover:border-primary text-white hover:text-primary font-semibold py-2 px-4 rounded-full" data-add-to-cart data-product-id="{{ $product->id }}">Add to Cart</button>
+                            @endif
                         </div>
 
                         <div class="flex space-x-4 my-6">
@@ -567,3 +559,5 @@
 </body>
 
 </html>
+
+

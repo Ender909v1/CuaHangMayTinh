@@ -354,15 +354,46 @@ document.addEventListener('DOMContentLoaded', function () {
       const image = productCard?.querySelector('img')?.getAttribute('src');
       const price = Number.parseFloat(priceText.replace(/[^\d.]/g, ''));
       if (!name || !image || !Number.isFinite(price)) return;
+      const productLink = productCard?.querySelector('a[href]')?.getAttribute('href') || '';
+      const idMatch = productLink.match(/\/product\/(\d+)/);
+      const fallbackId = idMatch ? Number.parseInt(idMatch[1], 10) : 0;
+      const cardProductId = Number.parseInt(productCard?.dataset?.productId || '', 10) || fallbackId;
       event.preventDefault();
       const cart = readCart();
       const id = `${name.toLowerCase()}|${image}`;
       const existing = cart.find(item => item.id === id);
-      if (existing) existing.quantity += 1;
-      else cart.push({ id, name, image, price, quantity: 1 });
+      if (existing) {
+        existing.quantity += 1;
+        if (!existing.product_id && cardProductId) existing.product_id = cardProductId;
+      } else cart.push({ id, product_id: cardProductId, name, image, price, quantity: 1 });
       saveCart(cart);
       addButton.textContent = 'Added to Cart';
       window.setTimeout(() => { addButton.textContent = 'Add to Cart'; }, 1200);
+      return;
+    }
+
+    // Single product detail page: out-of-stock products have no Add button,
+    // but this guards any detail-page button with stock info attached.
+    const detailAddButton = event.target.closest('[data-add-to-cart]');
+    if (detailAddButton) {
+      const container = detailAddButton.closest('#product-info') || document;
+      const name = container.querySelector('h1')?.textContent.trim();
+      const priceText = container.querySelector('.text-2xl.font-semibold')?.textContent || '';
+      const image = container.querySelector('#main-image, #srcImg')?.getAttribute('src');
+      const price = Number.parseFloat(priceText.replace(/[^\d.]/g, ''));
+      const productId = Number.parseInt(detailAddButton.dataset.productId || '', 10) || 0;
+      if (!name || !image || !Number.isFinite(price) || !productId) return;
+      event.preventDefault();
+      const cart = readCart();
+      const id = `${name.toLowerCase()}|${image}`;
+      const existing = cart.find(item => item.id === id);
+      if (existing) {
+        existing.quantity += 1;
+        if (!existing.product_id) existing.product_id = productId;
+      } else cart.push({ id, product_id: productId, name, image, price, quantity: 1 });
+      saveCart(cart);
+      detailAddButton.textContent = 'Added to Cart';
+      window.setTimeout(() => { detailAddButton.textContent = 'Add to Cart'; }, 1200);
       return;
     }
 

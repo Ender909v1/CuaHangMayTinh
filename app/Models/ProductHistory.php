@@ -15,11 +15,16 @@ class ProductHistory extends Model
         'product_id',
         'user_id',
         'action',
+        'old_stock_qty',
+        'new_stock_qty',
         'details',
+        'note',
         'created_at',
     ];
 
     protected $casts = [
+        'old_stock_qty' => 'integer',
+        'new_stock_qty' => 'integer',
         'created_at' => 'datetime',
     ];
 

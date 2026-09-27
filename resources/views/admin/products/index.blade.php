@@ -54,7 +54,7 @@
                                 <tr class="border-b">
                                     <td class="px-4 py-3 font-medium">{{ $product->name }}</td>
                                     <td class="px-4 py-3">{{ $product->sku }}</td>
-                                    <td class="px-4 py-3">${{ number_format($product->price, 2) }}</td>
+                                    <td class="px-4 py-3">${{ number_format($product->effectivePrice(), 2) }}@if ($product->hasDiscount()) <span class="text-gray-400 line-through">${{ number_format((float) $product->originalPrice(), 2) }}</span>@endif</td>
                                     <td class="px-4 py-3">{{ $product->stock_qty }}</td>
                                     <td class="px-4 py-3">
                                         <span class="rounded-full {{ $product->is_active ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-700' }} px-2 py-1 text-xs font-semibold">

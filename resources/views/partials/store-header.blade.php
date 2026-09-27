@@ -17,6 +17,12 @@
 
         <div class="hidden lg:flex items-center space-x-4 relative">
             @include('partials.header-auth')
+            @auth
+                {{-- Purchase history link. No "!" alert badge: updates are shown on the My Orders page. --}}
+                <a href="{{ route('my-orders') }}" class="relative text-white hover:text-secondary" title="My Orders">
+                    <i class="fas fa-receipt text-xl"></i>
+                </a>
+            @endauth
             <div class="relative group cart-wrapper">
                 <a href="{{ route('cart') }}" class="relative">
                     <img src="{{ asset('tailstore4-main/assets/images/cart-shopping.svg') }}" alt="Cart" class="h-6 w-6 group-hover:scale-120">
@@ -40,7 +46,13 @@
 
 <nav id="mobile-menu-placeholder" class="mobile-menu hidden flex flex-col items-center space-y-8 lg:hidden">
     @include('partials.mobile-navigation-links')
-    <div class="flex flex-col mt-6 space-y-2 items-center">
+    <div class="flex flex-col space-y-2 items-center">
+        @auth
+            <a href="{{ route('my-orders') }}"
+                class="bg-primary hover:bg-transparent text-white hover:text-primary border border-primary font-semibold px-4 py-2 rounded-full flex items-center justify-center min-w-[180px]">
+                <i class="fas fa-receipt mr-2"></i>My Orders
+            </a>
+        @endauth
         @include('partials.mobile-auth', ['showCartLink' => true])
     </div>
 </nav>

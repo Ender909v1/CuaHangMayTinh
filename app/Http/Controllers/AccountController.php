@@ -12,8 +12,29 @@ class AccountController extends Controller
     public function show()
     {
         $user = Auth::user();
+        $unseenCount = $user->orders()->where(function ($query) {
+            $query->whereNull('user_seen_at')
+                ->orWhereColumn('updated_at', '>', 'user_seen_at');
+        })->count();
 
-        return view('account.show', compact('user'));
+        return view('account.show', compact('user', 'unseenCount'));
+    }
+
+    /**
+     * Purchase history ("My Orders"): what the user bought + delivered or not.
+     * Visiting this page marks everything as seen, clearing the "!" badge.
+     */
+    public function orders()
+    {
+        $user = Auth::user();
+        $orders = $user->orders()->with(['items.product'])->latest('id')->get();
+
+        $user->orders()->where(function ($query) {
+            $query->whereNull('user_seen_at')
+                ->orWhereColumn('updated_at', '>', 'user_seen_at');
+        })->update(['user_seen_at' => now()]);
+
+        return view('account.orders', compact('orders'));
     }
 
     public function update(Request $request)

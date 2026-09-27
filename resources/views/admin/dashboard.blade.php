@@ -40,7 +40,23 @@
 
             <!-- Tab Content -->
             <div>
-                <!-- Dashboard Tab -->
+                @if ($errors->any())
+                <div class="mb-6 rounded border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                    <ul class="list-disc pl-5">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+            @if (session('success'))
+                <div class="mb-6 rounded border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            <!-- Dashboard Tab -->
                 <div x-show="activeTab === 'dashboard'">
                     <div class="grid gap-4 md:grid-cols-3">
                         <div class="rounded-xl bg-white p-6 shadow">
@@ -78,6 +94,9 @@
                                                 @endif
                                             </p>
                                             <p class="text-sm text-gray-500">{{ $entry->details }}</p>
+                                            @if ($entry->note)
+                                                <p class="text-sm text-gray-700">Note: {{ $entry->note }}</p>
+                                            @endif
                                         </div>
                                         <div class="text-right text-sm text-gray-500">
                                             <p>{{ $entry->action }}</p>
@@ -92,63 +111,17 @@
 
                 <!-- Products Tab -->
                 <div x-show="activeTab === 'products'" class="rounded-xl bg-white p-6 shadow">
-                    <div class="mb-6 flex items-center justify-between">
-                        <h2 class="text-xl font-bold">Products Management</h2>
-                        <a href="{{ route('admin.products.create') }}" class="rounded-full bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-500">Add Product</a>
-                    </div>
-                    <p class="text-gray-500">Manage your products here. Add, edit, or remove products from your store.</p>
-
-                    @php
-                        $recentProducts = \App\Models\Product::with(['brand', 'category'])->latest()->take(6)->get();
-                    @endphp
-
-                    @if ($recentProducts->isEmpty())
-                        <p class="mt-6 text-sm text-gray-500">No products yet. Add your first product to start selling.</p>
-                    @else
-                        <div class="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                            @foreach ($recentProducts as $product)
-                                <div class="rounded-xl border border-gray-200 p-4">
-                                    <div class="mb-3 flex items-start justify-between gap-3">
-                                        <div>
-                                            <p class="text-lg font-bold text-gray-900">{{ $product->name }}</p>
-                                            <p class="text-sm text-gray-500">{{ $product->sku }}</p>
-                                        </div>
-                                        <span class="rounded-full {{ $product->is_active ? 'bg-green-100 text-green-700' : 'bg-gray-200 text-gray-700' }} px-2 py-1 text-xs font-semibold">
-                                            {{ $product->is_active ? 'Active' : 'Inactive' }}
-                                        </span>
-                                    </div>
-
-                                    <div class="space-y-2 text-sm text-gray-600">
-                                        <p><span class="font-medium">Brand:</span> {{ $product->brand?->name ?? 'N/A' }}</p>
-                                        <p><span class="font-medium">Category:</span> {{ $product->category?->name ?? 'N/A' }}</p>
-                                        <p><span class="font-medium">Price:</span> ${{ number_format((float) $product->price, 2) }}</p>
-                                        <p><span class="font-medium">Stock:</span> {{ $product->stock_qty }}</p>
-                                    </div>
-
-                                    <div class="mt-4 flex gap-2">
-                                        <a href="{{ route('admin.products.show', $product) }}" class="rounded bg-blue-600 px-3 py-2 text-sm font-semibold text-white hover:bg-blue-500">Detail</a>
-                                        <a href="{{ route('admin.products.edit', $product) }}" class="rounded bg-yellow-500 px-3 py-2 text-sm font-semibold text-white hover:bg-yellow-400">Edit</a>
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div>
-                    @endif
+                    @include('admin.partials.products-tab')
                 </div>
 
                 <!-- Orders Tab -->
                 <div x-show="activeTab === 'orders'" class="rounded-xl bg-white p-6 shadow">
-                    <div class="mb-6">
-                        <h2 class="text-xl font-bold">Orders Management</h2>
-                    </div>
-                    <p class="text-gray-500">View and manage customer orders. Track order status, process refunds, and handle shipping.</p>
+                    @include('admin.partials.orders-tab')
                 </div>
 
                 <!-- Users Tab -->
                 <div x-show="activeTab === 'users'" class="rounded-xl bg-white p-6 shadow">
-                    <div class="mb-6">
-                        <h2 class="text-xl font-bold">Users Management</h2>
-                    </div>
-                    <p class="text-gray-500">Manage user accounts. View user details, manage permissions, and handle account issues.</p>
+                    @include('admin.partials.users-tab')
                 </div>
 
                 <!-- Categories Tab -->
@@ -196,10 +169,7 @@
 
                 <!-- Inventory Tab -->
                 <div x-show="activeTab === 'inventory'" class="rounded-xl bg-white p-6 shadow">
-                    <div class="mb-6">
-                        <h2 class="text-xl font-bold">Inventory Management</h2>
-                    </div>
-                    <p class="text-gray-500">Track stock levels, set low stock alerts, and manage inventory across all products.</p>
+                    @include('admin.partials.inventory-tab')
                 </div>
 
                 <!-- Reviews Tab -->

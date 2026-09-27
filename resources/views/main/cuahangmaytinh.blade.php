@@ -125,27 +125,7 @@
             <h2 class="text-2xl font-bold mb-8">Popular products</h2>
             <div class="flex flex-wrap -mx-4">
                 @foreach ($products->take(4) as $product)
-                    @php
-                        $imageUrl = $product->images->first()?->resolvedUrl() ?? asset('tailstore4-main/logo/logo.jpg');
-                        $displayPrice = $product->discount_price ?? $product->price;
-                        $oldPrice = $product->discount_price ? $product->price : null;
-                    @endphp
-                    <div class="w-full sm:w-1/2 lg:w-1/4 px-4 mb-8">
-                        <div class="bg-white p-3 rounded-lg shadow-lg">
-                            <img src="{{ $imageUrl }}" alt="{{ $product->name }}"
-                                class="w-full object-cover mb-4 rounded-lg cursor-pointer"
-                                @click="showModal = true; modalTitle = '{{ addslashes($product->name) }}'; modalCategory = '{{ addslashes($product->category->name ?? 'Product') }}'; modalPrice = '${{ number_format((float) $displayPrice, 2) }}'; modalOldPrice = '{{ $oldPrice ? '$'.number_format((float) $oldPrice, 2) : '' }}'; modalImg = '{{ $imageUrl }}'">
-                            <a href="{{ route('product', $product) }}" class="text-lg font-semibold mb-2 block">{{ $product->name }}</a>
-                            <p class="my-2 text-gray-500">{{ $product->category->name ?? 'Product' }}</p>
-                            <div class="flex items-center mb-4">
-                                <span class="text-lg font-bold text-primary">${{ number_format((float) $displayPrice, 2) }}</span>
-                                @if ($oldPrice)
-                                    <span class="text-sm line-through ml-2 text-gray-400">${{ number_format((float) $oldPrice, 2) }}</span>
-                                @endif
-                            </div>
-                            <button class="bg-primary border border-transparent hover:bg-transparent hover:border-primary text-white hover:text-primary font-semibold py-2 px-4 rounded-full w-full">Add to Cart</button>
-                        </div>
-                    </div>
+                    @include('partials.product-card', ['product' => $product])
                 @endforeach
             </div>
         </div>
@@ -156,27 +136,7 @@
             <h2 class="text-2xl font-bold mb-8">Latest products</h2>
             <div class="flex flex-wrap -mx-4">
                 @foreach ($products->slice(4, 4) as $product)
-                    @php
-                        $imageUrl = $product->images->first()?->resolvedUrl() ?? asset('tailstore4-main/logo/logo.jpg');
-                        $displayPrice = $product->discount_price ?? $product->price;
-                        $oldPrice = $product->discount_price ? $product->price : null;
-                    @endphp
-                    <div class="w-full sm:w-1/2 lg:w-1/4 px-4 mb-8">
-                        <div class="bg-white p-3 rounded-lg shadow-lg">
-                            <img src="{{ $imageUrl }}" alt="{{ $product->name }}"
-                                class="w-full object-cover mb-4 rounded-lg cursor-pointer"
-                                @click="showModal = true; modalTitle = '{{ addslashes($product->name) }}'; modalCategory = '{{ addslashes($product->category->name ?? 'Product') }}'; modalPrice = '${{ number_format((float) $displayPrice, 2) }}'; modalOldPrice = '{{ $oldPrice ? '$'.number_format((float) $oldPrice, 2) : '' }}'; modalImg = '{{ $imageUrl }}'">
-                            <a href="{{ route('product', $product) }}" class="text-lg font-semibold mb-2 block">{{ $product->name }}</a>
-                            <p class="my-2 text-gray-500">{{ $product->category->name ?? 'Product' }}</p>
-                            <div class="flex items-center mb-4">
-                                <span class="text-lg font-bold text-primary">${{ number_format((float) $displayPrice, 2) }}</span>
-                                @if ($oldPrice)
-                                    <span class="text-sm line-through ml-2 text-gray-400">${{ number_format((float) $oldPrice, 2) }}</span>
-                                @endif
-                            </div>
-                            <button class="bg-primary border border-transparent hover:bg-transparent hover:border-primary text-white hover:text-primary font-semibold py-2 px-4 rounded-full w-full">Add to Cart</button>
-                        </div>
-                    </div>
+                    @include('partials.product-card', ['product' => $product])
                 @endforeach
             </div>
         </div>

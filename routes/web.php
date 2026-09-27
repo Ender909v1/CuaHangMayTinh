@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\logincontroller;
 use App\Http\Controllers\registercontroller;
 use App\Models\Product;
@@ -54,9 +55,9 @@ Route::get('/cart', function () {
     return view('cart.cart');
 })->name('cart');
 
-Route::get('/checkout', function () {
-    return view('cart.checkout');
-})->name('checkout');
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
+Route::get('/checkout/success/{billCode}', [CheckoutController::class, 'success'])->name('checkout.success');
 
 Route::get('/404', function () {
     return view('error.404');
@@ -72,6 +73,7 @@ Route::post('/logout', [logincontroller::class, 'logout'])->name('logout');
 Route::middleware(['auth'])->group(function () {
     Route::get('/account', [AccountController::class, 'show'])->name('account');
     Route::put('/account', [AccountController::class, 'update'])->name('account.update');
+    Route::get('/my-orders', [AccountController::class, 'orders'])->name('my-orders');
 
     Route::middleware('admin')->group(function () {
         Route::get('/admin', [AdminController::class, 'dashboard'])->name('admin.dashboard');
@@ -91,6 +93,18 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/admin/categories/{category}', [AdminController::class, 'destroyCategory'])->name('admin.categories.destroy');
 
         Route::get('/admin/history', [AdminController::class, 'history'])->name('admin.history');
+
+        Route::get('/admin/orders', [AdminController::class, 'orders'])->name('admin.orders.index');
+        Route::get('/admin/orders/{order}', [AdminController::class, 'showOrder'])->name('admin.orders.show');
+        Route::put('/admin/orders/{order}/status', [AdminController::class, 'updateOrderStatus'])->name('admin.orders.status');
+
+        Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users.index');
+        Route::get('/admin/users/{user}/edit', [AdminController::class, 'editUser'])->name('admin.users.edit');
+        Route::put('/admin/users/{user}', [AdminController::class, 'updateUser'])->name('admin.users.update');
+        Route::delete('/admin/users/{user}', [AdminController::class, 'destroyUser'])->name('admin.users.destroy');
+
+        Route::get('/admin/inventory', [AdminController::class, 'inventory'])->name('admin.inventory.index');
+        Route::put('/admin/inventory/{product}/stock', [AdminController::class, 'updateStock'])->name('admin.inventory.update-stock');
     });
 });
 

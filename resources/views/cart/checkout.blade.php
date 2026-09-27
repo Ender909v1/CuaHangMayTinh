@@ -26,64 +26,90 @@
     <section id="checkout-page" class="bg-white py-16">
         <div class="container mx-auto px-4">
             <h1 class="text-2xl font-semibold mb-8">Checkout</h1>
+
+            {{-- Hidden product catalogue so checkout can resolve product ids for older cart lines. --}}
+            <div class="hidden" aria-hidden="true">
+                @foreach (\App\Models\Product::select('id', 'name')->orderBy('id')->get() as $catalogProduct)
+                    <a href="#" data-product-link data-product-id="{{ $catalogProduct->id }}" data-product-name="{{ $catalogProduct->name }}"></a>
+                @endforeach
+            </div>
+
+            @if ($errors->any())
+                <div class="mb-6 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+                    <ul class="list-disc space-y-1 pl-5">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <div class="flex flex-col md:flex-row gap-4">
                 <!-- Billing and Shipping Details -->
                 <div class="md:w-2/3 bg-white rounded-lg shadow-md p-4">
                     <h2 class="text-xl font-semibold mb-4">Billing Details</h2>
-                    <form>
+                    <form id="checkout-form" method="POST" action="{{ route('checkout.store') }}">
+                        @csrf
+                        <input type="hidden" name="items_json" id="checkout-items-json" value="">
                         <div class="mb-4">
                             <label for="billing-name" class="mb-4">Full Name</label>
-                            <input type="text" id="billing-name" class="w-full px-3 mt-2 py-2 border focus:border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-primary" required>
+                            <input type="text" id="billing-name" name="full_name" value="{{ old('full_name', $billingName) }}" class="w-full px-3 mt-2 py-2 border focus:border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-primary" required>
                         </div>
                         <div class="mb-4">
                             <label for="billing-email" class="mb-4">Email</label>
-                            <input type="email" id="billing-email" class="w-full px-3 mt-2 py-2 border focus:border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-primary" required>
+                            <input type="email" id="billing-email" name="email" value="{{ old('email', $billingEmail) }}" class="w-full px-3 mt-2 py-2 border focus:border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-primary" required>
                         </div>
                         <div class="mb-4">
                             <label for="billing-address" class="mb-4">Address</label>
-                            <input type="text" id="billing-address" class="w-full px-3 mt-2 py-2 border focus:border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-primary" required>
+                            <input type="text" id="billing-address" name="address" value="{{ old('address', $billingAddress) }}" class="w-full px-3 mt-2 py-2 border focus:border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-primary" required>
                         </div>
                         <div class="mb-4">
                             <label for="billing-city" class="mb-4">City</label>
-                            <input type="text" id="billing-city" class="w-full px-3 mt-2 py-2 border focus:border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-primary" required>
+                            <input type="text" id="billing-city" name="city" value="{{ old('city') }}" class="w-full px-3 mt-2 py-2 border focus:border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-primary">
                         </div>
                         <div class="mb-4 flex gap-4">
                             <div class="w-1/2">
                                 <label for="billing-state" class="mb-4">State</label>
-                                <input type="text" id="billing-state" class="w-full px-3 mt-2 py-2 border focus:border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-primary" required>
+                                <input type="text" id="billing-state" name="state" value="{{ old('state') }}" class="w-full px-3 mt-2 py-2 border focus:border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-primary">
                             </div>
                             <div class="w-1/2">
                                 <label for="billing-zip" class="mb-4">ZIP Code</label>
-                                <input type="text" id="billing-zip" class="w-full px-3 mt-2 py-2 border focus:border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-primary" required>
+                                <input type="text" id="billing-zip" name="zip" value="{{ old('zip') }}" class="w-full px-3 mt-2 py-2 border focus:border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-primary">
                             </div>
                         </div>
                         <div class="mb-4">
                             <label for="billing-phone" class="mb-4">Phone Number</label>
-                            <input type="tel" id="billing-phone" class="w-full px-3 mt-2 py-2 border focus:border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-primary" required>
+                            <input type="tel" id="billing-phone" name="phone" value="{{ old('phone', $billingPhone) }}" class="w-full px-3 mt-2 py-2 border focus:border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-primary" required>
                         </div>
                         <div class="mb-4">
-                            <label class="mb-4">Ship to a different address?</label>
-                            <input type="checkbox" id="different-address" class="mr-2">
-                            <label for="different-address" class="text-gray-700">Yes</label>
+                            <label for="payment-method" class="mb-4">Payment Method</label>
+                            <select id="payment-method" name="payment_method" class="w-full px-3 mt-2 py-2 border focus:border-transparent rounded-full focus:outline-none focus:ring-2 focus:ring-primary">
+                                <option value="cod">Cash on Delivery</option>
+                                <option value="bank_transfer">Bank Transfer</option>
+                                <option value="credit_card">Credit Card</option>
+                                <option value="e_wallet">E-Wallet</option>
+                            </select>
                         </div>
                     </form>
                 </div>
                 <!-- Order Summary -->
                 <div class="md:w-1/3 bg-white rounded-lg shadow-md p-4">
                     <h2 class="text-xl font-semibold mb-4">Order Summary</h2>
+                    <div id="checkout-items" class="mb-4 space-y-3 text-sm"></div>
                     <div class="flex justify-between mb-4">
                         <p>Subtotal</p>
-                        <p>$59.00</p>
+                        <p id="checkout-subtotal">$0.00</p>
                     </div>
                     <div class="flex justify-between mb-4">
                         <p>Shipping</p>
-                        <p>$10.00</p>
+                        <p>$0.00</p>
                     </div>
                     <div class="flex justify-between mb-4">
                         <p class="font-semibold">Total</p>
-                        <p class="font-semibold">$69.00</p>
+                        <p class="font-semibold" id="checkout-total">$0.00</p>
                     </div>
-                    <button class="bg-primary text-white border border-primary hover:bg-transparent hover:text-primary py-2 px-4 rounded-full w-full">Proceed to Payment</button>
+                    <p id="checkout-error" class="mb-3 hidden text-sm text-red-600">Your cart is empty. Please add some products first.</p>
+                    <button type="submit" form="checkout-form" id="checkout-submit" class="bg-primary text-white border border-primary hover:bg-transparent hover:text-primary py-2 px-4 rounded-full w-full">Proceed to Payment</button>
                 </div>
             </div>
         </div>
@@ -184,6 +210,106 @@
 
     <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <script src="{{ asset('tailstore4-main/assets/js/script.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.getElementById('checkout-form');
+            const itemsInput = document.getElementById('checkout-items-json');
+            const errorBox = document.getElementById('checkout-error');
+            if (!form || !itemsInput) return;
+
+            const readCart = () => {
+                try {
+                    const cart = JSON.parse(localStorage.getItem('computer-store-cart') || '[]');
+                    return Array.isArray(cart) ? cart : [];
+                } catch { return []; }
+            };
+
+            const renderSummary = () => {
+                const cart = readCart();
+                const list = document.getElementById('checkout-items');
+                const money = (n) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(n || 0);
+                const subtotal = cart.reduce((s, i) => s + (Number(i.price) || 0) * (Number(i.quantity) || 0), 0);
+                if (list) {
+                    list.innerHTML = '';
+                    if (!cart.length) {
+                        list.innerHTML = '<p class="text-gray-500">Your cart is empty.</p>';
+                    } else {
+                        cart.forEach((item) => {
+                            const row = document.createElement('div');
+                            row.className = 'flex justify-between gap-2';
+                            const label = document.createElement('span');
+                            label.textContent = `${item.name} x ${item.quantity}`;
+                            const amount = document.createElement('span');
+                            amount.textContent = money((Number(item.price) || 0) * (Number(item.quantity) || 0));
+                            row.appendChild(label);
+                            row.appendChild(amount);
+                            list.appendChild(row);
+                        });
+                    }
+                }
+                const sub = document.getElementById('checkout-subtotal');
+                const tot = document.getElementById('checkout-total');
+                if (sub) sub.textContent = money(subtotal);
+                if (tot) tot.textContent = money(subtotal);
+            };
+
+            renderSummary();
+            window.addEventListener('storage', (e) => { if (e.key === 'computer-store-cart') renderSummary(); });
+
+            // Backfill product_id for cart lines saved before product ids were tracked.
+            const backfillProductIds = () => {
+                const links = Array.from(document.querySelectorAll('[data-product-link]'));
+                if (!links.length) return;
+                const byKey = new Map();
+                links.forEach((link) => {
+                    const id = Number.parseInt(link.dataset.productId || '', 10);
+                    const name = (link.dataset.productName || '').toLowerCase();
+                    if (id && name) byKey.set(name, id);
+                });
+                if (!byKey.size) return;
+                let changed = false;
+                const cart = readCart();
+                cart.forEach((item) => {
+                    if (!Number(item.product_id) && item.name && byKey.has(String(item.name).toLowerCase())) {
+                        item.product_id = byKey.get(String(item.name).toLowerCase());
+                        changed = true;
+                    }
+                });
+                if (changed) {
+                    try { localStorage.setItem('computer-store-cart', JSON.stringify(cart)); } catch (e) {}
+                    renderSummary();
+                }
+            };
+            backfillProductIds();
+
+            form.addEventListener('submit', function (event) {
+                const cart = readCart().filter((i) => Number(i.product_id) > 0 && Number(i.quantity) > 0);
+                if (!cart.length) {
+                    event.preventDefault();
+                    if (errorBox) errorBox.classList.remove('hidden');
+                    return;
+                }
+                if (errorBox) errorBox.classList.add('hidden');
+                // Remove stale inputs then attach one hidden input per item line.
+                form.querySelectorAll('input[data-cart-item]').forEach((el) => el.remove());
+                cart.forEach((item, index) => {
+                    const pid = document.createElement('input');
+                    pid.type = 'hidden';
+                    pid.name = `items[${index}][product_id]`;
+                    pid.setAttribute('data-cart-item', '');
+                    pid.value = item.product_id;
+                    form.appendChild(pid);
+                    const qty = document.createElement('input');
+                    qty.type = 'hidden';
+                    qty.name = `items[${index}][quantity]`;
+                    qty.setAttribute('data-cart-item', '');
+                    qty.value = item.quantity;
+                    form.appendChild(qty);
+                });
+                itemsInput.value = JSON.stringify(cart);
+            });
+        });
+    </script>
 </body>
 
 </html>
