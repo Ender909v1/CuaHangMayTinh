@@ -252,6 +252,22 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
 /* Shopping cart shared by the product pages and cart page. */
+/* A brand new browser session starts with an empty cart, so entering the website for the
+   first time never shows products left in the cart by an earlier visit. */
+(function resetCartForNewBrowserSession() {
+  const storageKey = 'computer-store-cart';
+  const sessionKey = 'computer-store-cart-session';
+
+  try {
+    if (!sessionStorage.getItem(sessionKey)) {
+      localStorage.removeItem(storageKey);
+      sessionStorage.setItem(sessionKey, '1');
+    }
+  } catch {
+    // Private browsing can block storage; the cart then simply starts empty.
+  }
+})();
+
 document.addEventListener('DOMContentLoaded', function () {
   const storageKey = 'computer-store-cart';
   const currency = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND', maximumFractionDigits: 0 });
@@ -334,6 +350,11 @@ document.addEventListener('DOMContentLoaded', function () {
         badge.textContent = count;
         badge.classList.toggle('hidden', count === 0);
       }
+    });
+
+    const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+    document.querySelectorAll('[data-cart-count-text]').forEach(counter => {
+      counter.textContent = totalItems;
     });
   }
 

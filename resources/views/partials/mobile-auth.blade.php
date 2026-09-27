@@ -23,8 +23,10 @@
         <a href="{{ route('login') }}"
             class="bg-primary hover:bg-transparent text-white hover:text-primary border border-primary font-semibold px-4 py-2 rounded-full flex items-center justify-center min-w-[110px]">Login</a>
         @if (!empty($showCartLink))
+            {{-- Item count comes from the real local cart; it starts at 0 so a first visit shows an empty cart. --}}
             <a href="{{ route('cart') }}"
-                class="bg-primary hover:bg-transparent text-white hover:text-primary border border-primary font-semibold px-4 py-2 rounded-full flex items-center justify-center min-w-[110px]">Cart -&nbsp;<span>5</span>&nbsp;items</a>
+                class="bg-primary hover:bg-transparent text-white hover:text-primary border border-primary font-semibold px-4 py-2 rounded-full flex items-center justify-center min-w-[110px]">Cart
+                -&nbsp;<span data-cart-count-text>0</span>&nbsp;items</a>
         @endif
     </div>
 @endauth

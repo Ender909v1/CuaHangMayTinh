@@ -32,9 +32,9 @@
                     <div class="bg-white rounded-lg shadow-md p-6 mb-4">
                         {{-- Small box: fixed height, scrolls when many products are added --}}
                         <div class="max-h-[22rem] overflow-y-auto overflow-x-auto">
-                            {{-- Empty state: centred in the middle of the box --}}
+                            {{-- Empty state: shown until the visitor actually adds something --}}
                             <div
-                                class="empty-cart-state hidden min-h-[18rem] flex-col items-center justify-center text-center">
+                                class="empty-cart-state flex min-h-[18rem] flex-col items-center justify-center text-center">
                                 <img src="{{ asset('tailstore4-main/assets/images/cart-shopping.svg') }}"
                                     alt="Empty cart" class="w-20 h-20 md:w-24 md:h-24 opacity-80">
                                 <h2 class="mt-4 text-xl md:text-2xl font-semibold text-gray-800">Your cart is empty</h2>
@@ -44,7 +44,7 @@
                                     Shopping</a>
                             </div>
 
-                            <table id="cart-table" class="w-full">
+                            <table id="cart-table" class="w-full hidden">
                                 <thead>
                                     <tr>
                                         <th class="text-center md:text-left font-semibold">Product</th>
@@ -57,7 +57,7 @@
                             </table>
                         </div>
 
-                        <div id="cart-actions" class="px-1 flex flex-col lg:flex-row justify-between items-center mt-6">
+                        <div id="cart-actions" class="hidden px-1 flex flex-col lg:flex-row justify-between items-center mt-6">
                             <div class="flex items-center">
                                 <input type="text" placeholder="Coupon code"
                                     class="border border-gray-300 rounded-l-full py-2 px-4 focus:outline-none">

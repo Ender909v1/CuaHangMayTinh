@@ -35,4 +35,26 @@ class CartPageTest extends TestCase
         $response->assertSee('id="cart-table"', false);
         $response->assertSee('id="empty-cart"', false);
     }
+
+    public function test_cart_looks_empty_on_a_first_visit(): void
+    {
+        $response = $this->get('/cart');
+
+        $response->assertOk();
+        // the empty state is painted before any JavaScript runs; the product table and the
+        // action buttons stay hidden until the visitor really adds something
+        $response->assertSee('empty-cart-state flex', false);
+        $response->assertSee('id="cart-table" class="w-full hidden"', false);
+        $response->assertSee('id="cart-actions" class="hidden', false);
+    }
+
+    public function test_mobile_cart_link_starts_at_zero_items(): void
+    {
+        $response = $this->get('/cart');
+
+        $response->assertOk();
+        // the count is filled from the real cart instead of being hardcoded
+        $response->assertSee('<span data-cart-count-text>0</span>', false);
+        $response->assertDontSee('<span>5</span>', false);
+    }
 }
