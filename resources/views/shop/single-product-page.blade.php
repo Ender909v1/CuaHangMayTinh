@@ -1,4 +1,4 @@
-<!doctype html>
+{{-- <!doctype html>
 <html>
 
 <head>
@@ -84,9 +84,9 @@
                                 $displayPrice = $product->effectivePrice();
                                 $oldPrice = $product->originalPrice();
                             @endphp
-                            <div class="text-2xl font-semibold mb-8">${{ number_format((float) $displayPrice, 2) }}</div>
+                            <div class="text-2xl font-semibold mb-8">{{ number_format((float) $displayPrice, 0, ',', '.') }} ₫</div>
                             @if ($oldPrice)
-                                <div class="text-lg text-gray-400 line-through mb-6">${{ number_format((float) $oldPrice, 2) }}</div>
+                                <div class="text-lg text-gray-400 line-through mb-6">{{ number_format((float) $oldPrice, 0, ',', '.') }} ₫</div>
                             @endif
                             <div class="flex items-center mb-8">
                                 <button id="decrease"
@@ -100,7 +100,7 @@
                             @if ($product->stock_qty <= 0)
                                 <div class="mb-6 rounded-lg border border-gray-300 bg-gray-100 p-3 text-sm font-semibold text-gray-600">Out of stock — details only, purchase disabled.</div>
                             @else
-                                <button class="bg-primary border border-transparent hover:bg-transparent hover:border-primary text-white hover:text-primary font-semibold py-2 px-4 rounded-full" data-add-to-cart data-product-id="{{ $product->id }}">Add to Cart</button>
+                                <button class="bg-primary border border-transparent hover:bg-transparent hover:border-primary text-white hover:text-primary font-semibold py-2 px-4 rounded-full" data-add-to-cart data-product-id="{{ $product->id }}" data-product-price="{{ $displayPrice }}" data-product-name="{{ $product->name }}" data-product-image="{{ $primaryImage }}">Add to Cart</button>
                             @endif
                         </div>
 
@@ -410,8 +410,8 @@
                     <a href="{{ route('product') }}" class="text-lg font-semibold mb-2">Gaming Laptop RTX 4060</a>
                     <p class=" my-2">Laptop</p>
                     <div class="flex items-center mb-4">
-                      <span class="text-lg font-bold text-primary">$999.99</span>
-                      <span class="text-sm line-through ml-2">$1199.99</span>
+                      <span class="text-lg font-bold text-primary">999 ₫</span>
+                      <span class="text-sm line-through ml-2">1,199 ₫</span>
                     </div>
                     <button class="bg-primary border border-transparent hover:bg-transparent hover:border-primary text-white hover:text-primary font-semibold py-2 px-4 rounded-full w-full">Add to Cart</button>
                   </div>
@@ -423,7 +423,7 @@
                     <a href="{{ route('product') }}" class="text-lg font-semibold mb-2">NVIDIA RTX 4070 GPU</a>
                     <p class=" my-2">PC Part</p>
                     <div class="flex items-center mb-4">
-                      <span class="text-lg font-bold text-gray-900">$599.99</span>
+                      <span class="text-lg font-bold text-gray-900">599 ₫</span>
                     </div>
                     <button class="bg-primary border border-transparent hover:bg-transparent hover:border-primary text-white hover:text-primary font-semibold py-2 px-4 rounded-full w-full">Add to Cart</button>
                   </div>
@@ -435,8 +435,8 @@
                     <a href="{{ route('product') }}" class="text-lg font-semibold mb-2">Intel i7 13700K CPU</a>
                     <p class="my-2">PC Part</p>
                     <div class="flex items-center mb-4">
-                      <span class="text-lg font-bold text-gray-900">$389.99</span>
-                      <span class="text-sm line-through  ml-2">$429.99</span>
+                      <span class="text-lg font-bold text-gray-900">389 ₫</span>
+                      <span class="text-sm line-through  ml-2">429 ₫</span>
                     </div>
                     <button class="bg-primary border border-transparent hover:bg-transparent hover:border-primary text-white hover:text-primary font-semibold py-2 px-4 rounded-full w-full">Add to Cart</button>
                   </div>
@@ -448,8 +448,8 @@
                     <a href="{{ route('product') }}" class="text-lg font-semibold mb-2">MacBook Pro M3 14-inch</a>
                     <p class="my-2">Laptop</p>
                     <div class="flex items-center mb-4">
-                        <span class="text-lg font-bold text-primary">$1599.00</span>
-                        <span class="text-sm line-through ml-2">$1799.00</span>
+                        <span class="text-lg font-bold text-primary">1,599 ₫</span>
+                        <span class="text-sm line-through ml-2">1,799 ₫</span>
                     </div>
                     <button class="bg-primary border border-transparent hover:bg-transparent hover:border-primary text-white hover:text-primary font-semibold py-2 px-4 rounded-full w-full">Add to Cart</button>
                   </div>
@@ -560,4 +560,536 @@
 
 </html>
 
+ --}}
+<!doctype html>
+<html>
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Favicon -->
+    <link rel="icon" type="image/jpeg" href="{{ asset('tailstore4-main/logo/logo.jpg') }}" />
+    <title>Single product page</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="{{ asset('tailstore4-main/assets/css/styles.css') }}">
+    <link rel="stylesheet" href="{{ asset('tailstore4-main/node_modules/swiper/swiper-bundle.css') }}">
+    <link rel="stylesheet" href="{{ asset('tailstore4-main/assets/css/custom.css') }}">
+</head>
+
+<body>
+    <!-- Header -->
+    @include('partials.store-header')
+
+    <!-- Breadcrumbs -->
+    <section id="breadcrumbs" class="pt-6 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <ol class="list-reset flex">
+                <li><a href="{{ route('cuahangmaytinh') }}" class="font-semibold hover:text-primary">Home</a></li>
+                <li><span class="mx-2">&gt;</span></li>
+                <li><a href="{{ route('shop') }}" class="font-semibold hover:text-primary">Shop</a></li>
+                <li><span class="mx-2">&gt;</span></li>
+                <li><a href="{{ route('shop') }}" class="font-semibold hover:text-primary">{{ $product->category->name ?? 'Product' }}</a></li>
+                <li><span class="mx-2">&gt;</span></li>
+                <li>{{ $product->name }}</li>
+            </ol>
+        </div>
+    </section>
+
+    <!-- Product info -->
+    <section id="product-info">
+        <div class="container mx-auto px-4">
+            <div class="py-6">
+                <div class="flex flex-col lg:flex-row gap-6">
+                    <div class="w-full lg:w-1/2">
+                        <div class="grid gap-4">
+                            <div id="main-image-container">
+                                @php
+                                    $primaryImage = $product->images->first()?->image_url ?? asset('tailstore4-main/logo/logo.jpg');
+                                @endphp
+                                <img id="main-image"
+                                    class="h-auto w-full max-w-full rounded-lg object-cover object-center md:h-[480px]"
+                                    src="{{ $primaryImage }}"
+                                    alt="{{ $product->name }}" />
+                            </div>
+                            <div class="grid grid-cols-5 gap-4">
+                                @foreach ($product->images->take(5) as $image)
+                                    <div>
+                                        <img onclick="changeImage(this)"
+                                            data-full="{{ $image->image_url }}"
+                                            src="{{ $image->image_url }}"
+                                            class="object-cover object-center max-h-30 max-w-full rounded-lg cursor-pointer"
+                                            alt="{{ $product->name }}" />
+                                    </div>
+                                @endforeach
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="w-full lg:w-1/2 flex flex-col justify-between">
+                        <div class="pb-8 border-b border-gray-line">
+                            <h1 class="text-3xl font-bold mb-4">{{ $product->name }}</h1>
+                            <div class="flex items-center mb-8">
+                                <span>★★★★★</span>
+                                <span class="ml-2">(0 Reviews)</span>
+                                <a href="#" class="ml-4 text-primary font-semibold">Write a review</a>
+                            </div>
+                            <div class="mb-4 pb-4 border-b border-gray-line">
+                                <p class="mb-2">Category:<strong><a href="{{ route('shop') }}" class="hover:text-primary"> {{ $product->category->name ?? 'Product' }}</a></strong></p>
+                                <p class="mb-2">Product code:<strong> {{ $product->sku }}</strong></p>
+                                <p class="mb-2">Availability:<strong> {{ $product->stock_qty > 0 ? 'In Stock ('.$product->stock_qty.' left)' : 'Out of Stock' }}</strong></p>
+                            </div>
+                            @php
+                                $displayPrice = $product->effectivePrice();
+                                $oldPrice = $product->originalPrice();
+                            @endphp
+                            <div class="text-2xl font-semibold mb-8">{{ number_format((float) $displayPrice, 0, ',', '.') }} ₫</div>
+                            @if ($oldPrice)
+                                <div class="text-lg text-gray-400 line-through mb-6">{{ number_format((float) $oldPrice, 0, ',', '.') }} ₫</div>
+                            @endif
+                            <div class="flex items-center mb-8">
+                                <button id="decrease"
+                                    class="bg-primary hover:bg-transparent border border-transparent hover:border-primary text-white hover:text-primary font-semibold w-10 h-10 rounded-full flex items-center justify-center focus:outline-none"
+                                    disabled>-</button>
+                                <input id="quantity" type="number" value="1"
+                                    class="w-16 py-2 text-center focus:outline-none" readonly>
+                                <button id="increase"
+                                    class="bg-primary hover:bg-transparent border border-transparent hover:border-primary text-white hover:text-primary font-semibold  w-10 h-10 rounded-full focus:outline-none">+</button>
+                            </div>
+                            @if ($product->stock_qty <= 0)
+                                <div class="mb-6 rounded-lg border border-gray-300 bg-gray-100 p-3 text-sm font-semibold text-gray-600">Out of stock — details only, purchase disabled.</div>
+                            @else
+                                <button class="bg-primary border border-transparent hover:bg-transparent hover:border-primary text-white hover:text-primary font-semibold py-2 px-4 rounded-full" data-add-to-cart data-product-id="{{ $product->id }}" data-product-price="{{ $displayPrice }}" data-product-name="{{ $product->name }}" data-product-image="{{ $primaryImage }}">Add to Cart</button>
+                            @endif
+                        </div>
+
+                        <div class="flex space-x-4 my-6">
+                            <a href="#" class="w-4 h-4 flex items-center justify-center">
+                                <img src="{{ asset('tailstore4-main/assets/images/social_icons/facebook.svg') }}" alt="Facebook"
+                                    class="w-4 h-4 transition-transform transform hover:scale-110">
+                            </a>
+                            <a href="#" class="w-4 h-4 flex items-center justify-center">
+                                <img src="{{ asset('tailstore4-main/assets/images/social_icons/instagram.svg') }}" alt="Instagram"
+                                    class="w-4 h-4 transition-transform transform hover:scale-110">
+                            </a>
+                            <a href="#" class="w-4 h-4 flex items-center justify-center">
+                                <img src="{{ asset('tailstore4-main/assets/images/social_icons/pinterest.svg') }}" alt="Pinterest"
+                                    class="w-4 h-4 transition-transform transform hover:scale-110">
+                            </a>
+                            <a href="#" class="w-4 h-4 flex items-center justify-center">
+                                <img src="{{ asset('tailstore4-main/assets/images/social_icons/twitter.svg') }}" alt="Twitter"
+                                    class="w-4 h-4 transition-transform transform hover:scale-110">
+                            </a>
+                            <a href="#" class="w-4 h-4 flex items-center justify-center">
+                                <img src="{{ asset('tailstore4-main/assets/images/social_icons/viber.svg') }}" alt="Viber"
+                                    class="w-4 h-4 transition-transform transform hover:scale-110">
+                            </a>
+                        </div>
+
+                        <div>
+                            <h3 class="text-lg font-semibold mb-2">Product Description</h3>
+                            <p>{{ $product->description ?: 'High-performance computer hardware designed for work, gaming, and everyday productivity.' }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product tabs description -->
+    <section>
+        <div class="container mx-auto px-4">
+            <div class="py-12">
+                <div class="mt-10">
+                    <div class="flex space-x-4" role="tablist">
+                        <button id="description-tab" role="tab" aria-controls="description-content" aria-selected="true"
+                            class="tab active">Description</button>
+                        <button id="additional-info-tab" role="tab" aria-controls="additional-info-content"
+                            aria-selected="false" class="tab">Additional information</button>
+                        <button id="size-shape-tab" role="tab" aria-controls="size-shape-content" aria-selected="false"
+                            class="tab">Specifications</button>
+                        <button id="reviews-tab" role="tab" aria-controls="reviews-content" aria-selected="false"
+                            class="tab">Reviews (3)</button>
+                    </div>
+                    <div class="mt-8">
+                        <div id="description-content" role="tabpanel" aria-labelledby="description-tab"
+                            class="tab-content">
+                            <div class="flex flex-col lg:flex-row lg:space-x-8">
+                                <div class="w-full lg:w-1/2">
+                                    <h3 class="text-xl font-semibold mb-2">Gaming performance for work, study, and play.</h3>
+                                    <p class="mb-4">This ASUS laptop combines RTX 4060 graphics, a high-refresh display,
+                                        and fast storage for demanding applications and modern games.</p>
+                                </div>
+                                <div class="w-full lg:w-1/4">
+                                    <h3 class="text-xl font-semibold mb-5">Hardware</h3>
+                                    <p class="mb-2 pb-2 border-b border-gray-line">Processor: <span
+                                            class="font-semibold">AMD Ryzen 7 class</span></p>
+                                    <p class="mb-2 pb-2 border-b border-gray-line">Memory: <span
+                                            class="font-semibold">16GB RAM</span></p>
+                                    <p class="mb-2">Storage: <span class="font-semibold">512GB NVMe SSD</span></p>
+                                </div>
+                                <div class="w-full lg:w-1/4">
+                                    <h3 class="text-xl font-semibold mb-5">Display & Design</h3>
+                                    <p class="mb-2 pb-2 border-b border-gray-line">Screen: <span
+                                            class="font-semibold">16-inch QHD, high refresh rate</span></p>
+                                    <p class="mb-2 pb-2 border-b border-gray-line">Keyboard: <span
+                                            class="font-semibold">Backlit keyboard</span></p>
+                                    <p class="mb-2 pb-2 border-b border-gray-line">Display: <span
+                                            class="font-semibold">16-inch QHD</span></p>
+                                    <p class="mb-2">Graphics: <span class="font-semibold">RTX 4060</span></p>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="additional-info-content" role="tabpanel" aria-labelledby="additional-info-tab"
+                            class="tab-content hidden">
+                            <p>Additional information about the product.</p>
+                            <div class="flex flex-col space-y-8">
+                                <div>
+                                    <h3 class="text-lg font-semibold mb-2">Colors</h3>
+                                    <p class="text-base text-gray-700">
+                                        Available configurations:
+                                        <a href="{{ route('product') }}" class="text-primary hover:underline">16GB RAM</a>,
+                                        <a href="{{ route('product') }}" class="text-primary hover:underline">512GB SSD</a>,
+                                        <a href="{{ route('product') }}" class="text-primary hover:underline">RTX 4060</a>.
+                                    </p>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-semibold mb-2">Brand</h3>
+                                    <p class="text-base text-gray-700">
+                                        This laptop is made by
+                                        <a href="{{ route('product') }}" class="text-primary hover:underline">ASUS</a>.
+                                    </p>
+                                </div>
+                                <div>
+                                    <h3 class="text-lg font-semibold mb-2">Material & Care</h3>
+                                    <p class="text-base text-gray-700">
+                                        Chassis: Aluminum alloy
+                                        <br>
+                                        Features: Backlit keyboard, Wi-Fi 6, and high-performance cooling.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="size-shape-content" role="tabpanel" aria-labelledby="size-shape-tab"
+                            class="tab-content hidden">
+                            <div class="overflow-x-auto">
+                                <table class="min-w-full bg-white">
+                                    <thead>
+                                        <tr>
+                                            <th
+                                                class="px-6 py-3 border-b border-gray-line bg-gray-100 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
+                                                Size
+                                            </th>
+                                            <th
+                                                class="px-6 py-3 border-b border-gray-line bg-gray-100 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
+                                                Chest (inches)
+                                            </th>
+                                            <th
+                                                class="px-6 py-3 border-b border-gray-line bg-gray-100 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
+                                                Waist (inches)
+                                            </th>
+                                            <th
+                                                class="px-6 py-3 border-b border-gray-line bg-gray-100 text-left text-xs leading-4 font-medium text-gray-700 uppercase tracking-wider">
+                                                Sleeve Length (inches)
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td
+                                                class="px-6 py-4 whitespace-no-wrap border-b border-gray-line text-sm leading-5 text-gray-700">
+                                                Small
+                                            </td>
+                                            <td
+                                                class="px-6 py-4 whitespace-no-wrap border-b border-gray-line text-sm leading-5 text-gray-700">
+                                                34-36
+                                            </td>
+                                            <td
+                                                class="px-6 py-4 whitespace-no-wrap border-b border-gray-line text-sm leading-5 text-gray-700">
+                                                28-30
+                                            </td>
+                                            <td
+                                                class="px-6 py-4 whitespace-no-wrap border-b border-gray-line text-sm leading-5 text-gray-700">
+                                                32-33
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td
+                                                class="px-6 py-4 whitespace-no-wrap border-b border-gray-line text-sm leading-5 text-gray-700">
+                                                Medium
+                                            </td>
+                                            <td
+                                                class="px-6 py-4 whitespace-no-wrap border-b border-gray-line text-sm leading-5 text-gray-700">
+                                                38-40
+                                            </td>
+                                            <td
+                                                class="px-6 py-4 whitespace-no-wrap border-b border-gray-line text-sm leading-5 text-gray-700">
+                                                32-34
+                                            </td>
+                                            <td
+                                                class="px-6 py-4 whitespace-no-wrap border-b border-gray-line text-sm leading-5 text-gray-700">
+                                                33-34
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td
+                                                class="px-6 py-4 whitespace-no-wrap border-b border-gray-line text-sm leading-5 text-gray-700">
+                                                Large
+                                            </td>
+                                            <td
+                                                class="px-6 py-4 whitespace-no-wrap border-b border-gray-line text-sm leading-5 text-gray-700">
+                                                42-44
+                                            </td>
+                                            <td
+                                                class="px-6 py-4 whitespace-no-wrap border-b border-gray-line text-sm leading-5 text-gray-700">
+                                                36-38
+                                            </td>
+                                            <td
+                                                class="px-6 py-4 whitespace-no-wrap border-b border-gray-line text-sm leading-5 text-gray-700">
+                                                34-35
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td
+                                                class="px-6 py-4 whitespace-no-wrap border-b border-gray-line text-sm leading-5 text-gray-700">
+                                                X-Large
+                                            </td>
+                                            <td
+                                                class="px-6 py-4 whitespace-no-wrap border-b border-gray-line text-sm leading-5 text-gray-700">
+                                                46-48
+                                            </td>
+                                            <td
+                                                class="px-6 py-4 whitespace-no-wrap border-b border-gray-line text-sm leading-5 text-gray-700">
+                                                40-42
+                                            </td>
+                                            <td
+                                                class="px-6 py-4 whitespace-no-wrap border-b border-gray-line text-sm leading-5 text-gray-700">
+                                                35-36
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        </div>
+                        <div id="reviews-content" role="tabpanel" aria-labelledby="reviews-tab"
+                            class="tab-content hidden">
+                            <!-- Reviews List -->
+                            <div class="space-y-6">
+                                <h3 class="text-lg font-semibold mb-4">Customer Reviews</h3>
+                                <div id="reviews-list">
+                                    <!-- Review 1 -->
+                                    <div class="py-4">
+                                        <div class="flex items-center mb-2">
+                                            <span class="text-lg font-semibold text-gray-700">John Doe</span>
+                                            <span class="ml-2 text-primary">â˜…â˜…â˜…â˜…â˜…</span>
+                                        </div>
+                                        <p>Excellent performance and display. Highly recommend this laptop.</p>
+                                    </div>
+                                    <!-- Review 2 -->
+                                    <div class="border-t border-gray-line py-4">
+                                        <div class="flex items-center mb-2">
+                                            <span class="text-lg font-semibold text-gray-700">Jane Smith</span>
+                                            <span class="ml-2 text-primary">â˜…â˜…â˜…â˜…â˜†</span>
+                                        </div>
+                                        <p>Fast graphics and comfortable keyboard. Battery life could be longer.</p>
+                                    </div>
+                                    <!-- Review 3 -->
+                                    <div class="border-t border-gray-line py-4">
+                                        <div class="flex items-center mb-2">
+                                            <span class="text-lg font-semibold text-gray-700">Alice Johnson</span>
+                                            <span class="ml-2 text-primary">â˜…â˜…â˜…â˜…â˜…</span>
+                                        </div>
+                                        <p>Solid build quality and smooth gaming performance. Would buy again.</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Submit Review Form -->
+                            <div class="mt-8">
+                                <h3 class="text-lg font-semibold mb-4">Write a Review</h3>
+                                <form id="review-form" class="space-y-4">
+                                    <div class="space-y-4 md:flex md:space-x-4 md:space-y-0">
+                                        <div class="md:flex-1">
+                                            <label for="review-name"
+                                                class="block text-sm font-medium text-gray-700">Name</label>
+                                            <input type="text" id="review-name" name="review-name"
+                                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm">
+                                        </div>
+                                        <div class="md:flex-1">
+                                            <label for="review-email"
+                                                class="block text-sm font-medium text-gray-700">Email</label>
+                                            <input type="email" id="review-email" name="review-email"
+                                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm">
+                                        </div>
+                                        <div class="md:flex-1">
+                                            <label for="review-rating"
+                                                class="block text-sm font-medium text-gray-700">Rating</label>
+                                            <select id="review-rating" name="review-rating"
+                                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm">
+                                                <option value="5">â˜…â˜…â˜…â˜…â˜…</option>
+                                                <option value="4">â˜…â˜…â˜…â˜…â˜†</option>
+                                                <option value="3">â˜…â˜…â˜…â˜†â˜†</option>
+                                                <option value="2">â˜…â˜…â˜†â˜†â˜†</option>
+                                                <option value="1">â˜…â˜†â˜†â˜†â˜†</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label for="review-text"
+                                            class="block text-sm font-medium text-gray-700">Review</label>
+                                        <textarea id="review-text" name="review-text" rows="4"
+                                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary focus:border-primary sm:text-sm"></textarea>
+                                    </div>
+                                    <div>
+                                        <button type="submit"
+                                            class="bg-primary hover:bg-transparent border border-transparent hover:border-primary text-white hover:text-primary font-semibold py-2 px-4 rounded-full focus:outline-none">Submit
+                                            Review</button>
+                                    </div>
+                                </form>
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Latest-products -->
+    <section id="latest-products" class="py-10">
+        <div class="container mx-auto px-4">
+            <h2 class="text-2xl font-bold mb-8">Latest products</h2>
+            <div class="flex flex-wrap -mx-4">
+                @forelse ($latestProducts ?? [] as $item)
+                    @php
+                        $itemImage = $item->images->first()->image_url ?? asset('tailstore4-main/logo/logo.jpg');
+                        $itemPrice = $item->effectivePrice();
+                        $itemOldPrice = $item->originalPrice();
+                    @endphp
+                    <div class="w-full sm:w-1/2 lg:w-1/4 px-4 mb-8">
+                      <div class="bg-white p-3 rounded-lg shadow-lg">
+                        <img src="{{ $itemImage }}" alt="{{ $item->name }}" class="w-full object-cover mb-4 rounded-lg">
+                        <a href="{{ route('product', $item) }}" class="text-lg font-semibold mb-2">{{ $item->name }}</a>
+                        <p class=" my-2">{{ $item->category->name ?? '' }}</p>
+                        <div class="flex items-center mb-4">
+                          <span class="text-lg font-bold text-primary">{{ number_format((float) $itemPrice, 0, ',', '.') }} ₫</span>
+                          @if ($itemOldPrice)
+                              <span class="text-sm line-through ml-2">{{ number_format((float) $itemOldPrice, 0, ',', '.') }} ₫</span>
+                          @endif
+                        </div>
+                        <button class="bg-primary border border-transparent hover:bg-transparent hover:border-primary text-white hover:text-primary font-semibold py-2 px-4 rounded-full w-full" data-add-to-cart data-product-id="{{ $item->id }}" data-product-price="{{ $itemPrice }}" data-product-name="{{ $item->name }}" data-product-image="{{ $itemImage }}">Add to Cart</button>
+                      </div>
+                    </div>
+                @empty
+                @endforelse
+              </div>
+        </div>
+    </section>
+
+     <!-- Footer -->
+     <footer class="border-t border-gray-line">
+        <!-- Top part -->
+        <div class="container mx-auto px-4 py-10">
+        <div class="flex flex-wrap -mx-4">
+            <!-- Menu 1 -->
+            <div class="w-full sm:w-1/6 px-4 mb-8">
+            <h3 class="text-lg font-semibold mb-4">Shop</h3>
+            <ul>
+                <li><a href="{{ route('shop') }}" class="hover:text-primary">Shop</a></li>
+                <li><a href="{{ route('product') }}" class="hover:text-primary">Laptop</a></li>
+                <li><a href="{{ route('shop') }}" class="hover:text-primary">Gaming Laptop</a></li>
+                <li><a href="{{ route('product') }}" class="hover:text-primary">Business Laptop</a></li>
+                <li><a href="{{ route('product') }}" class="hover:text-primary">Student Laptop</a></li>
+            </ul>
+            </div>
+            <!-- Menu 2 -->
+            <div class="w-full sm:w-1/6 px-4 mb-8">
+            <h3 class="text-lg font-semibold mb-4">Pages</h3>
+            <ul>
+                <li><a href="{{ route('shop') }}" class="hover:text-primary">Shop</a></li>
+                <li><a href="{{ route('product') }}" class="hover:text-primary">Product</a></li>
+                <li><a href="{{ route('checkout') }}" class="hover:text-primary">Checkout</a></li>
+                <li><a href="{{ route('not-found') }}" class="hover:text-primary">404</a></li>
+            </ul>
+            </div>
+            <!-- Menu 3 -->
+            <div class="w-full sm:w-1/6 px-4 mb-8">
+            <h3 class="text-lg font-semibold mb-4">Account</h3>
+            <ul>
+                <li><a href="{{ route('cart') }}" class="hover:text-primary">Cart</a></li>
+                @include('partials.footer-account')
+            </ul>
+            </div>
+            <!-- Social Media -->
+            <div class="w-full sm:w-1/6 px-4 mb-8">
+            <h3 class="text-lg font-semibold mb-4">Follow Us</h3>
+            <ul>
+                <li class="flex items-center mb-2">
+                <img src="{{ asset('tailstore4-main/assets/images/social_icons/facebook.svg') }}" alt="Facebook" class="w-4 h-4 transition-transform transform hover:scale-110 mr-2">
+                <a href="#" class="hover:text-primary">Facebook</a>
+                </li>
+                <li class="flex items-center mb-2">
+                <img src="{{ asset('tailstore4-main/assets/images/social_icons/twitter.svg') }}" alt="Twitter" class="w-4 h-4 transition-transform transform hover:scale-110 mr-2">
+                <a href="#" class="hover:text-primary">Twitter</a>
+                </li>
+                <li class="flex items-center mb-2">
+                <img src="{{ asset('tailstore4-main/assets/images/social_icons/instagram.svg') }}" alt="Instagram" class="w-4 h-4 transition-transform transform hover:scale-110 mr-2">
+                <a href="#" class="hover:text-primary">Instagram</a>
+                </li>
+                <li class="flex items-center mb-2">
+                <img src="{{ asset('tailstore4-main/assets/images/social_icons/pinterest.svg') }}" alt="Instagram" class="w-4 h-4 transition-transform transform hover:scale-110 mr-2">
+                <a href="#" class="hover:text-primary">Pinterest</a>
+                </li>
+                <li class="flex items-center mb-2">
+                <img src="{{ asset('tailstore4-main/assets/images/social_icons/youtube.svg') }}" alt="Instagram" class="w-4 h-4 transition-transform transform hover:scale-110 mr-2">
+                <a href="#" class="hover:text-primary">YouTube</a>
+                </li>
+            </ul>
+            </div>
+            <!-- Contact Information -->
+            <div class="w-full sm:w-2/6 px-4 mb-8">
+            <h3 class="text-lg font-semibold mb-4">Contact Us</h3>
+            <p><img src="{{ asset('tailstore4-main/logo/logo.jpg') }}" alt="Logo" class="h-[60px] mb-4"></p>
+            <p>123 Street Name, Paris, France</p>
+            <p class="text-xl font-bold my-4">Phone: (123) 456-7890</p>
+            <a href="mailto:info@company.com" class="underline">Email: info@company.com</a>
+            </div>
+        </div>
+        </div>
+
+        <!-- Bottom part -->
+        <div class="py-6 border-t border-gray-line">
+        <div class="container mx-auto px-4 flex flex-wrap justify-between items-center">
+            <!-- Copyright and Links -->
+            <div class="w-full lg:w-3/4 text-center lg:text-left mb-4 lg:mb-0">
+            <p class="mb-2 font-bold">&copy; 2024 Your Company. All rights reserved.</p>
+            <ul class="flex justify-center lg:justify-start space-x-4 mb-4 lg:mb-0">
+                <li><a href="#" class="hover:text-primary">Privacy Policy</a></li>
+                <li><a href="#" class="hover:text-primary">Terms of Service</a></li>
+                <li><a href="#" class="hover:text-primary">FAQ</a></li>
+            </ul>
+            <p class="text-sm mt-4">Your shop's description goes here. This is a brief introduction to your shop and what you offer.</p>
+            </div>
+            <!-- Payment Icons -->
+            <div class="w-full lg:w-1/4 text-center lg:text-right">
+            <img src="{{ asset('tailstore4-main/assets/images/social_icons/paypal.svg') }}" alt="PayPal" class="inline-block h-8 mr-2">
+            <img src="{{ asset('tailstore4-main/assets/images/social_icons/stripe.svg') }}" alt="Stripe" class="inline-block h-8 mr-2">
+            <img src="{{ asset('tailstore4-main/assets/images/social_icons/visa.svg') }}" alt="Visa" class="inline-block h-8">
+            </div>
+        </div>
+        </div>
+    </footer>
+
+    <script src="node_modules/swiper/swiper-bundle.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="{{ asset('tailstore4-main/assets/js/script.js') }}"></script>
+
+</body>
+
+</html>

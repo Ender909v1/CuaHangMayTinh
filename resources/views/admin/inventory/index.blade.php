@@ -50,7 +50,7 @@
                                 <tr class="border-b align-top {{ $product->stock_qty <= 0 ? 'bg-red-50' : ($product->stock_qty <= 5 ? 'bg-yellow-50' : '') }}">
                                     <td class="px-4 py-3 font-medium">{{ $product->name }}</td>
                                     <td class="px-4 py-3">{{ $product->sku }}</td>
-                                    <td class="px-4 py-3">${{ number_format($product->effectivePrice(), 2) }}</td>
+                                    <td class="px-4 py-3">{{ number_format($product->effectivePrice(), 0, ',', '.') }} ₫</td>
                                     <td class="px-4 py-3 font-bold {{ $product->stock_qty <= 0 ? 'text-red-600' : '' }}">{{ $product->stock_qty }} left</td>
                                     <td class="px-4 py-3">
                                         @if ($product->stock_qty <= 0)

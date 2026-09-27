@@ -38,7 +38,12 @@ Route::get('/login', function () {
 })->name('login');
 
 Route::get('/shop', function () {
-    return view('shop.shop');
+    $products = Product::with(['brand', 'category', 'images'])
+        ->where('is_active', true)
+        ->orderByDesc('created_at')
+        ->get();
+
+    return view('shop.shop', compact('products'));
 })->name('shop');
 
 Route::get('/product/{product?}', function (?Product $product = null) {

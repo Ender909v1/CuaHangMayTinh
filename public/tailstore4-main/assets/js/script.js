@@ -254,7 +254,7 @@ document.addEventListener('DOMContentLoaded', function () {
 /* Shopping cart shared by the product pages and cart page. */
 document.addEventListener('DOMContentLoaded', function () {
   const storageKey = 'computer-store-cart';
-  const currency = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+  const currency = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND', maximumFractionDigits: 0 });
   const readCart = () => {
     try {
       const cart = JSON.parse(localStorage.getItem(storageKey) || '[]');
@@ -346,54 +346,36 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   document.addEventListener('click', function (event) {
-    const addButton = event.target.closest('button');
-    if (addButton && addButton.textContent.trim().replace(/\s+/g, ' ') === 'Add to Cart') {
-      const productCard = addButton.closest('.bg-white.p-3');
-      const name = productCard?.querySelector('a')?.textContent.trim();
-      const priceText = productCard?.querySelector('span.text-lg.font-bold')?.textContent || '';
-      const image = productCard?.querySelector('img')?.getAttribute('src');
-      const price = Number.parseFloat(priceText.replace(/[^\d.]/g, ''));
-      if (!name || !image || !Number.isFinite(price)) return;
-      const productLink = productCard?.querySelector('a[href]')?.getAttribute('href') || '';
-      const idMatch = productLink.match(/\/product\/(\d+)/);
-      const fallbackId = idMatch ? Number.parseInt(idMatch[1], 10) : 0;
-      const cardProductId = Number.parseInt(productCard?.dataset?.productId || '', 10) || fallbackId;
+    const addButton = event.target.closest('[data-add-to-cart]');
+    if (addButton) {
+      const productId = Number.parseInt(addButton.dataset.productId || '', 10);
+      const price = Number(addButton.dataset.productPrice);
+      const name = addButton.dataset.productName?.trim();
+      const image = addButton.dataset.productImage;
+      if (!productId || !name || !image || !Number.isFinite(price)) {
+        console.error('Cannot add product to cart: product button data is incomplete.');
+        return;
+      }
+
       event.preventDefault();
       const cart = readCart();
-      const id = `${name.toLowerCase()}|${image}`;
-      const existing = cart.find(item => item.id === id);
+      const id = `product-${productId}`;
+      const legacyId = `${name.toLowerCase()}|${image}`;
+      const existing = cart.find(item => Number(item.product_id) === productId || item.id === legacyId);
       if (existing) {
         existing.quantity += 1;
-        if (!existing.product_id && cardProductId) existing.product_id = cardProductId;
-      } else cart.push({ id, product_id: cardProductId, name, image, price, quantity: 1 });
+        existing.id = id;
+        existing.product_id = productId;
+        existing.name = name;
+        existing.image = image;
+        existing.price = price;
+      } else {
+        cart.push({ id, product_id: productId, name, image, price, quantity: 1 });
+      }
+
       saveCart(cart);
       addButton.textContent = 'Added to Cart';
       window.setTimeout(() => { addButton.textContent = 'Add to Cart'; }, 1200);
-      return;
-    }
-
-    // Single product detail page: out-of-stock products have no Add button,
-    // but this guards any detail-page button with stock info attached.
-    const detailAddButton = event.target.closest('[data-add-to-cart]');
-    if (detailAddButton) {
-      const container = detailAddButton.closest('#product-info') || document;
-      const name = container.querySelector('h1')?.textContent.trim();
-      const priceText = container.querySelector('.text-2xl.font-semibold')?.textContent || '';
-      const image = container.querySelector('#main-image, #srcImg')?.getAttribute('src');
-      const price = Number.parseFloat(priceText.replace(/[^\d.]/g, ''));
-      const productId = Number.parseInt(detailAddButton.dataset.productId || '', 10) || 0;
-      if (!name || !image || !Number.isFinite(price) || !productId) return;
-      event.preventDefault();
-      const cart = readCart();
-      const id = `${name.toLowerCase()}|${image}`;
-      const existing = cart.find(item => item.id === id);
-      if (existing) {
-        existing.quantity += 1;
-        if (!existing.product_id) existing.product_id = productId;
-      } else cart.push({ id, product_id: productId, name, image, price, quantity: 1 });
-      saveCart(cart);
-      detailAddButton.textContent = 'Added to Cart';
-      window.setTimeout(() => { detailAddButton.textContent = 'Add to Cart'; }, 1200);
       return;
     }
 
@@ -427,8 +409,7 @@ document.addEventListener('DOMContentLoaded', function () {
       const name = card.querySelector('a')?.textContent.trim();
       const category = card.querySelector('p.my-2')?.textContent.trim();
       const image = card.querySelector('img')?.getAttribute('src');
-      const priceText = card.querySelector('span.text-lg.font-bold')?.textContent || '';
-      const price = Number.parseFloat(priceText.replace(/[^\d.]/g, ''));
+      const price = Number(card.dataset.productPrice);
       if (!name || !category || !image || !Number.isFinite(price)) return null;
 
       return { id: `${name.toLowerCase()}|${image}`, name, category, image, price };
@@ -492,13 +473,13 @@ document.addEventListener('DOMContentLoaded', function () {
     message.textContent = 'Based on products you viewed and added to your cart.';
   }
 
-  const currency = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+  const currency = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND', maximumFractionDigits: 0 });
   const productUrl = section.dataset.productUrl;
   recommendations.forEach(product => {
     const wrapper = document.createElement('div');
     wrapper.className = 'w-full sm:w-1/2 lg:w-1/4 px-4 mb-8';
     wrapper.innerHTML = `
-      <div class="bg-white p-3 rounded-lg shadow-lg h-full flex flex-col">
+      <div class="bg-white p-3 rounded-lg shadow-lg h-full flex flex-col" data-product-price="${product.price}">
         <img src="${escapeText(product.image)}" alt="${escapeText(product.name)}" class="w-full mb-4 rounded-lg cursor-pointer" style="height: 16rem; object-fit: contain;">
         <a href="${productUrl}" class="text-lg font-semibold mb-2 block" style="min-height: 3.5rem;">${escapeText(product.name)}</a>
         <p class="my-2 text-gray-500" style="min-height: 2rem;">${escapeText(product.category)}</p>
@@ -512,8 +493,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const name = card.querySelector('a')?.textContent.trim();
     const category = card.querySelector('p.my-2')?.textContent.trim();
     const image = card.querySelector('img')?.getAttribute('src');
-    const priceText = card.querySelector('span.text-lg.font-bold')?.textContent || '';
-    const price = Number.parseFloat(priceText.replace(/[^\d.]/g, ''));
+    const price = Number(card.dataset.productPrice);
     return name && category && image && Number.isFinite(price)
       ? { id: `${name.toLowerCase()}|${image}`, name, category, image, price }
       : null;

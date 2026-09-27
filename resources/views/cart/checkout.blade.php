@@ -98,15 +98,15 @@
                     <div id="checkout-items" class="mb-4 space-y-3 text-sm"></div>
                     <div class="flex justify-between mb-4">
                         <p>Subtotal</p>
-                        <p id="checkout-subtotal">$0.00</p>
+                        <p id="checkout-subtotal">0 ₫</p>
                     </div>
                     <div class="flex justify-between mb-4">
                         <p>Shipping</p>
-                        <p>$0.00</p>
+                        <p>0 ₫</p>
                     </div>
                     <div class="flex justify-between mb-4">
                         <p class="font-semibold">Total</p>
-                        <p class="font-semibold" id="checkout-total">$0.00</p>
+                        <p class="font-semibold" id="checkout-total">0 ₫</p>
                     </div>
                     <p id="checkout-error" class="mb-3 hidden text-sm text-red-600">Your cart is empty. Please add some products first.</p>
                     <button type="submit" form="checkout-form" id="checkout-submit" class="bg-primary text-white border border-primary hover:bg-transparent hover:text-primary py-2 px-4 rounded-full w-full">Proceed to Payment</button>
@@ -227,7 +227,7 @@
             const renderSummary = () => {
                 const cart = readCart();
                 const list = document.getElementById('checkout-items');
-                const money = (n) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(n || 0);
+                const money = (n) => new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND', maximumFractionDigits: 0 }).format(n || 0);
                 const subtotal = cart.reduce((s, i) => s + (Number(i.price) || 0) * (Number(i.quantity) || 0), 0);
                 if (list) {
                     list.innerHTML = '';
@@ -313,7 +313,6 @@
 </body>
 
 </html>
-
 
 
 

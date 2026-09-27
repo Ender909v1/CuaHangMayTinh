@@ -28,7 +28,7 @@
                 <div class="mt-6 border-t pt-4">
                     <div class="flex justify-between text-sm">
                         <span class="text-gray-500">Total paid</span>
-                        <span class="font-bold">${{ number_format((float) $order->total_amount, 2) }}</span>
+                        <span class="font-bold">{{ number_format((float) $order->total_amount, 0, ',', '.') }} ₫</span>
                     </div>
                     <div class="mt-2 flex justify-between text-sm">
                         <span class="text-gray-500">Payment</span>
@@ -46,7 +46,7 @@
                         @foreach ($order->items as $item)
                             <li class="flex justify-between gap-3 py-2">
                                 <span>{{ $item->product?->name ?? 'Product #'.$item->product_id }} × {{ $item->quantity }}</span>
-                                <span class="font-semibold">${{ number_format((float) $item->unit_price * (int) $item->quantity, 2) }}</span>
+                                <span class="font-semibold">{{ number_format((float) $item->unit_price * (int) $item->quantity, 0, ',', '.') }} ₫</span>
                             </li>
                         @endforeach
                     </ul>

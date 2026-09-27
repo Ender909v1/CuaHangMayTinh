@@ -109,7 +109,7 @@ class CheckoutController extends Controller
         $order = Order::with(['items.product'])->where('bill_code', $billCode)->firstOrFail();
 
         // Customers only see their own bill; admins can see any.
-        if (Auth::check() && ! Auth::user()->isAdmin() && $order->user_id !== Auth::id()) {
+        if (Auth::check() && Auth::user()->role !== 'admin' && $order->user_id !== Auth::id()) {
             abort(403);
         }
 

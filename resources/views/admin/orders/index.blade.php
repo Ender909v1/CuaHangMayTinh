@@ -43,7 +43,7 @@
                                     <td class="px-4 py-3 font-mono font-bold">{{ $order->bill_code ?? '#'.$order->id }}</td>
                                     <td class="px-4 py-3">{{ $order->user?->full_name ?? 'Guest' }}<br><span class="text-xs text-gray-500">{{ $order->shipping_address }}</span></td>
                                     <td class="px-4 py-3">{{ $order->items->sum('quantity') }}</td>
-                                    <td class="px-4 py-3 font-semibold">${{ number_format((float) $order->total_amount, 2) }}</td>
+                                    <td class="px-4 py-3 font-semibold">{{ number_format((float) $order->total_amount, 0, ',', '.') }} ₫</td>
                                     <td class="px-4 py-3">{{ $order->payment_method ?? '—' }} / {{ $order->payment_status }}</td>
                                     <td class="px-4 py-3">
                                         <form method="POST" action="{{ route('admin.orders.status', $order) }}" class="flex items-center gap-2">

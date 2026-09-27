@@ -42,7 +42,7 @@
                         </form>
                     </div>
                     <div><p class="text-gray-500">Customer</p><p class="font-semibold">{{ $order->user?->full_name ?? 'Guest checkout' }} ({{ $order->user?->email ?? 'no account' }})</p></div>
-                    <div><p class="text-gray-500">Total</p><p class="font-bold">${{ number_format((float) $order->total_amount, 2) }}</p></div>
+                    <div><p class="text-gray-500">Total</p><p class="font-bold">{{ number_format((float) $order->total_amount, 0, ',', '.') }} ₫</p></div>
                     <div class="md:col-span-2"><p class="text-gray-500">Shipping</p><p class="font-medium">{{ $order->shipping_address }}</p></div>
                     <div><p class="text-gray-500">Payment method</p><p class="font-medium">{{ $order->payment_method ?? '—' }}</p></div>
                     <div><p class="text-gray-500">Date</p><p class="font-medium">{{ $order->order_date }}</p></div>
@@ -52,8 +52,8 @@
                     <ul class="mt-2 divide-y text-sm">
                         @foreach ($order->items as $item)
                             <li class="flex justify-between gap-3 py-2">
-                                <span>{{ $item->product?->name ?? 'Product #'.$item->product_id }} × {{ $item->quantity }} <span class="text-gray-400">(@ ${{ number_format((float) $item->unit_price, 2) }})</span></span>
-                                <span class="font-semibold">${{ number_format((float) $item->unit_price * (int) $item->quantity, 2) }}</span>
+                                <span>{{ $item->product?->name ?? 'Product #'.$item->product_id }} × {{ $item->quantity }} <span class="text-gray-400">({{ number_format((float) $item->unit_price, 0, ',', '.') }} ₫ each)</span></span>
+                                <span class="font-semibold">{{ number_format((float) $item->unit_price * (int) $item->quantity, 0, ',', '.') }} ₫</span>
                             </li>
                         @endforeach
                     </ul>

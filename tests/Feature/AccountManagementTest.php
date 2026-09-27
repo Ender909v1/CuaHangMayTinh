@@ -184,6 +184,35 @@ class AccountManagementTest extends TestCase
         $this->get('/product/'.$product->id)->assertOk();
     }
 
+    public function test_shop_page_displays_only_active_products(): void
+    {
+        $activeProduct = $this->makeProductForPageTest();
+        $activeProduct->update(['name' => 'Active Page Test Laptop', 'price' => 999.99]);
+
+        $inactiveProduct = $this->makeProductForPageTest();
+        $inactiveProduct->update(['name' => 'Inactive Page Test Laptop', 'is_active' => false]);
+
+        $response = $this->get('/shop');
+
+        $response->assertSee($activeProduct->name);
+        $response->assertSee('1.000 ₫');
+        $response->assertDontSee($inactiveProduct->name);
+    }
+
+    public function test_add_to_cart_buttons_use_effective_price_on_home_and_shop_pages(): void
+    {
+        $product = $this->makeProductForPageTest();
+        $product->update(['price' => 28990000, 'discount_price' => 25990000]);
+
+        $this->get('/')
+            ->assertSee('data-product-id="'.$product->id.'"', false)
+            ->assertSee('data-product-price="25990000"', false);
+
+        $this->get('/shop')
+            ->assertSee('data-product-id="'.$product->id.'"', false)
+            ->assertSee('data-product-price="25990000"', false);
+    }
+
     public function test_user_can_render_all_public_pages_while_logged_in(): void
     {
         $user = $this->makeUser();

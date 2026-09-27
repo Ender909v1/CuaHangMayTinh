@@ -19,7 +19,7 @@
                 @foreach ($products as $product)
                     <tr class="border-b">
                         <td class="px-4 py-3 font-medium">{{ $product->name }}</td>
-                        <td class="px-4 py-3">${{ number_format($product->effectivePrice(), 2) }}</td>
+                        <td class="px-4 py-3">{{ number_format($product->effectivePrice(), 0, ',', '.') }} ₫</td>
                         <td class="px-4 py-3">{{ $product->stock_qty }}</td>
                         <td class="px-4 py-3">
                             <div class="flex gap-2">

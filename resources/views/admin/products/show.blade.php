@@ -78,11 +78,11 @@
                             <div class="border-y border-gray-200 py-5">
                                 <div class="flex items-center gap-3">
                                     <p class="text-3xl font-bold text-red-600">
-                                        ${{ number_format($product->effectivePrice(), 2) }}
+                                        {{ number_format($product->effectivePrice(), 0, ',', '.') }} ₫
                                     </p>
                                     @if ($product->hasDiscount())
                                         <span class="text-lg text-gray-400 line-through">
-                                            ${{ number_format((float) $product->originalPrice(), 2) }}
+                                            {{ number_format((float) $product->originalPrice(), 0, ',', '.') }} ₫
                                         </span>
                                     @endif
                                 </div>
