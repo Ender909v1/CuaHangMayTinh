@@ -127,6 +127,8 @@
         </div>
     </section>
 
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="{{ asset('tailstore4-main/assets/js/script.js') }}"></script>
     <script>
         /* The review box grows down with the text instead of scrolling, up to 24rem. */
         document.querySelectorAll('[data-review-box]').forEach(function (box) {

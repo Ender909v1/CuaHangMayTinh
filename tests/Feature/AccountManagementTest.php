@@ -218,7 +218,7 @@ class AccountManagementTest extends TestCase
         $user = $this->makeUser();
         $product = $this->makeProductForPageTest();
 
-        foreach (['/', '/shop', '/product', '/product/'.$product->id, '/cart', '/checkout', '/404', '/account', '/my-orders'] as $url) {
+        foreach (['/', '/shop', '/product', '/product/'.$product->id, '/cart', '/checkout', '/404', '/account', '/my-orders', '/reviews'] as $url) {
             $response = $this->actingAs($user)->get($url);
 
             $response->assertOk();
