@@ -95,6 +95,43 @@ class AdminDashboardTest extends TestCase
         $response->assertSee('Test Laptop');
     }
 
+    public function test_admin_product_lists_show_twenty_products_per_page(): void
+    {
+        $admin = $this->makeAdmin();
+        $productIds = [];
+
+        for ($index = 1; $index <= 21; $index++) {
+            $product = $this->makeProduct();
+            $product->update(['name' => 'Paginated Product '.$index]);
+            $productIds[] = $product->id;
+        }
+
+        $productsPage = $this->actingAs($admin)->get('/admin/products');
+        $productsPage->assertOk();
+        $productsPage->assertSee('page=2', false);
+        $productsPage->assertViewHas('products', fn ($products): bool => $products->count() === 20
+            && $products->first()->id === $productIds[20]
+            && $products->last()->id === $productIds[1]);
+
+        $productsPageTwo = $this->actingAs($admin)->get('/admin/products?page=2');
+        $productsPageTwo->assertOk();
+        $productsPageTwo->assertViewHas('products', fn ($products): bool => $products->count() === 1
+            && $products->first()->id === $productIds[0]);
+
+        $dashboardProductsPage = $this->actingAs($admin)->get('/admin?tab=products');
+        $dashboardProductsPage->assertOk();
+        $dashboardProductsPage->assertSee('tab=products', false);
+        $dashboardProductsPage->assertSee('page=2', false);
+        $dashboardProductsPage->assertViewHas('products', fn ($products): bool => $products->count() === 20
+            && $products->first()->id === $productIds[20]
+            && $products->last()->id === $productIds[1]);
+
+        $dashboardProductsPageTwo = $this->actingAs($admin)->get('/admin?tab=products&page=2');
+        $dashboardProductsPageTwo->assertOk();
+        $dashboardProductsPageTwo->assertViewHas('products', fn ($products): bool => $products->count() === 1
+            && $products->first()->id === $productIds[0]);
+    }
+
     public function test_admin_product_detail_renders_with_images_and_specifications(): void
     {
         $admin = $this->makeAdmin();

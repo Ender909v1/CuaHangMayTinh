@@ -25,11 +25,16 @@ class AdminController extends Controller
         $activeProducts = Product::where('is_active', true)->count();
         $lowStockProducts = Product::where('stock_qty', '<=', 5)->count();
         $history = ProductHistory::with(['user', 'product'])->latest()->take(8)->get();
-        // Dashboard tabs always show the FULL lists (no truncation, no "show all" buttons).
-        $products = Product::with(['brand', 'category'])->latest()->get();
-        $productsByMonth = $products->groupBy(
-            fn (Product $product): string => $product->created_at?->format('Y-m') ?? ''
-        );
+        $products = Product::with(['brand', 'category'])
+            ->latest('id')
+            ->paginate(20)
+            ->appends(['tab' => 'products']);
+        $productsByMonth = Product::query()
+            ->where('created_at', '>=', now()->startOfMonth()->subMonths(7))
+            ->get(['created_at'])
+            ->groupBy(
+                fn (Product $product): string => $product->created_at?->format('Y-m') ?? ''
+            );
         $monthlyProductStats = collect(range(7, 0))->map(function (int $monthsAgo) use ($productsByMonth): array {
             $month = now()->startOfMonth()->subMonths($monthsAgo);
 
@@ -39,13 +44,13 @@ class AdminController extends Controller
             ];
         })->all();
         $maxMonthlyProductCount = max(array_column($monthlyProductStats, 'count'));
-        $stockTotal = $products->count();
+        $stockTotal = $totalProducts;
         $stockChartCircumference = 276.46;
         $stockChartOffset = 0.0;
         $stockStats = collect([
-            ['label' => 'In stock', 'count' => $products->where('stock_qty', '>', 5)->count(), 'color' => '#16a34a'],
-            ['label' => 'Low stock', 'count' => $products->where('stock_qty', '>', 0)->where('stock_qty', '<=', 5)->count(), 'color' => '#f59e0b'],
-            ['label' => 'Out of stock', 'count' => $products->where('stock_qty', 0)->count(), 'color' => '#ef4444'],
+            ['label' => 'In stock', 'count' => Product::where('stock_qty', '>', 5)->count(), 'color' => '#16a34a'],
+            ['label' => 'Low stock', 'count' => Product::where('stock_qty', '>', 0)->where('stock_qty', '<=', 5)->count(), 'color' => '#f59e0b'],
+            ['label' => 'Out of stock', 'count' => Product::where('stock_qty', 0)->count(), 'color' => '#ef4444'],
         ])->map(function (array $stat) use ($stockTotal, $stockChartCircumference, &$stockChartOffset): array {
             $share = $stockTotal > 0 ? $stat['count'] / $stockTotal : 0;
             $stat['percent'] = (int) round($share * 100);
@@ -71,7 +76,7 @@ class AdminController extends Controller
 
     public function products()
     {
-        $products = Product::with(['brand', 'category'])->latest()->paginate(12);
+        $products = Product::with(['brand', 'category'])->latest('id')->paginate(20);
 
         return view('admin.products.index', compact('products'));
     }

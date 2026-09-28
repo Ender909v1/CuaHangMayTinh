@@ -52,7 +52,9 @@ Route::get('/shop', function () {
     $products = Product::with(['brand', 'category', 'images'])
         ->where('is_active', true)
         ->orderByDesc('created_at')
-        ->get();
+        ->orderByDesc('id')
+        ->paginate(20)
+        ->withQueryString();
 
     return view('shop.shop', compact('brands', 'categories', 'products'));
 })->name('shop');

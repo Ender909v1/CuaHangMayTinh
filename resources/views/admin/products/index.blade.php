@@ -78,12 +78,13 @@
                     </table>
                 </div>
 
-                <div class="mt-6">
-                    {{ $products->links() }}
-                </div>
+                @if ($products->hasPages())
+                    <div class="mt-6">
+                        {{ $products->links() }}
+                    </div>
+                @endif
             </div>
         </main>
     </div>
 </body>
 </html>
-

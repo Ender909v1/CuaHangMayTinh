@@ -587,6 +587,11 @@
                             <p class="col-span-full text-center py-10">No products found.</p>
                         @endforelse
                     </div>
+                    @if ($products->hasPages())
+                        <div class="mt-8">
+                            {{ $products->links() }}
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
