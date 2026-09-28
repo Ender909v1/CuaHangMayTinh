@@ -369,6 +369,15 @@ document.addEventListener('DOMContentLoaded', function () {
   document.addEventListener('click', function (event) {
     const addButton = event.target.closest('[data-add-to-cart]');
     if (addButton) {
+      /* Shoppers must have an account before anything lands in the cart:
+         guests get sent to the login page (which links to Register). */
+      const storeHeader = document.querySelector('header[data-authenticated]');
+      if (storeHeader && storeHeader.dataset.authenticated !== '1') {
+        event.preventDefault();
+        window.location.href = storeHeader.dataset.loginUrl;
+        return;
+      }
+
       const productId = Number.parseInt(addButton.dataset.productId || '', 10);
       const price = Number(addButton.dataset.productPrice);
       const name = addButton.dataset.productName?.trim();

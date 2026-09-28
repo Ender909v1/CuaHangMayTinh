@@ -1,4 +1,6 @@
-<header class="bg-gray-dark sticky top-0 z-50">
+<header class="bg-gray-dark sticky top-0 z-50"
+    data-authenticated="{{ auth()->check() ? '1' : '0' }}"
+    data-login-url="{{ route('login') }}">
     <div class="container mx-auto flex justify-between items-center py-4">
         <a href="{{ route('cuahangmaytinh') }}" class="flex items-center">
             <img src="{{ asset('tailstore4-main/logo/logo.jpg') }}" alt="Shop Logo" class="navbar-shop-logo">
