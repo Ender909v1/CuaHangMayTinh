@@ -560,15 +560,21 @@
                                 $cardImage = $product->images->first()->image_url ?? asset('tailstore4-main/logo/logo.jpg');
                                 $cardPrice = $product->effectivePrice();
                                 $cardOldPrice = $product->originalPrice();
+                                $isOutOfStock = (int) $product->stock_qty <= 0;
                             @endphp
-                            <div class="bg-white p-4 rounded-lg shadow product-card"
+                            <div class="bg-white p-4 rounded-lg shadow product-card {{ $isOutOfStock ? 'opacity-75' : '' }}"
                                 data-category="{{ $product->category_id }}"
                                 data-spec="{{ $product->spec ?? '' }}"
                                 data-price="{{ $cardPrice }}"
                                 data-brand="{{ $product->brand_id }}">
-                                <img src="{{ $cardImage }}" alt="{{ $product->name }}"
-                                    class="w-full object-cover mb-4 rounded-lg">
-                                <a href="{{ route('product', $product) }}" class="text-lg font-semibold mb-2">{{ $product->name }}</a>
+                                <div class="relative">
+                                    <img src="{{ $cardImage }}" alt="{{ $product->name }}"
+                                        class="w-full object-cover mb-4 rounded-lg {{ $isOutOfStock ? 'grayscale' : '' }}">
+                                    @if ($isOutOfStock)
+                                        <span class="absolute left-2 top-2 rounded-full bg-gray-900 px-3 py-1 text-xs font-bold uppercase text-white">Out of stock</span>
+                                    @endif
+                                </div>
+                                <a href="{{ route('product', $product) }}" class="text-lg font-semibold mb-2 block">{{ $product->name }}</a>
                                 <p class=" my-2">{{ $product->category->name ?? '' }}</p>
                                 <div class="flex items-center mb-4">
                                     <span class="text-lg font-bold text-primary">{{ number_format((float) $cardPrice, 0, ',', '.') }} ₫</span>
@@ -576,12 +582,20 @@
                                         <span class="text-sm line-through ml-2">{{ number_format((float) $cardOldPrice, 0, ',', '.') }} ₫</span>
                                     @endif
                                 </div>
-                                <button
-                                    class="bg-primary border border-transparent hover:bg-transparent hover:border-primary text-white hover:text-primary font-semibold py-2 px-4 rounded-full w-full"
-                                    data-add-to-cart data-product-id="{{ $product->id }}"
-                                    data-product-price="{{ $cardPrice }}" data-product-name="{{ $product->name }}"
-                                    data-product-image="{{ $cardImage }}">Add
-                                    to Cart</button>
+                                @if ($isOutOfStock)
+                                    <button
+                                        type="button"
+                                        disabled
+                                        aria-disabled="true"
+                                        class="btn-out-of-stock py-2 px-4 rounded-full w-full font-semibold">Out of Stock</button>
+                                @else
+                                    <button
+                                        class="bg-primary border border-transparent hover:bg-transparent hover:border-primary text-white hover:text-primary font-semibold py-2 px-4 rounded-full w-full"
+                                        data-add-to-cart data-product-id="{{ $product->id }}"
+                                        data-product-price="{{ $cardPrice }}" data-product-name="{{ $product->name }}"
+                                        data-product-image="{{ $cardImage }}">Add
+                                        to Cart</button>
+                                @endif
                             </div>
                         @empty
                             <p class="col-span-full text-center py-10">No products found.</p>

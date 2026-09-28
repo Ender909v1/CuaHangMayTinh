@@ -603,3 +603,15 @@ img.cursor-pointer:hover {
     }
 }
 
+
+/* Out of stock product button: non-clickable, subdued styling */
+.btn-out-of-stock,
+button.btn-out-of-stock:hover {
+    background-color: #9ca3af !important;
+    border-color: #9ca3af !important;
+    color: #ffffff !important;
+    cursor: not-allowed !important;
+    pointer-events: none !important;
+    opacity: 0.75;
+}
+
