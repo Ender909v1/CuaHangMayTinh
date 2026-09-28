@@ -56,6 +56,34 @@ class AdminDashboardTest extends TestCase
         $response->assertSee('Admin updated product: Test Laptop');
     }
 
+    public function test_dashboard_shows_product_additions_and_stock_health_statistics(): void
+    {
+        $admin = $this->makeAdmin();
+        $availableProduct = $this->makeProduct();
+        $availableProduct->update(['stock_qty' => 8]);
+
+        $lowStockProduct = $this->makeProduct();
+        $lowStockProduct->forceFill(['created_at' => now()->startOfMonth()->subMonth()])->save();
+
+        $outOfStockProduct = $this->makeProduct();
+        $outOfStockProduct->update(['stock_qty' => 0]);
+
+        $response = $this->actingAs($admin)->get('/admin');
+
+        $response->assertOk();
+        $response->assertSeeInOrder([
+            'Product statistics',
+            'Product additions',
+            'Stock health',
+            'Recent product history',
+        ]);
+        $response->assertSee('In stock: 1', false);
+        $response->assertSee('Low stock: 1', false);
+        $response->assertSee('Out of stock: 1', false);
+        $response->assertSee(strtoupper(now()->format('M')).': 2 products added', false);
+        $response->assertSee(strtoupper(now()->startOfMonth()->subMonth()->format('M')).': 1 products added', false);
+    }
+
     public function test_admin_products_index_renders(): void
     {
         $admin = $this->makeAdmin();

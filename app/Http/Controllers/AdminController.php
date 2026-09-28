@@ -27,6 +27,34 @@ class AdminController extends Controller
         $history = ProductHistory::with(['user', 'product'])->latest()->take(8)->get();
         // Dashboard tabs always show the FULL lists (no truncation, no "show all" buttons).
         $products = Product::with(['brand', 'category'])->latest()->get();
+        $productsByMonth = $products->groupBy(
+            fn (Product $product): string => $product->created_at?->format('Y-m') ?? ''
+        );
+        $monthlyProductStats = collect(range(7, 0))->map(function (int $monthsAgo) use ($productsByMonth): array {
+            $month = now()->startOfMonth()->subMonths($monthsAgo);
+
+            return [
+                'label' => strtoupper($month->format('M')),
+                'count' => $productsByMonth->get($month->format('Y-m'), collect())->count(),
+            ];
+        })->all();
+        $maxMonthlyProductCount = max(array_column($monthlyProductStats, 'count'));
+        $stockTotal = $products->count();
+        $stockChartCircumference = 276.46;
+        $stockChartOffset = 0.0;
+        $stockStats = collect([
+            ['label' => 'In stock', 'count' => $products->where('stock_qty', '>', 5)->count(), 'color' => '#16a34a'],
+            ['label' => 'Low stock', 'count' => $products->where('stock_qty', '>', 0)->where('stock_qty', '<=', 5)->count(), 'color' => '#f59e0b'],
+            ['label' => 'Out of stock', 'count' => $products->where('stock_qty', 0)->count(), 'color' => '#ef4444'],
+        ])->map(function (array $stat) use ($stockTotal, $stockChartCircumference, &$stockChartOffset): array {
+            $share = $stockTotal > 0 ? $stat['count'] / $stockTotal : 0;
+            $stat['percent'] = (int) round($share * 100);
+            $stat['dashLength'] = round($share * $stockChartCircumference, 2);
+            $stat['offset'] = round($stockChartOffset, 2);
+            $stockChartOffset += $stat['dashLength'];
+
+            return $stat;
+        })->all();
         $users = User::orderBy('id')->get();
         $orders = Order::with(['user', 'items.product'])->latest('id')->get();
         $inventory = Product::with(['brand', 'category', 'histories' => $this->stockHistory()])
@@ -36,7 +64,8 @@ class AdminController extends Controller
 
         return view('admin.dashboard', compact(
             'totalProducts', 'activeProducts', 'lowStockProducts', 'history',
-            'products', 'users', 'orders', 'inventory', 'reviews'
+            'products', 'monthlyProductStats', 'maxMonthlyProductCount', 'stockTotal',
+            'stockChartCircumference', 'stockStats', 'users', 'orders', 'inventory', 'reviews'
         ));
     }
 

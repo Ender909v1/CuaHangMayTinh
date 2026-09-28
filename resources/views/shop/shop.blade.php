@@ -70,18 +70,13 @@
                     <div class="mb-6 pb-8 border-b border-gray-line">
                         <h3 class="text-lg font-semibold mb-6">Category</h3>
                         <div class="space-y-2">
-                            <label class="flex items-center">
-                                <input type="checkbox" class="form-checkbox custom-checkbox filter-checkbox" data-filter-type="category">
-                                <span class="ml-2">Laptop</span>
-                            </label>
-                            <label class="flex items-center">
-                                <input type="checkbox" class="form-checkbox custom-checkbox filter-checkbox" data-filter-type="category">
-                                <span class="ml-2">PC Part</span>
-                            </label>
-                            <label class="flex items-center">
-                                <input type="checkbox" class="form-checkbox custom-checkbox filter-checkbox" data-filter-type="category">
-                                <span class="ml-2">Accessories</span>
-                            </label>
+                            @foreach ($categories as $category)
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="form-checkbox custom-checkbox filter-checkbox"
+                                        data-filter-type="category" data-filter-value="{{ $category->id }}">
+                                    <span class="ml-2">{{ $category->name }}</span>
+                                </label>
+                            @endforeach
                         </div>
                     </div>
                     <!-- Filter by Specs -->
@@ -124,18 +119,13 @@
                     <div class="mb-6 pb-8 border-b border-gray-line">
                         <h3 class="text-lg font-semibold mb-6">Brand</h3>
                         <div class="space-y-2">
-                            <label class="flex items-center">
-                                <input type="checkbox" class="form-checkbox custom-checkbox filter-checkbox" data-filter-type="brand" data-filter-value="ASUS">
-                                <span class="ml-2">ASUS</span>
-                            </label>
-                            <label class="flex items-center">
-                                <input type="checkbox" class="form-checkbox custom-checkbox filter-checkbox" data-filter-type="brand" data-filter-value="MSI">
-                                <span class="ml-2">MSI</span>
-                            </label>
-                            <label class="flex items-center">
-                                <input type="checkbox" class="form-checkbox custom-checkbox filter-checkbox" data-filter-type="brand" data-filter-value="NVIDIA">
-                                <span class="ml-2">NVIDIA</span>
-                            </label>
+                            @foreach ($brands as $brand)
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="form-checkbox custom-checkbox filter-checkbox"
+                                        data-filter-type="brand" data-filter-value="{{ $brand->id }}">
+                                    <span class="ml-2">{{ $brand->name }}</span>
+                                </label>
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -364,7 +354,7 @@
                     const categoryCheckboxes = document.querySelectorAll('#filters input[data-filter-type="category"]');
                     const selectedCategories = Array.from(categoryCheckboxes)
                         .filter(cb => cb.checked)
-                        .map(cb => cb.nextElementSibling.textContent.trim());
+                        .map(cb => cb.dataset.filterValue);
 
                     // Get selected specs
                     const specCheckboxes = document.querySelectorAll('#filters input[data-filter-type="spec"]');
@@ -502,18 +492,13 @@
                     <div class="mb-6 pb-8 border-b border-gray-line">
                         <h3 class="text-lg font-semibold mb-6">Category</h3>
                         <div class="space-y-2">
-                            <label class="flex items-center">
-                                <input type="checkbox" class="form-checkbox custom-checkbox filter-checkbox" data-filter-type="category">
-                                <span class="ml-2">Laptop</span>
-                            </label>
-                            <label class="flex items-center">
-                                <input type="checkbox" class="form-checkbox custom-checkbox filter-checkbox" data-filter-type="category">
-                                <span class="ml-2">PC Part</span>
-                            </label>
-                            <label class="flex items-center">
-                                <input type="checkbox" class="form-checkbox custom-checkbox filter-checkbox" data-filter-type="category">
-                                <span class="ml-2">Accessories</span>
-                            </label>
+                            @foreach ($categories as $category)
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="form-checkbox custom-checkbox filter-checkbox"
+                                        data-filter-type="category" data-filter-value="{{ $category->id }}">
+                                    <span class="ml-2">{{ $category->name }}</span>
+                                </label>
+                            @endforeach
                         </div>
                     </div>
                     <!-- Filter by Specs -->
@@ -556,18 +541,13 @@
                     <div class="mb-6 pb-8 border-b border-gray-line">
                         <h3 class="text-lg font-semibold mb-6">Brand</h3>
                         <div class="space-y-2">
-                            <label class="flex items-center">
-                                <input type="checkbox" class="form-checkbox custom-checkbox filter-checkbox" data-filter-type="brand" data-filter-value="ASUS">
-                                <span class="ml-2">ASUS</span>
-                            </label>
-                            <label class="flex items-center">
-                                <input type="checkbox" class="form-checkbox custom-checkbox filter-checkbox" data-filter-type="brand" data-filter-value="MSI">
-                                <span class="ml-2">MSI</span>
-                            </label>
-                            <label class="flex items-center">
-                                <input type="checkbox" class="form-checkbox custom-checkbox filter-checkbox" data-filter-type="brand" data-filter-value="NVIDIA">
-                                <span class="ml-2">NVIDIA</span>
-                            </label>
+                            @foreach ($brands as $brand)
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="form-checkbox custom-checkbox filter-checkbox"
+                                        data-filter-type="brand" data-filter-value="{{ $brand->id }}">
+                                    <span class="ml-2">{{ $brand->name }}</span>
+                                </label>
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -582,10 +562,10 @@
                                 $cardOldPrice = $product->originalPrice();
                             @endphp
                             <div class="bg-white p-4 rounded-lg shadow product-card"
-                                data-category="{{ $product->category->name ?? '' }}"
+                                data-category="{{ $product->category_id }}"
                                 data-spec="{{ $product->spec ?? '' }}"
                                 data-price="{{ $cardPrice }}"
-                                data-brand="{{ $product->brand ?? '' }}">
+                                data-brand="{{ $product->brand_id }}">
                                 <img src="{{ $cardImage }}" alt="{{ $product->name }}"
                                     class="w-full object-cover mb-4 rounded-lg">
                                 <a href="{{ route('product', $product) }}" class="text-lg font-semibold mb-2">{{ $product->name }}</a>
@@ -744,7 +724,7 @@
                     const categoryCheckboxes = document.querySelectorAll('#filters input[data-filter-type="category"]');
                     const selectedCategories = Array.from(categoryCheckboxes)
                         .filter(cb => cb.checked)
-                        .map(cb => cb.nextElementSibling.textContent.trim());
+                        .map(cb => cb.dataset.filterValue);
 
                     // Get selected specs
                     const specCheckboxes = document.querySelectorAll('#filters input[data-filter-type="spec"]');

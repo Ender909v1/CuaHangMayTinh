@@ -73,6 +73,87 @@
                         </div>
                     </div>
 
+                    <section class="mt-8" aria-labelledby="product-statistics-heading">
+                        <h2 id="product-statistics-heading" class="sr-only">Product statistics</h2>
+                        <div class="grid gap-6 xl:grid-cols-[1.45fr_1fr]">
+                            <div class="rounded-xl bg-white p-6 shadow">
+                                <div class="mb-6">
+                                    <h3 class="text-lg font-bold">Product additions</h3>
+                                    <p class="mt-1 text-sm text-gray-500">Products added each month over the last 8 months</p>
+                                </div>
+
+                                <div class="relative h-48" role="list" aria-label="Monthly product additions over the last eight months">
+                                    <div class="pointer-events-none absolute inset-0 flex flex-col justify-between">
+                                        @foreach (range(0, 3) as $line)
+                                            <div class="border-t border-gray-100"></div>
+                                        @endforeach
+                                    </div>
+                                    <div class="absolute inset-0 flex items-end justify-around gap-2 px-1">
+                                        @foreach ($monthlyProductStats as $month)
+                                            <div class="relative z-10 flex h-full min-w-0 flex-1 flex-col items-center justify-end" role="listitem" aria-label="{{ $month['label'] }}: {{ $month['count'] }} products added">
+                                                <span class="mb-2 text-xs font-medium text-gray-500">{{ $month['count'] }}</span>
+                                                <div
+                                                    class="w-full max-w-8 rounded-t-md bg-red-500 transition-colors hover:bg-red-600"
+                                                    style="height: {{ $month['count'] > 0 ? max(4, (int) round($month['count'] / $maxMonthlyProductCount * 100)) : 0 }}%"
+                                                    aria-hidden="true"
+                                                ></div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                </div>
+                                <div class="mt-3 grid grid-cols-8 gap-2 text-center text-xs font-medium text-gray-400">
+                                    @foreach ($monthlyProductStats as $month)
+                                        <span>{{ $month['label'] }}</span>
+                                    @endforeach
+                                </div>
+                            </div>
+
+                            <div class="rounded-xl bg-white p-6 shadow">
+                                <div class="mb-6">
+                                    <h3 class="text-lg font-bold">Stock health</h3>
+                                    <p class="mt-1 text-sm text-gray-500">Product availability across your catalog</p>
+                                </div>
+
+                                <div class="flex flex-col items-center gap-6 sm:flex-row sm:justify-around">
+                                    <div class="relative h-44 w-44 shrink-0" role="img" aria-label="Stock health: {{ $stockTotal }} products">
+                                        <svg class="h-full w-full" viewBox="0 0 120 120" aria-hidden="true">
+                                            <circle cx="60" cy="60" r="44" fill="none" stroke="#f3f4f6" stroke-width="18"></circle>
+                                            @foreach ($stockStats as $stat)
+                                                <circle
+                                                    cx="60"
+                                                    cy="60"
+                                                    r="44"
+                                                    fill="none"
+                                                    stroke="{{ $stat['color'] }}"
+                                                    stroke-width="18"
+                                                    stroke-dasharray="{{ $stat['dashLength'] }} {{ $stockChartCircumference }}"
+                                                    stroke-dashoffset="-{{ $stat['offset'] }}"
+                                                    transform="rotate(-90 60 60)"
+                                                ></circle>
+                                            @endforeach
+                                        </svg>
+                                        <div class="absolute inset-0 flex flex-col items-center justify-center">
+                                            <span class="text-3xl font-bold text-gray-800">{{ $stockTotal }}</span>
+                                            <span class="text-xs text-gray-500">products</span>
+                                        </div>
+                                    </div>
+
+                                    <ul class="w-full space-y-4 sm:max-w-48">
+                                        @foreach ($stockStats as $stat)
+                                            <li class="flex items-center justify-between gap-3 text-sm" aria-label="{{ $stat['label'] }}: {{ $stat['count'] }}">
+                                                <span class="flex items-center gap-2 text-gray-600">
+                                                    <span class="h-3 w-3 shrink-0 rounded-full" style="background-color: {{ $stat['color'] }}" aria-hidden="true"></span>
+                                                    {{ $stat['label'] }}
+                                                </span>
+                                                <span class="shrink-0 font-medium text-gray-700">{{ $stat['count'] }} <span class="text-gray-400">({{ $stat['percent'] }}%)</span></span>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
                     <div class="mt-10 rounded-xl bg-white p-6 shadow">
                         <div class="mb-6 flex items-center justify-between">
                             <h2 class="text-xl font-bold">Recent product history</h2>
@@ -181,5 +262,3 @@
     </div>
 </body>
 </html>
-
-

@@ -6,6 +6,8 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\logincontroller;
 use App\Http\Controllers\registercontroller;
 use App\Http\Controllers\ReviewController;
+use App\Models\Brand;
+use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -39,12 +41,20 @@ Route::get('/login', function () {
 })->name('login');
 
 Route::get('/shop', function () {
+    $brands = Brand::query()
+        ->whereHas('products', fn ($query) => $query->where('is_active', true))
+        ->orderBy('name')
+        ->get();
+    $categories = Category::query()
+        ->whereHas('products', fn ($query) => $query->where('is_active', true))
+        ->orderBy('name')
+        ->get();
     $products = Product::with(['brand', 'category', 'images'])
         ->where('is_active', true)
         ->orderByDesc('created_at')
         ->get();
 
-    return view('shop.shop', compact('products'));
+    return view('shop.shop', compact('brands', 'categories', 'products'));
 })->name('shop');
 
 Route::get('/product/{product?}', function (?Product $product = null) {
