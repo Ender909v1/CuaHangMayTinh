@@ -5,6 +5,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\logincontroller;
 use App\Http\Controllers\registercontroller;
+use App\Http\Controllers\ReviewController;
 use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -60,6 +61,11 @@ Route::get('/cart', function () {
     return view('cart.cart');
 })->name('cart');
 
+// Customer review tab: everybody reads the reviews with the admin answers,
+// logged-in customers can post their own review.
+Route::get('/reviews', [ReviewController::class, 'index'])->name('reviews');
+Route::post('/reviews', [ReviewController::class, 'store'])->middleware('auth')->name('reviews.store');
+
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 Route::post('/checkout', [CheckoutController::class, 'store'])->name('checkout.store');
 Route::get('/checkout/success/{billCode}', [CheckoutController::class, 'success'])->name('checkout.success');
@@ -110,6 +116,9 @@ Route::middleware(['auth'])->group(function () {
 
         Route::get('/admin/inventory', [AdminController::class, 'inventory'])->name('admin.inventory.index');
         Route::put('/admin/inventory/{product}/stock', [AdminController::class, 'updateStock'])->name('admin.inventory.update-stock');
+
+        Route::put('/admin/reviews/{review}/response', [AdminController::class, 'respondToReview'])->name('admin.reviews.respond');
+        Route::delete('/admin/reviews/{review}', [AdminController::class, 'destroyReview'])->name('admin.reviews.destroy');
     });
 });
 

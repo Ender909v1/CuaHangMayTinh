@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\ProductHistory;
+use App\Models\Review;
 use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
@@ -31,10 +32,11 @@ class AdminController extends Controller
         $inventory = Product::with(['brand', 'category', 'histories' => $this->stockHistory()])
             ->orderBy('stock_qty')
             ->get();
+        $reviews = Review::with(['user', 'product'])->latest('id')->get();
 
         return view('admin.dashboard', compact(
             'totalProducts', 'activeProducts', 'lowStockProducts', 'history',
-            'products', 'users', 'orders', 'inventory'
+            'products', 'users', 'orders', 'inventory', 'reviews'
         ));
     }
 
@@ -345,6 +347,42 @@ class AdminController extends Controller
         ]);
 
         return back()->with('success', "Stock for {$product->name} updated: {$oldStock} → {$newStock}.");
+    }
+
+    /**
+     * Reviews tab: the admin answers a customer review. The answer can be edited later,
+     * so saving again simply replaces the previous response.
+     */
+    public function respondToReview(Request $request, Review $review)
+    {
+        $validated = $request->validate([
+            'admin_response' => ['required', 'string', 'min:2', 'max:2000'],
+        ], [
+            'admin_response.required' => 'Write a response before saving.',
+            'admin_response.min' => 'The response must be at least 2 characters.',
+            'admin_response.max' => 'The response cannot be longer than 2000 characters.',
+        ]);
+
+        $review->update([
+            'admin_response' => $validated['admin_response'],
+            'admin_responded_at' => now(),
+        ]);
+
+        return redirect()
+            ->route('admin.dashboard', ['tab' => 'reviews'])
+            ->with('success', 'Response saved for the review of '.($review->product?->name ?? 'the customer').'.');
+    }
+
+    /**
+     * Reviews tab: remove a customer review (and with it any admin response).
+     */
+    public function destroyReview(Review $review)
+    {
+        $review->delete();
+
+        return redirect()
+            ->route('admin.dashboard', ['tab' => 'reviews'])
+            ->with('success', 'Review deleted successfully.');
     }
 
     /**

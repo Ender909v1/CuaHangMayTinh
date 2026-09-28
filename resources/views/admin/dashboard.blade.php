@@ -174,10 +174,7 @@
 
                 <!-- Reviews Tab -->
                 <div x-show="activeTab === 'reviews'" class="rounded-xl bg-white p-6 shadow">
-                    <div class="mb-6">
-                        <h2 class="text-xl font-bold">Reviews Management</h2>
-                    </div>
-                    <p class="text-gray-500">Moderate customer reviews. Approve, reject, or respond to product reviews.</p>
+                    @include('admin.partials.reviews-tab')
                 </div>
             </div>
         </main>

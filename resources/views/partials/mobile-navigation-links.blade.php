@@ -25,6 +25,7 @@
         </ul>
     </li>
     <li><a href="{{ route('shop') }}" class="hover:text-secondary font-bold block py-2">Shop</a></li>
+    <li><a href="{{ route('reviews') }}" class="hover:text-secondary font-bold block py-2">Reviews</a></li>
     <li><a href="{{ route('product') }}" class="hover:text-secondary font-bold block py-2">Product</a></li>
     <li><a href="{{ route('cuahangmaytinh') }}#contact" class="hover:text-secondary font-bold block py-2">Contact</a></li>
     <li><a href="{{ route('checkout') }}" class="hover:text-secondary font-bold block py-2">Checkout</a></li>

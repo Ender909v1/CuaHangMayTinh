@@ -587,3 +587,19 @@ img.cursor-pointer:hover {
     overflow-y: auto;
 }
 
+/* Review tab: the review box grows down with the text, so it must not be drag-resized. */
+.resize-none {
+    resize: none;
+}
+
+/* Review tab: on wider screens a review's name/date block and its stars sit on one row. */
+@media (min-width: 640px) {
+    .sm\:items-center {
+        align-items: center;
+    }
+
+    .sm\:justify-between {
+        justify-content: space-between;
+    }
+}
+
