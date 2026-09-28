@@ -25,6 +25,7 @@
                             <div class="flex gap-2">
                                 <a href="{{ route('admin.products.show', $product) }}" class="rounded bg-blue-600 px-3 py-1.5 text-white hover:bg-blue-500">Detail</a>
                                 <a href="{{ route('admin.products.edit', $product) }}" class="rounded bg-yellow-500 px-3 py-1.5 text-white hover:bg-yellow-400">Edit</a>
+                                <form method="POST" action="{{ route('admin.products.destroy', $product) }}" onsubmit="return confirm('Delete this product?');">@csrf @method('DELETE')<button type="submit" class="rounded bg-red-600 px-3 py-1.5 text-white hover:bg-red-500">Delete</button></form>
                             </div>
                         </td>
                     </tr>

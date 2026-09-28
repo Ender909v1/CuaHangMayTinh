@@ -432,6 +432,43 @@ class AdminDashboardTest extends TestCase
         $this->assertDatabaseCount('product_histories', 0);
     }
 
+    public function test_dashboard_does_not_show_a_brands_tab(): void
+    {
+        $response = $this->actingAs($this->makeAdmin())->get('/admin');
+
+        $response->assertOk();
+        $response->assertDontSee("activeTab = 'brands'", false);
+        $response->assertDontSee('Brands Management', false);
+    }
+
+    public function test_products_tab_shows_a_delete_button_for_each_product(): void
+    {
+        $admin = $this->makeAdmin();
+        $product = $this->makeProduct();
+
+        $response = $this->actingAs($admin)->get('/admin?tab=products');
+
+        $response->assertOk();
+        $response->assertSee(route('admin.products.destroy', $product), false);
+        $response->assertSee('Delete this product?', false);
+    }
+
+    public function test_admin_can_delete_a_product_from_the_products_tab(): void
+    {
+        $admin = $this->makeAdmin();
+        $product = $this->makeProduct();
+
+        $response = $this->actingAs($admin)->delete('/admin/products/'.$product->id);
+
+        $response->assertRedirect('/admin/products');
+        $response->assertSessionHas('success');
+        $this->assertDatabaseMissing('products', ['id' => $product->id]);
+        $this->assertDatabaseHas('product_histories', [
+            'user_id' => $admin->id,
+            'action' => 'deleted',
+        ]);
+    }
+
     private function makeAdmin(): User
     {
         return User::create([

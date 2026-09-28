@@ -32,7 +32,6 @@
                     <button @click="activeTab = 'orders'" :class="activeTab === 'orders' ? 'bg-red-600 text-white' : 'bg-gray-200 text-gray-700'" class="px-4 py-2 rounded-t-lg font-semibold">Orders</button>
                     <button @click="activeTab = 'users'" :class="activeTab === 'users' ? 'bg-red-600 text-white' : 'bg-gray-200 text-gray-700'" class="px-4 py-2 rounded-t-lg font-semibold">Users</button>
                     <button @click="activeTab = 'categories'" :class="activeTab === 'categories' ? 'bg-red-600 text-white' : 'bg-gray-200 text-gray-700'" class="px-4 py-2 rounded-t-lg font-semibold">Categories</button>
-                    <button @click="activeTab = 'brands'" :class="activeTab === 'brands' ? 'bg-red-600 text-white' : 'bg-gray-200 text-gray-700'" class="px-4 py-2 rounded-t-lg font-semibold">Brands</button>
                     <button @click="activeTab = 'inventory'" :class="activeTab === 'inventory' ? 'bg-red-600 text-white' : 'bg-gray-200 text-gray-700'" class="px-4 py-2 rounded-t-lg font-semibold">Inventory</button>
                     <button @click="activeTab = 'reviews'" :class="activeTab === 'reviews' ? 'bg-red-600 text-white' : 'bg-gray-200 text-gray-700'" class="px-4 py-2 rounded-t-lg font-semibold">Reviews</button>
                 </div>
@@ -237,15 +236,6 @@
                             @endforeach
                         </div>
                     @endif
-                </div>
-
-                <!-- Brands Tab -->
-                <div x-show="activeTab === 'brands'" class="rounded-xl bg-white p-6 shadow">
-                    <div class="mb-6 flex items-center justify-between">
-                        <h2 class="text-xl font-bold">Brands Management</h2>
-                        <button class="rounded-full bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-500">Add Brand</button>
-                    </div>
-                    <p class="text-gray-500">Manage product brands. Add new brands, update brand information, and manage brand visibility.</p>
                 </div>
 
                 <!-- Inventory Tab -->
