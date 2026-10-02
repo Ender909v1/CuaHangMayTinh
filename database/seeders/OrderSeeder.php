@@ -17,6 +17,7 @@ class OrderSeeder extends Seeder
             $paid = fake()->boolean(70);
 
             DB::table('orders')->insert([
+                'bill_code' => $this->generateUniqueBillCode(),
                 'user_id' => fake()->randomElement($userIds),
                 'order_date' => now()->subDays(fake()->numberBetween(0, 90)),
                 'total_amount' => fake()->randomFloat(2, 200000, 50000000),
@@ -29,5 +30,14 @@ class OrderSeeder extends Seeder
                 'shipping_address' => fake()->address(),
             ]);
         }
+    }
+
+    private function generateUniqueBillCode(): string
+    {
+        do {
+            $billCode = 'BILL-'.strtoupper(substr(bin2hex(random_bytes(5)), 0, 8));
+        } while (DB::table('orders')->where('bill_code', $billCode)->exists());
+
+        return $billCode;
     }
 }

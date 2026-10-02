@@ -59,13 +59,16 @@ return new class extends Migration
         }
 
         if (Schema::hasColumn('orders', 'bill_code')) {
-            try {
-                Schema::table('orders', function (Blueprint $table) {
-                    $table->dropUnique(['bill_code']);
+            foreach (Schema::getIndexes('orders') as $index) {
+                if (! in_array('bill_code', $index['columns'], true)) {
+                    continue;
+                }
+
+                Schema::table('orders', function (Blueprint $table) use ($index) {
+                    $table->dropIndex($index['name']);
                 });
-            } catch (Throwable) {
-                // Index name may differ; ignore.
             }
+
             Schema::table('orders', function (Blueprint $table) {
                 $table->dropColumn('bill_code');
             });

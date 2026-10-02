@@ -472,9 +472,11 @@
                         </select>
                         <div
                             class="pointer-events-none absolute inset-y-0 right-0 flex items-center justify-center px-2">
-                            <img id="arrow-down" class="h-4 w-4" src="{{ asset('tailstore4-main/assets/images/filter-down-arrow.svg') }}"
+                            <img id="arrow-down" class="h-4 w-4"
+                                src="{{ asset('tailstore4-main/assets/images/filter-down-arrow.svg') }}"
                                 alt="filter arrow">
-                            <img id="arrow-up" class="h-4 w-4 hidden" src="{{ asset('tailstore4-main/assets/images/filter-up-arrow.svg') }}"
+                            <img id="arrow-up" class="h-4 w-4 hidden"
+                                src="{{ asset('tailstore4-main/assets/images/filter-up-arrow.svg') }}"
                                 alt="filter arrow">
                         </div>
                     </div>
@@ -506,15 +508,18 @@
                         <h3 class="text-lg font-semibold mb-6">Specs</h3>
                         <div class="space-y-2">
                             <label class="flex items-center">
-                                <input type="checkbox" class="form-checkbox custom-checkbox filter-checkbox" data-filter-type="spec" data-filter-value="Intel Core">
+                                <input type="checkbox" class="form-checkbox custom-checkbox filter-checkbox"
+                                    data-filter-type="spec" data-filter-value="Intel Core">
                                 <span class="ml-2">Intel Core</span>
                             </label>
                             <label class="flex items-center">
-                                <input type="checkbox" class="form-checkbox custom-checkbox filter-checkbox" data-filter-type="spec" data-filter-value="AMD Ryzen">
+                                <input type="checkbox" class="form-checkbox custom-checkbox filter-checkbox"
+                                    data-filter-type="spec" data-filter-value="AMD Ryzen">
                                 <span class="ml-2">AMD Ryzen</span>
                             </label>
                             <label class="flex items-center">
-                                <input type="checkbox" class="form-checkbox custom-checkbox filter-checkbox" data-filter-type="spec" data-filter-value="RTX Graphics">
+                                <input type="checkbox" class="form-checkbox custom-checkbox filter-checkbox"
+                                    data-filter-type="spec" data-filter-value="RTX Graphics">
                                 <span class="ml-2">RTX Graphics</span>
                             </label>
                         </div>
@@ -524,15 +529,18 @@
                         <h3 class="text-lg font-semibold mb-6">Price</h3>
                         <div class="space-y-2">
                             <label class="flex items-center custom-color-checkbox" data-color="#ff0000">
-                                <input type="checkbox" class="form-checkbox custom-checkbox filter-checkbox" data-filter-type="price" data-filter-value="0-10000000">
+                                <input type="checkbox" class="form-checkbox custom-checkbox filter-checkbox"
+                                    data-filter-type="price" data-filter-value="0-10000000">
                                 <span class="ml-2">Under 10.000.000 ₫</span>
                             </label>
                             <label class="flex items-center custom-color-checkbox" data-color="#0000ff">
-                                <input type="checkbox" class="form-checkbox custom-checkbox filter-checkbox" data-filter-type="price" data-filter-value="10000000-30000000">
+                                <input type="checkbox" class="form-checkbox custom-checkbox filter-checkbox"
+                                    data-filter-type="price" data-filter-value="10000000-30000000">
                                 <span class="ml-2">10.000.000 ₫ - 30.000.000 ₫</span>
                             </label>
                             <label class="flex items-center custom-color-checkbox" data-color="#00ff00">
-                                <input type="checkbox" class="form-checkbox custom-checkbox filter-checkbox" data-filter-type="price" data-filter-value="30000000-above">
+                                <input type="checkbox" class="form-checkbox custom-checkbox filter-checkbox"
+                                    data-filter-type="price" data-filter-value="30000000-above">
                                 <span class="ml-2">Above 30.000.000 ₫</span>
                             </label>
                         </div>
@@ -557,42 +565,47 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                         @forelse ($products as $product)
                             @php
-                                $cardImage = $product->images->first()->image_url ?? asset('tailstore4-main/logo/logo.jpg');
+                                $cardImage =
+                                    $product->images->first()->image_url ?? asset('tailstore4-main/logo/logo.jpg');
                                 $cardPrice = $product->effectivePrice();
                                 $cardOldPrice = $product->originalPrice();
                                 $isOutOfStock = (int) $product->stock_qty <= 0;
                             @endphp
                             <div class="bg-white p-4 rounded-lg shadow product-card {{ $isOutOfStock ? 'opacity-75' : '' }}"
-                                data-category="{{ $product->category_id }}"
-                                data-spec="{{ $product->spec ?? '' }}"
-                                data-price="{{ $cardPrice }}"
-                                data-brand="{{ $product->brand_id }}">
+                                data-category="{{ $product->category_id }}" data-spec="{{ $product->spec ?? '' }}"
+                                data-price="{{ $cardPrice }}" data-brand="{{ $product->brand_id }}">
                                 <div class="relative">
                                     <img src="{{ $cardImage }}" alt="{{ $product->name }}"
                                         class="w-full object-cover mb-4 rounded-lg {{ $isOutOfStock ? 'grayscale' : '' }}">
                                     @if ($isOutOfStock)
-                                        <span class="absolute left-2 top-2 rounded-full bg-gray-900 px-3 py-1 text-xs font-bold uppercase text-white">Out of stock</span>
+                                        <span
+                                            class="absolute left-2 top-2 rounded-full bg-gray-900 px-3 py-1 text-xs font-bold uppercase text-white">Out
+                                            of stock</span>
                                     @endif
                                 </div>
-                                <a href="{{ route('product', $product) }}" class="text-lg font-semibold mb-2 block">{{ $product->name }}</a>
+                                <a href="{{ route('product', $product) }}"
+                                    class="text-lg font-semibold mb-2 block">{{ $product->name }}</a>
                                 <p class=" my-2">{{ $product->category->name ?? '' }}</p>
                                 <div class="flex items-center mb-4">
-                                    <span class="text-lg font-bold text-primary">{{ number_format((float) $cardPrice, 0, ',', '.') }} ₫</span>
+                                    <span
+                                        class="text-lg font-bold text-primary">{{ number_format((float) $cardPrice, 0, ',', '.') }}
+                                        ₫</span>
                                     @if ($cardOldPrice)
-                                        <span class="text-sm line-through ml-2">{{ number_format((float) $cardOldPrice, 0, ',', '.') }} ₫</span>
+                                        <span
+                                            class="text-sm line-through ml-2">{{ number_format((float) $cardOldPrice, 0, ',', '.') }}
+                                            ₫</span>
                                     @endif
                                 </div>
                                 @if ($isOutOfStock)
-                                    <button
-                                        type="button"
-                                        disabled
-                                        aria-disabled="true"
-                                        class="btn-out-of-stock py-2 px-4 rounded-full w-full font-semibold">Out of Stock</button>
+                                    <button type="button" disabled aria-disabled="true"
+                                        class="btn-out-of-stock py-2 px-4 rounded-full w-full font-semibold">Out of
+                                        Stock</button>
                                 @else
                                     <button
                                         class="bg-primary border border-transparent hover:bg-transparent hover:border-primary text-white hover:text-primary font-semibold py-2 px-4 rounded-full w-full"
                                         data-add-to-cart data-product-id="{{ $product->id }}"
-                                        data-product-price="{{ $cardPrice }}" data-product-name="{{ $product->name }}"
+                                        data-product-price="{{ $cardPrice }}"
+                                        data-product-name="{{ $product->name }}"
                                         data-product-image="{{ $cardImage }}">Add
                                         to Cart</button>
                                 @endif
@@ -669,28 +682,28 @@
                     <h3 class="text-lg font-semibold mb-4">Follow Us</h3>
                     <ul>
                         <li class="flex items-center mb-2">
-                            <img src="{{ asset('tailstore4-main/assets/images/social_icons/facebook.svg') }}" alt="Facebook"
-                                class="w-4 h-4 transition-transform transform hover:scale-110 mr-2">
+                            <img src="{{ asset('tailstore4-main/assets/images/social_icons/facebook.svg') }}"
+                                alt="Facebook" class="w-4 h-4 transition-transform transform hover:scale-110 mr-2">
                             <a href="#" class="hover:text-primary">Facebook</a>
                         </li>
                         <li class="flex items-center mb-2">
-                            <img src="{{ asset('tailstore4-main/assets/images/social_icons/twitter.svg') }}" alt="Twitter"
-                                class="w-4 h-4 transition-transform transform hover:scale-110 mr-2">
+                            <img src="{{ asset('tailstore4-main/assets/images/social_icons/twitter.svg') }}"
+                                alt="Twitter" class="w-4 h-4 transition-transform transform hover:scale-110 mr-2">
                             <a href="#" class="hover:text-primary">Twitter</a>
                         </li>
                         <li class="flex items-center mb-2">
-                            <img src="{{ asset('tailstore4-main/assets/images/social_icons/instagram.svg') }}" alt="Instagram"
-                                class="w-4 h-4 transition-transform transform hover:scale-110 mr-2">
+                            <img src="{{ asset('tailstore4-main/assets/images/social_icons/instagram.svg') }}"
+                                alt="Instagram" class="w-4 h-4 transition-transform transform hover:scale-110 mr-2">
                             <a href="#" class="hover:text-primary">Instagram</a>
                         </li>
                         <li class="flex items-center mb-2">
-                            <img src="{{ asset('tailstore4-main/assets/images/social_icons/pinterest.svg') }}" alt="Instagram"
-                                class="w-4 h-4 transition-transform transform hover:scale-110 mr-2">
+                            <img src="{{ asset('tailstore4-main/assets/images/social_icons/pinterest.svg') }}"
+                                alt="Instagram" class="w-4 h-4 transition-transform transform hover:scale-110 mr-2">
                             <a href="#" class="hover:text-primary">Pinterest</a>
                         </li>
                         <li class="flex items-center mb-2">
-                            <img src="{{ asset('tailstore4-main/assets/images/social_icons/youtube.svg') }}" alt="Instagram"
-                                class="w-4 h-4 transition-transform transform hover:scale-110 mr-2">
+                            <img src="{{ asset('tailstore4-main/assets/images/social_icons/youtube.svg') }}"
+                                alt="Instagram" class="w-4 h-4 transition-transform transform hover:scale-110 mr-2">
                             <a href="#" class="hover:text-primary">YouTube</a>
                         </li>
                     </ul>
@@ -698,7 +711,8 @@
                 <!-- Contact Information -->
                 <div class="w-full sm:w-2/6 px-4 mb-8">
                     <h3 class="text-lg font-semibold mb-4">Contact Us</h3>
-                    <p><img src="{{ asset('tailstore4-main/logo/logo.jpg') }}" alt="Logo" class="h-[60px] mb-4"></p>
+                    <p><img src="{{ asset('tailstore4-main/logo/logo.jpg') }}" alt="Logo" class="h-[60px] mb-4">
+                    </p>
                     <p>123 Street Name, Paris, France</p>
                     <p class="text-xl font-bold my-4">Phone: (123) 456-7890</p>
                     <a href="mailto:info@company.com" class="underline">Email: info@company.com</a>
@@ -717,14 +731,18 @@
                         <li><a href="#" class="hover:text-primary">Terms of Service</a></li>
                         <li><a href="#" class="hover:text-primary">FAQ</a></li>
                     </ul>
-                    <p class="text-sm mt-4">Your shop's description goes here. This is a brief introduction to your shop
+                    <p class="text-sm mt-4">Your shop's description goes here. This is a brief introduction to your
+                        shop
                         and what you offer.</p>
                 </div>
                 <!-- Payment Icons -->
                 <div class="w-full lg:w-1/4 text-center lg:text-right">
-                    <img src="{{ asset('tailstore4-main/assets/images/social_icons/paypal.svg') }}" alt="PayPal" class="inline-block h-8 mr-2">
-                    <img src="{{ asset('tailstore4-main/assets/images/social_icons/stripe.svg') }}" alt="Stripe" class="inline-block h-8 mr-2">
-                    <img src="{{ asset('tailstore4-main/assets/images/social_icons/visa.svg') }}" alt="Visa" class="inline-block h-8">
+                    <img src="{{ asset('tailstore4-main/assets/images/social_icons/paypal.svg') }}" alt="PayPal"
+                        class="inline-block h-8 mr-2">
+                    <img src="{{ asset('tailstore4-main/assets/images/social_icons/stripe.svg') }}" alt="Stripe"
+                        class="inline-block h-8 mr-2">
+                    <img src="{{ asset('tailstore4-main/assets/images/social_icons/visa.svg') }}" alt="Visa"
+                        class="inline-block h-8">
                 </div>
             </div>
         </div>
@@ -740,25 +758,29 @@
             allCheckboxes.forEach(checkbox => {
                 checkbox.addEventListener('change', function() {
                     // Get selected categories
-                    const categoryCheckboxes = document.querySelectorAll('#filters input[data-filter-type="category"]');
+                    const categoryCheckboxes = document.querySelectorAll(
+                        '#filters input[data-filter-type="category"]');
                     const selectedCategories = Array.from(categoryCheckboxes)
                         .filter(cb => cb.checked)
                         .map(cb => cb.dataset.filterValue);
 
                     // Get selected specs
-                    const specCheckboxes = document.querySelectorAll('#filters input[data-filter-type="spec"]');
+                    const specCheckboxes = document.querySelectorAll(
+                        '#filters input[data-filter-type="spec"]');
                     const selectedSpecs = Array.from(specCheckboxes)
                         .filter(cb => cb.checked)
                         .map(cb => cb.dataset.filterValue);
 
                     // Get selected price ranges
-                    const priceCheckboxes = document.querySelectorAll('#filters input[data-filter-type="price"]');
+                    const priceCheckboxes = document.querySelectorAll(
+                        '#filters input[data-filter-type="price"]');
                     const selectedPrices = Array.from(priceCheckboxes)
                         .filter(cb => cb.checked)
                         .map(cb => cb.dataset.filterValue);
 
                     // Get selected brands
-                    const brandCheckboxes = document.querySelectorAll('#filters input[data-filter-type="brand"]');
+                    const brandCheckboxes = document.querySelectorAll(
+                        '#filters input[data-filter-type="brand"]');
                     const selectedBrands = Array.from(brandCheckboxes)
                         .filter(cb => cb.checked)
                         .map(cb => cb.dataset.filterValue);
@@ -772,12 +794,14 @@
                         let showProduct = true;
 
                         // Check category filter
-                        if (selectedCategories.length > 0 && !selectedCategories.includes(productCategory)) {
+                        if (selectedCategories.length > 0 && !selectedCategories.includes(
+                                productCategory)) {
                             showProduct = false;
                         }
 
                         // Check spec filter
-                        if (selectedSpecs.length > 0 && !selectedSpecs.includes(productSpec)) {
+                        if (selectedSpecs.length > 0 && !selectedSpecs.includes(
+                            productSpec)) {
                             showProduct = false;
                         }
 
@@ -785,15 +809,20 @@
                         if (selectedPrices.length > 0) {
                             let priceMatch = false;
                             selectedPrices.forEach(range => {
-                                if (range === '0-10000000' && productPrice < 10000000) priceMatch = true;
-                                if (range === '10000000-30000000' && productPrice >= 10000000 && productPrice <= 30000000) priceMatch = true;
-                                if (range === '30000000-above' && productPrice > 30000000) priceMatch = true;
+                                if (range === '0-10000000' && productPrice <
+                                    10000000) priceMatch = true;
+                                if (range === '10000000-30000000' && productPrice >=
+                                    10000000 && productPrice <= 30000000)
+                                    priceMatch = true;
+                                if (range === '30000000-above' && productPrice >
+                                    30000000) priceMatch = true;
                             });
                             if (!priceMatch) showProduct = false;
                         }
 
                         // Check brand filter
-                        if (selectedBrands.length > 0 && !selectedBrands.includes(productBrand)) {
+                        if (selectedBrands.length > 0 && !selectedBrands.includes(
+                                productBrand)) {
                             showProduct = false;
                         }
 
@@ -804,4 +833,5 @@
         });
     </script>
 </body>
+
 </html>
