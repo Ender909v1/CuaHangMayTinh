@@ -123,6 +123,8 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/account', [AccountController::class, 'show'])->name('account');
     Route::put('/account', [AccountController::class, 'update'])->name('account.update');
     Route::get('/my-orders', [AccountController::class, 'orders'])->name('my-orders');
+    Route::delete('/my-orders/{order}', [AccountController::class, 'cancelOrder'])->name('my-orders.cancel');
+    Route::delete('/my-orders/{order}/items/{item}', [AccountController::class, 'removeOrderItem'])->name('my-orders.remove-item');
 
     Route::middleware('admin')->group(function () {
         Route::get('/admin', [AdminController::class, 'dashboard'])->name('admin.dashboard');
@@ -146,6 +148,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admin/orders', [AdminController::class, 'orders'])->name('admin.orders.index');
         Route::get('/admin/orders/{order}', [AdminController::class, 'showOrder'])->name('admin.orders.show');
         Route::put('/admin/orders/{order}/status', [AdminController::class, 'updateOrderStatus'])->name('admin.orders.status');
+        Route::put('/admin/orders/{order}/payment', [AdminController::class, 'updateOrderPayment'])->name('admin.orders.payment');
 
         Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users.index');
         Route::get('/admin/users/{user}/edit', [AdminController::class, 'editUser'])->name('admin.users.edit');

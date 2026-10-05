@@ -23,6 +23,33 @@
                 @if (session('success'))
                     <div class="mb-4 rounded border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">{{ session('success') }}</div>
                 @endif
+                <form method="GET" action="{{ route('admin.orders.index') }}" class="mb-6 grid gap-3 rounded-xl border border-gray-200 bg-gray-50 p-4 md:grid-cols-2 xl:grid-cols-5">
+                    <div class="xl:col-span-2">
+                        <label for="order-search" class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-500">Search</label>
+                        <input id="order-search" type="text" name="search" value="{{ $orderFilters['search'] ?? '' }}" placeholder="Bill code, customer, email, address…" class="w-full rounded border px-3 py-2 text-sm">
+                    </div>
+                    <div>
+                        <label for="order-status" class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-500">Status</label>
+                        <select id="order-status" name="status" class="w-full rounded border px-3 py-2 text-sm">
+                            <option value="">All statuses</option>
+                            @foreach (\App\Models\Order::STATUSES as $statusOption)
+                                <option value="{{ $statusOption }}" {{ ($orderFilters['status'] ?? '') === $statusOption ? 'selected' : '' }}>{{ ucfirst($statusOption) }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div>
+                        <label for="order-date-from" class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-500">Order date from</label>
+                        <input id="order-date-from" type="date" name="date_from" value="{{ $orderFilters['date_from'] ?? '' }}" class="w-full rounded border px-3 py-2 text-sm">
+                    </div>
+                    <div>
+                        <label for="order-date-to" class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-500">Order date to</label>
+                        <input id="order-date-to" type="date" name="date_to" value="{{ $orderFilters['date_to'] ?? '' }}" class="w-full rounded border px-3 py-2 text-sm">
+                    </div>
+                    <div class="flex gap-2 md:col-span-2 xl:col-span-5">
+                        <button type="submit" class="rounded bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-500">Apply Filters</button>
+                        <a href="{{ route('admin.orders.index') }}" class="rounded border px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100">Reset</a>
+                    </div>
+                </form>
                 <div class="overflow-x-auto">
                     <table class="min-w-full text-left text-sm">
                         <thead>

@@ -40,20 +40,73 @@
                             </select>
                             <span class="text-xs text-gray-400">/ {{ $order->payment_status }}</span>
                         </form>
+                        @if ($order->status !== 'cancelled')
+                            <form method="POST" action="{{ route('admin.orders.cancel', $order) }}" class="mt-2" onsubmit="return confirm('Cancel this order and return all items to stock?');">
+                                @csrf @method('PUT')
+                                <button type="submit" class="rounded border border-red-300 px-3 py-1 text-xs font-semibold text-red-600 hover:bg-red-50">Cancel order + restock</button>
+                            </form>
+                        @endif
                     </div>
                     <div><p class="text-gray-500">Customer</p><p class="font-semibold">{{ $order->user?->full_name ?? 'Guest checkout' }} ({{ $order->user?->email ?? 'no account' }})</p></div>
                     <div><p class="text-gray-500">Total</p><p class="font-bold">{{ number_format((float) $order->total_amount, 0, ',', '.') }} ₫</p></div>
                     <div class="md:col-span-2"><p class="text-gray-500">Shipping</p><p class="font-medium">{{ $order->shipping_address }}</p></div>
                     <div><p class="text-gray-500">Payment method</p><p class="font-medium">{{ $order->payment_method ?? '—' }}</p></div>
                     <div><p class="text-gray-500">Date</p><p class="font-medium">{{ $order->order_date }}</p></div>
+                    <div>
+                        <p class="text-gray-500">Payment status</p>
+                        <p class="font-medium">{{ $order->payment_status }}</p>
+                        @if ($order->paymentNeedsAttention())
+                            <p class="mt-1 rounded bg-yellow-50 px-2 py-1 text-xs font-semibold text-yellow-700">Bank/QR transfer needs attention — verify the money, then update below.</p>
+                        @endif
+                    </div>
+                    <div><p class="text-gray-500">Transaction ID</p><p class="font-mono font-medium">{{ $order->transaction_id ?? '—' }}</p></div>
+                </div>
+                <div class="rounded-xl border border-gray-200 bg-gray-50 p-4">
+                    <h2 class="font-bold">Update payment (bank/QR rescue)</h2>
+                    <p class="mt-1 text-xs text-gray-500">Customer scanned the QR but the transfer stalled? Check your bank app, then fix the bill here: method, status, and transaction reference.</p>
+                    <form method="POST" action="{{ route('admin.orders.payment', $order) }}" class="mt-3 grid gap-3 md:grid-cols-2">
+                        @csrf @method('PUT')
+                        <div>
+                            <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-500" for="payment-method">Payment method</label>
+                            <select id="payment-method" name="payment_method" class="w-full rounded border px-3 py-2 text-sm">
+                                @foreach (\App\Models\Order::PAYMENT_METHODS as $methodOption)
+                                    <option value="{{ $methodOption }}" {{ $order->payment_method === $methodOption ? 'selected' : '' }}>{{ $methodOption }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div>
+                            <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-500" for="payment-status">Payment status</label>
+                            <select id="payment-status" name="payment_status" class="w-full rounded border px-3 py-2 text-sm">
+                                @foreach (\App\Models\Order::PAYMENT_STATUSES as $paymentOption)
+                                    <option value="{{ $paymentOption }}" {{ $order->payment_status === $paymentOption ? 'selected' : '' }}>{{ $paymentOption }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-500" for="transaction-id">Transaction ID (bank reference)</label>
+                            <input id="transaction-id" type="text" name="transaction_id" value="{{ $order->transaction_id ?? '' }}" placeholder="e.g. FT123456789" class="w-full rounded border px-3 py-2 text-sm">
+                        </div>
+                        <div class="md:col-span-2">
+                            <button type="submit" class="rounded bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-500">Save payment</button>
+                        </div>
+                    </form>
+                </div>
                 </div>
                 <div>
                     <h2 class="font-bold">Items</h2>
                     <ul class="mt-2 divide-y text-sm">
                         @foreach ($order->items as $item)
-                            <li class="flex justify-between gap-3 py-2">
+                            <li class="flex items-center justify-between gap-3 py-2">
                                 <span>{{ $item->product?->name ?? 'Product #'.$item->product_id }} × {{ $item->quantity }} <span class="text-gray-400">({{ number_format((float) $item->unit_price, 0, ',', '.') }} ₫ each)</span></span>
-                                <span class="font-semibold">{{ number_format((float) $item->unit_price * (int) $item->quantity, 0, ',', '.') }} ₫</span>
+                                <span class="flex items-center gap-3">
+                                    <span class="font-semibold">{{ number_format((float) $item->unit_price * (int) $item->quantity, 0, ',', '.') }} ₫</span>
+                                    @if ($order->canRemoveItems())
+                                        <form method="POST" action="{{ route('admin.order-items.destroy', [$order, $item]) }}" onsubmit="return confirm('Remove this item and restock it?');">
+                                            @csrf @method('DELETE')
+                                            <button type="submit" class="rounded border border-red-300 px-3 py-1 text-xs font-semibold text-red-600 hover:bg-red-50">Remove</button>
+                                        </form>
+                                    @endif
+                                </span>
                             </li>
                         @endforeach
                     </ul>

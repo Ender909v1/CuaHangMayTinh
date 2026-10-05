@@ -1,8 +1,37 @@
-<div class="mb-6">
+<div class="mb-6 flex flex-wrap items-end justify-between gap-3">
     <h2 class="text-xl font-bold">Orders Management</h2>
+    <a href="{{ route('admin.orders.index') }}" class="rounded bg-gray-900 px-3 py-2 text-sm font-semibold text-white hover:bg-gray-700">Full Orders Page</a>
 </div>
+<form method="GET" action="{{ route('admin.dashboard') }}" class="mb-6 grid gap-3 rounded-xl border border-gray-200 bg-gray-50 p-4 md:grid-cols-2 xl:grid-cols-5">
+    <input type="hidden" name="tab" value="orders">
+    <div class="xl:col-span-2">
+        <label for="dashboard-order-search" class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-500">Search</label>
+        <input id="dashboard-order-search" type="text" name="search" value="{{ $orderFilters['search'] ?? '' }}" placeholder="Bill code, customer, email, address…" class="w-full rounded border px-3 py-2 text-sm">
+    </div>
+    <div>
+        <label for="dashboard-order-status" class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-500">Status</label>
+        <select id="dashboard-order-status" name="status" class="w-full rounded border px-3 py-2 text-sm">
+            <option value="">All statuses</option>
+            @foreach (\App\Models\Order::STATUSES as $statusOption)
+                <option value="{{ $statusOption }}" {{ ($orderFilters['status'] ?? '') === $statusOption ? 'selected' : '' }}>{{ ucfirst($statusOption) }}</option>
+            @endforeach
+        </select>
+    </div>
+    <div>
+        <label for="dashboard-order-from" class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-500">Order date from</label>
+        <input id="dashboard-order-from" type="date" name="date_from" value="{{ $orderFilters['date_from'] ?? '' }}" class="w-full rounded border px-3 py-2 text-sm">
+    </div>
+    <div>
+        <label for="dashboard-order-to" class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-500">Order date to</label>
+        <input id="dashboard-order-to" type="date" name="date_to" value="{{ $orderFilters['date_to'] ?? '' }}" class="w-full rounded border px-3 py-2 text-sm">
+    </div>
+    <div class="flex gap-2 md:col-span-2 xl:col-span-5">
+        <button type="submit" class="rounded bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-500">Apply Filters</button>
+        <a href="{{ route('admin.dashboard', ['tab' => 'orders']) }}" class="rounded border px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100">Reset</a>
+    </div>
+</form>
 @if ($orders->isEmpty())
-    <p class="text-gray-500">No orders yet. Orders placed from checkout will appear here with their bill code.</p>
+    <p class="text-gray-500">No orders match these filters. Orders placed from checkout will appear here with their bill code.</p>
 @else
     <div class="overflow-x-auto">
         <table class="min-w-full text-left text-sm">

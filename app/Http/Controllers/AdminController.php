@@ -10,6 +10,7 @@ use App\Models\ProductHistory;
 use App\Models\Review;
 use App\Models\User;
 use Closure;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
@@ -19,7 +20,7 @@ use Illuminate\Validation\Rule;
 
 class AdminController extends Controller
 {
-    public function dashboard()
+    public function dashboard(Request $request)
     {
         $totalProducts = Product::count();
         $activeProducts = Product::where('is_active', true)->count();
@@ -61,7 +62,8 @@ class AdminController extends Controller
             return $stat;
         })->all();
         $users = User::orderBy('id')->get();
-        $orders = Order::with(['user', 'items.product'])->latest('id')->get();
+        $orderFilters = $this->orderFilters($request);
+        $orders = $this->filteredOrdersQuery($orderFilters)->latest('id')->get();
         $inventory = Product::with(['brand', 'category', 'histories' => $this->stockHistory()])
             ->orderBy('stock_qty')
             ->get();
@@ -70,7 +72,8 @@ class AdminController extends Controller
         return view('admin.dashboard', compact(
             'totalProducts', 'activeProducts', 'lowStockProducts', 'history',
             'products', 'monthlyProductStats', 'maxMonthlyProductCount', 'stockTotal',
-            'stockChartCircumference', 'stockStats', 'users', 'orders', 'inventory', 'reviews'
+            'stockChartCircumference', 'stockStats', 'users', 'orders', 'inventory', 'reviews',
+            'orderFilters'
         ));
     }
 
@@ -250,11 +253,15 @@ class AdminController extends Controller
         return view('admin.history', compact('history'));
     }
 
-    public function orders()
+    public function orders(Request $request)
     {
-        $orders = Order::with(['user', 'items.product'])->latest('id')->paginate(15);
+        $orderFilters = $this->orderFilters($request);
+        $orders = $this->filteredOrdersQuery($orderFilters)
+            ->latest('id')
+            ->paginate(15)
+            ->withQueryString();
 
-        return view('admin.orders.index', compact('orders'));
+        return view('admin.orders.index', compact('orders', 'orderFilters'));
     }
 
     public function showOrder(Order $order)
@@ -278,6 +285,32 @@ class AdminController extends Controller
         $order->save();
 
         return back()->with('success', "Order {$order->bill_code} marked as {$order->status}.");
+    }
+
+    /**
+     * Bank/QR rescue: a transfer scan can stall mid-flight (app closed, network
+     * drop) leaving payment_status stuck on pending/failed. The admin verifies
+     * the money in the bank app, then fixes the bill here: payment method,
+     * payment status, and the bank transaction reference.
+     */
+    public function updateOrderPayment(Request $request, Order $order)
+    {
+        $validated = $request->validate([
+            'payment_method' => ['required', Rule::in(Order::PAYMENT_METHODS)],
+            'payment_status' => ['required', Rule::in(Order::PAYMENT_STATUSES)],
+            'transaction_id' => ['nullable', 'string', 'max:255'],
+        ]);
+
+        $order->payment_method = $validated['payment_method'];
+        $order->payment_status = $validated['payment_status'];
+        $order->transaction_id = $validated['transaction_id'] ?: null;
+        $order->updated_at = now()->addSecond();
+        $order->save();
+
+        return back()->with(
+            'success',
+            "Payment for {$order->bill_code} updated: {$order->payment_method} / {$order->payment_status}."
+        );
     }
 
     public function users()
@@ -425,6 +458,62 @@ class AdminController extends Controller
     private function stockHistory(): Closure
     {
         return fn ($query) => $query->with('user')->latest('id');
+    }
+
+    /**
+     * Shared Orders Management filters (search bar + status droplist + order-date range).
+     * Read raw query values (no validate()->redirect) so dashboard GET filtering never 302-loops.
+     *
+     * @return array{search: string, status: string, date_from: string, date_to: string}
+     */
+    private function orderFilters(Request $request): array
+    {
+        $status = (string) $request->query('status', '');
+        $dateFrom = (string) $request->query('date_from', '');
+        $dateTo = (string) $request->query('date_to', '');
+
+        return [
+            'search' => trim((string) $request->query('search', '')),
+            'status' => in_array($status, Order::STATUSES, true) ? $status : '',
+            'date_from' => preg_match('/^\d{4}-\d{2}-\d{2}$/', $dateFrom) === 1 ? $dateFrom : '',
+            'date_to' => preg_match('/^\d{4}-\d{2}-\d{2}$/', $dateTo) === 1 ? $dateTo : '',
+        ];
+    }
+
+    /**
+     * Base orders query with the shared search/status/date filters applied.
+     * Search matches bill code, customer name/email, or shipping address.
+     * Dates filter on the order_date column (order creation date).
+     */
+    private function filteredOrdersQuery(array $filters): Builder
+    {
+        $query = Order::with(['user', 'items.product']);
+
+        if ($filters['search'] !== '') {
+            $search = $filters['search'];
+            $query->where(function (Builder $query) use ($search): void {
+                $query->where('bill_code', 'like', "%{$search}%")
+                    ->orWhere('shipping_address', 'like', "%{$search}%")
+                    ->orWhereHas('user', function (Builder $query) use ($search): void {
+                        $query->where('full_name', 'like', "%{$search}%")
+                            ->orWhere('email', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        if ($filters['status'] !== '') {
+            $query->where('status', $filters['status']);
+        }
+
+        if ($filters['date_from'] !== '') {
+            $query->whereDate('order_date', '>=', $filters['date_from']);
+        }
+
+        if ($filters['date_to'] !== '') {
+            $query->whereDate('order_date', '<=', $filters['date_to']);
+        }
+
+        return $query;
     }
 
     private function storeProductImage(Product $product, UploadedFile $image): void
