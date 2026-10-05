@@ -511,9 +511,11 @@
         <div class="container mx-auto px-4">
             <h2 class="text-2xl font-bold mb-8">Popular products</h2>
             <div class="flex flex-wrap -mx-4">
-                @foreach ($products->take(4) as $product)
+                @forelse ($popularProducts ?? $products->take(4) as $product)
                     @include('partials.product-card', ['product' => $product])
-                @endforeach
+                @empty
+                    <p class="px-4 text-gray-500">No popular products yet.</p>
+                @endforelse
             </div>
         </div>
     </section>
@@ -522,9 +524,11 @@
         <div class="container mx-auto px-4">
             <h2 class="text-2xl font-bold mb-8">Latest products</h2>
             <div class="flex flex-wrap -mx-4">
-                @foreach ($products->slice(4, 4) as $product)
+                @forelse ($latestProducts ?? $products->slice(4, 4) as $product)
                     @include('partials.product-card', ['product' => $product])
-                @endforeach
+                @empty
+                    <p class="px-4 text-gray-500">No latest products yet.</p>
+                @endforelse
             </div>
         </div>
     </section>

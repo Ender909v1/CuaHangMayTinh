@@ -14,13 +14,27 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    $products = Product::with(['brand', 'category', 'images'])
-        ->where('is_active', true)
+    $baseProducts = fn () => Product::with(['brand', 'category', 'images'])
+        ->where('is_active', true);
+
+    $latestProducts = (clone $baseProducts())
         ->orderByDesc('created_at')
-        ->take(8)
+        ->orderByDesc('id')
+        ->take(4)
         ->get();
 
-    return view('main.cuahangmaytinh', compact('products'));
+    $popularProducts = (clone $baseProducts())
+        ->withSum('orderItems as total_sold', 'quantity')
+        ->orderByDesc('total_sold')
+        ->orderByDesc('created_at')
+        ->orderByDesc('id')
+        ->take(4)
+        ->get();
+
+    // Backwards-compatible list used by tests / other sections expecting $products.
+    $products = $latestProducts->concat($popularProducts->whereNotIn('id', $latestProducts->modelKeys()));
+
+    return view('main.cuahangmaytinh', compact('products', 'latestProducts', 'popularProducts'));
 })->name('cuahangmaytinh');
 
 // Guests see the register page; logged-in users are sent to account management.
