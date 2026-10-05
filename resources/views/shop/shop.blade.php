@@ -449,26 +449,14 @@
     <section id="shop">
         <div class="container mx-auto">
             <!-- Top Filter -->
-            <div class="flex flex-col md:flex-row justify-between items-center py-4">
-                <div class="flex items-center space-x-4">
-                    <button
-                        class="bg-primary text-white hover:bg-transparent hover:text-primary border hover:border-primary py-2 px-4 rounded-full focus:outline-none">Show
-                        On
-                        Sale</button>
-                    <button
-                        class="bg-primary text-white hover:bg-transparent hover:text-primary border hover:border-primary py-2 px-4 rounded-full focus:outline-none">List
-                        View</button>
-                    <button
-                        class="bg-primary text-white hover:bg-transparent hover:text-primary border hover:border-primary py-2 px-4 rounded-full focus:outline-none">Grid
-                        View</button>
-                </div>
+            <div class="flex flex-col md:flex-row justify-end items-center py-4">
                 <div class="flex mt-5 md:mt-0 space-x-4">
-                    <div class="relative">
-                        <select
+                    <form method="GET" action="{{ route('shop') }}" class="relative">
+                        <select name="sort" onchange="this.form.submit()"
                             class="block appearance-none w-full bg-white border  hover:border-primary px-4 py-2 pr-8 rounded-full shadow leading-tight focus:outline-none focus:shadow-outline">
-                            <option>Sort by Latest</option>
-                            <option>Sort by Popularity</option>
-                            <option>Sort by A-Z</option>
+                            <option value="latest" {{ ($sort ?? 'latest') === 'latest' ? 'selected' : '' }}>Sort by Latest</option>
+                            <option value="popular" {{ ($sort ?? '') === 'popular' ? 'selected' : '' }}>Sort by Popularity</option>
+                            <option value="az" {{ ($sort ?? '') === 'az' ? 'selected' : '' }}>Sort by A-Z</option>
                         </select>
                         <div
                             class="pointer-events-none absolute inset-y-0 right-0 flex items-center justify-center px-2">
@@ -479,7 +467,7 @@
                                 src="{{ asset('tailstore4-main/assets/images/filter-up-arrow.svg') }}"
                                 alt="filter arrow">
                         </div>
-                    </div>
+                    </form>
                 </div>
             </div>
             <!-- Filter Toggle Button for Mobile -->

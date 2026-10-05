@@ -9,6 +9,7 @@ use App\Http\Controllers\ReviewController;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Product;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -40,7 +41,7 @@ Route::get('/login', function () {
     return view('verify.login');
 })->name('login');
 
-Route::get('/shop', function () {
+Route::get('/shop', function (Request $request) {
     $brands = Brand::query()
         ->whereHas('products', fn ($query) => $query->where('is_active', true))
         ->orderBy('name')
@@ -49,14 +50,25 @@ Route::get('/shop', function () {
         ->whereHas('products', fn ($query) => $query->where('is_active', true))
         ->orderBy('name')
         ->get();
-    $products = Product::with(['brand', 'category', 'images'])
-        ->where('is_active', true)
-        ->orderByDesc('created_at')
-        ->orderByDesc('id')
+    $sort = $request->query('sort', 'latest');
+    if (! in_array($sort, ['latest', 'popular', 'az'])) {
+        $sort = 'latest';
+    }
+
+    $productsQuery = Product::with(['brand', 'category', 'images'])
+        ->where('is_active', true);
+
+    match ($sort) {
+        'popular' => $productsQuery->withCount('views')->orderByDesc('views_count')->orderByDesc('id'),
+        'az' => $productsQuery->orderBy('name')->orderBy('id'),
+        default => $productsQuery->orderByDesc('created_at')->orderByDesc('id'),
+    };
+
+    $products = $productsQuery
         ->paginate(20)
         ->withQueryString();
 
-    return view('shop.shop', compact('brands', 'categories', 'products'));
+    return view('shop.shop', compact('brands', 'categories', 'products', 'sort'));
 })->name('shop');
 
 Route::get('/product/{product?}', function (?Product $product = null) {
