@@ -15,13 +15,19 @@ class OrderSeeder extends Seeder
 
         for ($i = 0; $i < 10; $i++) {
             $paid = fake()->boolean(70);
+            $orderDate = now()->subDays(fake()->numberBetween(0, 90));
+            // Status change happened somewhere between placing the order and now.
+            $statusChangedAt = $orderDate->copy()->addMinutes(
+                fake()->numberBetween(0, max(0, (int) $orderDate->diffInMinutes(now())))
+            );
 
             DB::table('orders')->insert([
                 'bill_code' => $this->generateUniqueBillCode(),
                 'user_id' => fake()->randomElement($userIds),
-                'order_date' => now()->subDays(fake()->numberBetween(0, 90)),
+                'order_date' => $orderDate,
                 'total_amount' => fake()->randomFloat(2, 200000, 50000000),
                 'status' => fake()->randomElement($statuses),
+                'status_updated_at' => $statusChangedAt,
                 'payment_method' => fake()->randomElement($paymentMethods),
                 'payment_status' => $paid ? 'paid' : 'pending',
                 'transaction_id' => $paid ? fake()->uuid() : null,

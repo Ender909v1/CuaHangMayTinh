@@ -10,7 +10,7 @@ class Order extends Model
 {
     protected $fillable = [
         'bill_code', 'user_id', 'order_date', 'total_amount', 'status',
-        'payment_method', 'payment_status', 'transaction_id',
+        'status_updated_at', 'payment_method', 'payment_status', 'transaction_id',
         'email_sent', 'email_sent_at', 'user_seen_at', 'shipping_address',
     ];
 
@@ -18,6 +18,7 @@ class Order extends Model
 
     protected $casts = [
         'order_date' => 'datetime',
+        'status_updated_at' => 'datetime',
         'updated_at' => 'datetime',
         'user_seen_at' => 'datetime',
         'total_amount' => 'decimal:2',
@@ -26,6 +27,23 @@ class Order extends Model
     ];
 
     public const STATUSES = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'];
+
+    /**
+     * Stamp status_updated_at so My Orders can show when the current status
+     * took effect (admin marked delivered/cancelled/..., customer cancelled).
+     * On creation the first status (pending) starts with the order itself;
+     * saves that only touch payment/seen/etc. must not move the stamp.
+     */
+    protected static function booted(): void
+    {
+        static::saving(function (Order $order): void {
+            if (! $order->exists) {
+                $order->status_updated_at ??= $order->order_date ?? now();
+            } elseif ($order->isDirty('status')) {
+                $order->status_updated_at = now();
+            }
+        });
+    }
 
     public const PAYMENT_METHODS = ['cod', 'bank_transfer', 'credit_card', 'e_wallet'];
 

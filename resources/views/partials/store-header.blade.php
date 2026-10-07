@@ -39,8 +39,16 @@
             <a id="search-icon" href="javascript:void(0);" class="text-white hover:text-secondary group">
                 <img src="{{ asset('tailstore4-main/assets/images/search-icon.svg') }}" alt="Search" class="h-6 w-6 transition-transform transform group-hover:scale-120">
             </a>
-            <div id="search-field" class="hidden absolute top-full right-0 mt-2 w-full bg-white shadow-lg p-2 rounded">
-                <input type="text" class="w-full p-2 border border-gray-300 rounded" placeholder="Search for products...">
+            @php($searchQuery = is_string(request()->query('search')) ? trim(request()->query('search')) : '')
+            <div id="search-field"
+                class="{{ $searchQuery !== '' ? '' : 'hidden' }} absolute top-full right-0 mt-2 w-full bg-white shadow-lg p-2 rounded">
+                <form method="GET" action="{{ route('shop') }}" class="flex gap-2">
+                    <input type="search" name="search" value="{{ $searchQuery }}"
+                        class="w-full min-w-0 p-2 border border-gray-300 rounded focus:outline-none focus:border-primary"
+                        placeholder="Search for products..." aria-label="Search for products">
+                    <button type="submit"
+                        class="bg-primary border border-primary hover:bg-transparent text-white hover:text-primary font-semibold px-4 rounded-full">Search</button>
+                </form>
             </div>
         </div>
     </div>

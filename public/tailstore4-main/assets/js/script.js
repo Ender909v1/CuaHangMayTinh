@@ -76,14 +76,34 @@ const searchIcon = document.getElementById('search-icon');
 const searchField = document.getElementById('search-field');
 
 if (searchIcon && searchField) {
-  searchIcon.addEventListener('click', function() {
+  const searchInput = searchField.querySelector('input[name="search"]');
+
+  searchIcon.addEventListener('click', function (event) {
+    event.preventDefault();
     if (searchField.classList.contains('hidden')) {
-        searchField.classList.remove('hidden');
-        searchField.classList.add('search-slide-down');
+      searchField.classList.remove('hidden');
+      searchField.classList.add('search-slide-down');
+      if (searchInput) searchInput.focus();
     } else {
-        searchField.classList.add('hidden');
-        searchField.classList.remove('search-slide-down');
+      searchField.classList.add('hidden');
+      searchField.classList.remove('search-slide-down');
     }
+  });
+
+  /* Clicking outside the panel dismisses it. */
+  document.addEventListener('click', function (event) {
+    if (searchField.classList.contains('hidden')) return;
+    if (searchField.contains(event.target) || searchIcon.contains(event.target)) return;
+    searchField.classList.add('hidden');
+    searchField.classList.remove('search-slide-down');
+  });
+
+  /* Escape dismisses the panel and returns focus to the icon. */
+  document.addEventListener('keydown', function (event) {
+    if (event.key !== 'Escape' || searchField.classList.contains('hidden')) return;
+    searchField.classList.add('hidden');
+    searchField.classList.remove('search-slide-down');
+    searchIcon.focus();
   });
 }
 
@@ -440,9 +460,13 @@ document.addEventListener('DOMContentLoaded', function () {
       const category = card.querySelector('p.my-2')?.textContent.trim();
       const image = card.querySelector('img')?.getAttribute('src');
       const price = Number(card.dataset.productPrice);
-      if (!name || !category || !image || !Number.isFinite(price)) return null;
+      const productId = Number.parseInt(card.dataset.productId || '', 10);
+      if (!name || !category || !image || !Number.isFinite(price) || !Number.isFinite(productId)) return null;
 
-      return { id: `${name.toLowerCase()}|${image}`, name, category, image, price };
+      /* Out-of-stock cards render "View Details" instead of a purchase button. */
+      if (!card.querySelector('[data-add-to-cart]')) return null;
+
+      return { id: `${name.toLowerCase()}|${image}`, productId, name, category, image, price };
     })
     .filter(Boolean);
 
@@ -514,7 +538,7 @@ document.addEventListener('DOMContentLoaded', function () {
         <a href="${productUrl}" class="text-lg font-semibold mb-2 block" style="min-height: 3.5rem;">${escapeText(product.name)}</a>
         <p class="my-2 text-gray-500" style="min-height: 2rem;">${escapeText(product.category)}</p>
         <div class="flex items-center mb-4" style="min-height: 2rem;"><span class="text-lg font-bold text-primary">${currency.format(product.price)}</span></div>
-        <button type="button" class="bg-primary border border-transparent hover:bg-transparent hover:border-primary text-white hover:text-primary font-semibold py-2 px-4 rounded-full w-full" style="margin-top: auto;">Add to Cart</button>
+        <button type="button" class="bg-primary border border-transparent hover:bg-transparent hover:border-primary text-white hover:text-primary font-semibold py-2 px-4 rounded-full w-full" style="margin-top: auto;" data-add-to-cart data-product-id="${product.productId}" data-product-price="${product.price}" data-product-name="${escapeText(product.name)}" data-product-image="${escapeText(product.image)}">Add to Cart</button>
       </div>`;
     list.appendChild(wrapper);
   });

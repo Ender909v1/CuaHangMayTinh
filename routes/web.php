@@ -72,6 +72,18 @@ Route::get('/shop', function (Request $request) {
     $productsQuery = Product::with(['brand', 'category', 'images'])
         ->where('is_active', true);
 
+    $searchValue = $request->query('search', '');
+    $search = is_string($searchValue) ? trim($searchValue) : '';
+    if ($search !== '') {
+        $like = '%'.$search.'%';
+        $productsQuery->where(function ($query) use ($like) {
+            $query->where('name', 'like', $like)
+                ->orWhere('sku', 'like', $like)
+                ->orWhereHas('category', fn ($categoryQuery) => $categoryQuery->where('name', 'like', $like))
+                ->orWhereHas('brand', fn ($brandQuery) => $brandQuery->where('name', 'like', $like));
+        });
+    }
+
     match ($sort) {
         'popular' => $productsQuery->withCount('views')->orderByDesc('views_count')->orderByDesc('id'),
         'az' => $productsQuery->orderBy('name')->orderBy('id'),
@@ -82,7 +94,7 @@ Route::get('/shop', function (Request $request) {
         ->paginate(20)
         ->withQueryString();
 
-    return view('shop.shop', compact('brands', 'categories', 'products', 'sort'));
+    return view('shop.shop', compact('brands', 'categories', 'products', 'sort', 'search'));
 })->name('shop');
 
 Route::get('/product/{product?}', function (?Product $product = null) {

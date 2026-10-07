@@ -30,6 +30,9 @@
             <div class="flex flex-col md:flex-row justify-end items-center py-4">
                 <div class="flex mt-5 md:mt-0 space-x-4">
                     <form method="GET" action="{{ route('shop') }}" class="relative">
+                        @if ($search !== '')
+                            <input type="hidden" name="search" value="{{ $search }}">
+                        @endif
                         <select name="sort" onchange="this.form.submit()"
                             class="block appearance-none w-full bg-white border  hover:border-primary px-4 py-2 pr-8 rounded-full shadow leading-tight focus:outline-none focus:shadow-outline">
                             <option value="latest" {{ ($sort ?? 'latest') === 'latest' ? 'selected' : '' }}>Sort by Latest</option>
@@ -127,6 +130,15 @@
                 </div>
                 <!-- Products List -->
                 <div class="w-full md:w-3/4 p-4">
+                    @if ($search !== '')
+                        <div class="mb-4 flex flex-wrap items-center justify-between gap-2 rounded-lg border border-gray-line bg-white px-4 py-3">
+                            <p class="text-gray-700">Showing results for
+                                <strong>&ldquo;{{ $search }}&rdquo;</strong>
+                                &middot; {{ $products->total() }}
+                                {{ \Illuminate\Support\Str::plural('product', $products->total()) }}</p>
+                            <a href="{{ route('shop') }}" class="font-semibold text-primary hover:underline">Clear search</a>
+                        </div>
+                    @endif
                     <!-- Products grid -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                         @forelse ($products as $product)

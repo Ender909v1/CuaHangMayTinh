@@ -41,6 +41,16 @@
                                     <span class="rounded-full bg-yellow-100 px-3 py-1 text-xs font-bold uppercase text-yellow-700">{{ $order->status }}</span>
                                 @endif
                             </div>
+                            @php
+                                // When the current status took effect (admin delivered/cancelled, ...);
+                                // legacy rows without a stamp fall back to the order date.
+                                $statusChangedAt = $order->status_updated_at ?? $order->order_date;
+                                $statusText = in_array($order->status, ['delivered', 'cancelled'], true)
+                                    ? ucfirst($order->status).' on '
+                                    : ucfirst($order->status).' since ';
+                                $statusText .= $statusChangedAt?->format('d/m/Y H:i') ?? '';
+                            @endphp
+                            <p class="mt-1 text-xs text-gray-500">{{ $statusText }}</p>
                             <ul class="mt-3 divide-y text-sm">
                                 @foreach ($order->items as $item)
                                     <li class="flex items-center justify-between gap-3 py-2">
