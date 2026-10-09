@@ -15,7 +15,7 @@ class ReviewController extends Controller
      * Customer review tab: everyone can read the reviews and the admin answers,
      * logged-in customers get the "write a review" box on top of the list.
      */
-    public function index(): View
+    public function index(Request $request): View
     {
         $reviews = Review::with(['user', 'product'])
             ->orderByDesc('created_at')
@@ -24,7 +24,12 @@ class ReviewController extends Controller
 
         $products = Product::where('is_active', true)->orderBy('name')->get(['id', 'name']);
 
-        return view('reviews.index', compact('reviews', 'products'));
+        $requestedId = (int) $request->query('product', $request->query('product_id', 0));
+        $selectedProductId = $requestedId > 0 && $products->contains('id', $requestedId)
+            ? $requestedId
+            : null;
+
+        return view('reviews.index', compact('reviews', 'products', 'selectedProductId'));
     }
 
     /**

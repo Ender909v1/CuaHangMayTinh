@@ -73,7 +73,7 @@
                             <div class="flex items-center mb-8">
                                 <span>★★★★★</span>
                                 <span class="ml-2">(0 Reviews)</span>
-                                <a href="#" class="ml-4 text-primary font-semibold">Write a review</a>
+                                <a href="{{ route('reviews', ['product' => $product->id]) }}#write-review" class="ml-4 text-primary font-semibold">Write a review</a>
                             </div>
                             <div class="mb-4 pb-4 border-b border-gray-line">
                                 <p class="mb-2">Category:<strong><a href="{{ route('shop') }}" class="hover:text-primary"> {{ $product->category->name ?? 'Product' }}</a></strong></p>
@@ -636,7 +636,7 @@
                             <div class="flex items-center mb-8">
                                 <span>★★★★★</span>
                                 <span class="ml-2">(0 Reviews)</span>
-                                <a href="#" class="ml-4 text-primary font-semibold">Write a review</a>
+                                <a href="{{ route('reviews', ['product' => $product->id]) }}#write-review" class="ml-4 text-primary font-semibold">Write a review</a>
                             </div>
                             <div class="mb-4 pb-4 border-b border-gray-line">
                                 <p class="mb-2">Category:<strong><a href="{{ route('shop') }}" class="hover:text-primary"> {{ $product->category->name ?? 'Product' }}</a></strong></p>

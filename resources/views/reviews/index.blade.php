@@ -36,7 +36,7 @@
 
             {{-- Write a review: the box on top of the list. The textarea grows down as the review gets longer. --}}
             @auth
-                <div class="bg-white rounded-lg shadow-md p-6 mb-6">
+                <div id="write-review" class="bg-white rounded-lg shadow-md p-6 mb-6">
                     <h2 class="text-lg font-semibold mb-4">Write a review</h2>
                     <form method="POST" action="{{ route('reviews.store') }}">
                         @csrf
@@ -47,7 +47,7 @@
                                     class="w-full px-3 py-2 border rounded-full focus:outline-none focus:ring-2 focus:ring-primary">
                                     <option value="">Choose the product you are reviewing</option>
                                     @foreach ($products as $product)
-                                        <option value="{{ $product->id }}" @selected(old('product_id') == $product->id)>{{ $product->name }}</option>
+                                        <option value="{{ $product->id }}" @selected((int) old('product_id', $selectedProductId ?? 0) === (int) $product->id)>{{ $product->name }}</option>
                                     @endforeach
                                 </select>
                             </div>

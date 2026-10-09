@@ -25,33 +25,33 @@
             <div class="swiper-wrapper">
                 <div class="swiper-slide">
                     <img src="{{ asset('tailstore4-main/carousel/banner_1.jpg') }}" alt="Laptop banner" style="filter: brightness(0.4);">
-                    <div class="absolute inset-0 bg-black/60"></div>
+                    <div class="absolute inset-0 bg-black/60 pointer-events-none"></div>
                     <div class="swiper-slide-content">
                         <h2 class="text-3xl md:text-7xl font-bold text-white mb-2 md:mb-4" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">Laptop</h2>
                         <p class="mb-4 text-white md:text-2xl" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">Power through work and play with <br>high-performance gaming and business laptops.</p>
-                        <a href="{{ url('/') }}"
+                        <a href="{{ route('shop') }}"
                             class="bg-primary hover:bg-transparent text-white hover:text-white border border-transparent hover:border-white font-semibold px-4 py-2 rounded-full inline-block">Shop
                             now</a>
                     </div>
                 </div>
                 <div class="swiper-slide">
                     <img src="{{ asset('tailstore4-main/carousel/banner_2.jpg') }}" alt="PC parts banner" style="filter: brightness(0.4);">
-                    <div class="absolute inset-0 bg-black/60"></div>
+                    <div class="absolute inset-0 bg-black/60 pointer-events-none"></div>
                     <div class="swiper-slide-content">
                         <h2 class="text-3xl md:text-7xl font-bold text-white mb-2 md:mb-4" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">PC Part</h2>
                         <p class="mb-4 text-white md:text-2xl" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">Build your dream setup with premium CPUs, GPUs,<br>and motherboard essentials.</p>
-                        <a href="{{ url('/') }}"
+                        <a href="{{ route('shop') }}"
                             class="bg-white hover:bg-transparent text-black hover:text-white font-semibold px-4 py-2 rounded-full inline-block border border-transparent hover:border-white">Shop
                             now</a>
                     </div>
                 </div>
                 <div class="swiper-slide">
                     <img src="{{ asset('tailstore4-main/carousel/banner_3.jpg') }}" alt="Accessories banner" style="filter: brightness(0.4);">
-                    <div class="absolute inset-0 bg-black/60"></div>
+                    <div class="absolute inset-0 bg-black/60 pointer-events-none"></div>
                     <div class="swiper-slide-content">
                         <h2 class="text-3xl md:text-7xl font-bold text-white mb-2 md:mb-4" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">Accessories</h2>
                         <p class="mb-4 text-white md:text-2xl" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">Upgrade your setup with essential gear<br>for cooling, storage, and productivity.</p>
-                        <a href="{{ url('/') }}"
+                        <a href="{{ route('shop') }}"
                             class="bg-primary hover:bg-transparent text-white hover:text-white border border-transparent hover:border-white font-semibold px-4 py-2 rounded-full inline-block">Shop
                             now</a>
                     </div>
@@ -69,11 +69,11 @@
                     <div class="category-banner relative overflow-hidden rounded-lg shadow-lg group">
                         <img src="{{ asset('tailstore4-main/logo/laptop.jpg') }}" alt="Category 1"
                             class="w-full h-auto">
-                        <div class="absolute inset-0 bg-gray-light/50"></div>
+                        <div class="absolute inset-0 bg-gray-light/50 pointer-events-none"></div>
                         <div
                             class="absolute inset-0 flex flex-col items-center justify-center text-center text-white p-4">
                             <h2 class="text-2xl md:text-3xl font-bold mb-4">Laptop</h2>
-                            <a href="{{ url('/') }}"
+                            <a href="{{ route('shop') }}"
                                 class="bg-primary hover:bg-transparent border border-transparent hover:border-white text-white hover:text-white font-semibold px-4 py-2 rounded-full inline-block">Shop
                                 now</a>
                         </div>
@@ -83,11 +83,11 @@
                     <div class="category-banner relative overflow-hidden rounded-lg shadow-lg group">
                         <img src="{{ asset('tailstore4-main/logo/pc_part.jpg') }}" alt="Category 2"
                             class="w-full h-auto">
-                        <div class="absolute inset-0 bg-gray-light/50"></div>
+                        <div class="absolute inset-0 bg-gray-light/50 pointer-events-none"></div>
                         <div
                             class="category-text absolute inset-0 flex flex-col items-center justify-center text-center text-white p-4 transition duration-300">
                             <h2 class="text-2xl md:text-3xl font-bold mb-4">PC Part</h2>
-                            <a href="{{ url('/') }}"
+                            <a href="{{ route('shop') }}"
                                 class="bg-primary hover:bg-transparent border border-transparent hover:border-white text-white hover:text-white font-semibold px-4 py-2 rounded-full inline-block">Shop
                                 now</a>
                         </div>
@@ -97,11 +97,11 @@
                     <div class="category-banner relative overflow-hidden rounded-lg shadow-lg group">
                         <img src="{{ asset('tailstore4-main/logo/accessories.jpg') }}" alt="Category 3"
                             class="w-full h-auto">
-                        <div class="absolute inset-0 bg-gray-light/50"></div>
+                        <div class="absolute inset-0 bg-gray-light/50 pointer-events-none"></div>
                         <div
                             class="category-text absolute inset-0 flex flex-col items-center justify-center text-center text-white p-4 transition duration-300">
                             <h2 class="text-2xl md:text-3xl font-bold mb-4">Accessories</h2>
-                            <a href="{{ url('/') }}"
+                            <a href="{{ route('shop') }}"
                                 class="bg-primary hover:bg-transparent border border-transparent hover:border-white text-white hover:text-white font-semibold px-4 py-2 rounded-full inline-block">Shop
                                 now</a>
                         </div>
@@ -412,33 +412,33 @@
             <div class="swiper-wrapper">
                 <div class="swiper-slide">
                     <img src="{{ asset('tailstore4-main/carousel/banner_1.jpg') }}" alt="Laptop banner" style="filter: brightness(0.4);">
-                    <div class="absolute inset-0 bg-black/60"></div>
+                    <div class="absolute inset-0 bg-black/60 pointer-events-none"></div>
                     <div class="swiper-slide-content">
                         <h2 class="text-3xl md:text-7xl font-bold text-white mb-2 md:mb-4" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">Laptop</h2>
                         <p class="mb-4 text-white md:text-2xl" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">Power through work and play with <br>high-performance gaming and business laptops.</p>
-                        <a href="{{ url('/') }}"
+                        <a href="{{ route('shop') }}"
                             class="bg-primary hover:bg-transparent text-white hover:text-white border border-transparent hover:border-white font-semibold px-4 py-2 rounded-full inline-block">Shop
                             now</a>
                     </div>
                 </div>
                 <div class="swiper-slide">
                     <img src="{{ asset('tailstore4-main/carousel/banner_2.jpg') }}" alt="PC parts banner" style="filter: brightness(0.4);">
-                    <div class="absolute inset-0 bg-black/60"></div>
+                    <div class="absolute inset-0 bg-black/60 pointer-events-none"></div>
                     <div class="swiper-slide-content">
                         <h2 class="text-3xl md:text-7xl font-bold text-white mb-2 md:mb-4" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">PC Part</h2>
                         <p class="mb-4 text-white md:text-2xl" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">Build your dream setup with premium CPUs, GPUs,<br>and motherboard essentials.</p>
-                        <a href="{{ url('/') }}"
+                        <a href="{{ route('shop') }}"
                             class="bg-white hover:bg-transparent text-black hover:text-white font-semibold px-4 py-2 rounded-full inline-block border border-transparent hover:border-white">Shop
                             now</a>
                     </div>
                 </div>
                 <div class="swiper-slide">
                     <img src="{{ asset('tailstore4-main/carousel/banner_3.jpg') }}" alt="Accessories banner" style="filter: brightness(0.4);">
-                    <div class="absolute inset-0 bg-black/60"></div>
+                    <div class="absolute inset-0 bg-black/60 pointer-events-none"></div>
                     <div class="swiper-slide-content">
                         <h2 class="text-3xl md:text-7xl font-bold text-white mb-2 md:mb-4" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">Accessories</h2>
                         <p class="mb-4 text-white md:text-2xl" style="text-shadow: 2px 2px 4px rgba(0,0,0,0.8);">Upgrade your setup with essential gear<br>for cooling, storage, and productivity.</p>
-                        <a href="{{ url('/') }}"
+                        <a href="{{ route('shop') }}"
                             class="bg-primary hover:bg-transparent text-white hover:text-white border border-transparent hover:border-white font-semibold px-4 py-2 rounded-full inline-block">Shop
                             now</a>
                     </div>
@@ -456,11 +456,11 @@
                     <div class="category-banner relative overflow-hidden rounded-lg shadow-lg group">
                         <img src="{{ asset('tailstore4-main/logo/laptop.jpg') }}" alt="Category 1"
                             class="w-full h-auto">
-                        <div class="absolute inset-0 bg-gray-light/50"></div>
+                        <div class="absolute inset-0 bg-gray-light/50 pointer-events-none"></div>
                         <div
                             class="absolute inset-0 flex flex-col items-center justify-center text-center text-white p-4">
                             <h2 class="text-2xl md:text-3xl font-bold mb-4">Laptop</h2>
-                            <a href="{{ url('/') }}"
+                            <a href="{{ route('shop') }}"
                                 class="bg-primary hover:bg-transparent border border-transparent hover:border-white text-white hover:text-white font-semibold px-4 py-2 rounded-full inline-block">Shop
                                 now</a>
                         </div>
@@ -470,11 +470,11 @@
                     <div class="category-banner relative overflow-hidden rounded-lg shadow-lg group">
                         <img src="{{ asset('tailstore4-main/logo/pc_part.jpg') }}" alt="Category 2"
                             class="w-full h-auto">
-                        <div class="absolute inset-0 bg-gray-light/50"></div>
+                        <div class="absolute inset-0 bg-gray-light/50 pointer-events-none"></div>
                         <div
                             class="category-text absolute inset-0 flex flex-col items-center justify-center text-center text-white p-4 transition duration-300">
                             <h2 class="text-2xl md:text-3xl font-bold mb-4">PC Part</h2>
-                            <a href="{{ url('/') }}"
+                            <a href="{{ route('shop') }}"
                                 class="bg-primary hover:bg-transparent border border-transparent hover:border-white text-white hover:text-white font-semibold px-4 py-2 rounded-full inline-block">Shop
                                 now</a>
                         </div>
@@ -484,11 +484,11 @@
                     <div class="category-banner relative overflow-hidden rounded-lg shadow-lg group">
                         <img src="{{ asset('tailstore4-main/logo/accessories.jpg') }}" alt="Category 3"
                             class="w-full h-auto">
-                        <div class="absolute inset-0 bg-gray-light/50"></div>
+                        <div class="absolute inset-0 bg-gray-light/50 pointer-events-none"></div>
                         <div
                             class="category-text absolute inset-0 flex flex-col items-center justify-center text-center text-white p-4 transition duration-300">
                             <h2 class="text-2xl md:text-3xl font-bold mb-4">Accessories</h2>
-                            <a href="{{ url('/') }}"
+                            <a href="{{ route('shop') }}"
                                 class="bg-primary hover:bg-transparent border border-transparent hover:border-white text-white hover:text-white font-semibold px-4 py-2 rounded-full inline-block">Shop
                                 now</a>
                         </div>
