@@ -149,6 +149,71 @@ class AdminTabFiltersTest extends TestCase
             ->assertDontSee('Excellent laptop battery', false);
     }
 
+    public function test_products_page_filters_by_search_category_brand_status_and_stock(): void
+    {
+        $admin = $this->makeAdmin('admin-products@example.com');
+        $brandA = Brand::create(['name' => 'Brand Alpha Products']);
+        $brandB = Brand::create(['name' => 'Brand Beta Products']);
+        $categoryA = Category::create(['name' => 'Category Alpha Products']);
+        $categoryB = Category::create(['name' => 'Category Beta Products']);
+        $this->makeProductForFilters('Alpha Laptop Pro', 'PROD-ALPHA-001', 20, true, $brandA, $categoryA);
+        $this->makeProductForFilters('Beta Mouse Mini', 'PROD-BETA-002', 0, false, $brandB, $categoryB);
+
+        $this->actingAs($admin)->get('/admin/products?search=PROD-ALPHA-001')
+            ->assertOk()
+            ->assertSee('Alpha Laptop Pro', false)
+            ->assertDontSee('Beta Mouse Mini', false);
+
+        $this->actingAs($admin)->get('/admin/products?category='.$categoryA->id)
+            ->assertOk()
+            ->assertSee('Alpha Laptop Pro', false)
+            ->assertDontSee('Beta Mouse Mini', false);
+
+        $this->actingAs($admin)->get('/admin/products?brand='.$brandB->id)
+            ->assertOk()
+            ->assertSee('Beta Mouse Mini', false)
+            ->assertDontSee('Alpha Laptop Pro', false);
+
+        $this->actingAs($admin)->get('/admin/products?status=inactive')
+            ->assertOk()
+            ->assertSee('Beta Mouse Mini', false)
+            ->assertDontSee('Alpha Laptop Pro', false);
+
+        $this->actingAs($admin)->get('/admin/products?stock=out')
+            ->assertOk()
+            ->assertSee('Beta Mouse Mini', false)
+            ->assertDontSee('Alpha Laptop Pro', false);
+    }
+
+    public function test_dashboard_products_tab_supports_prefixed_filters(): void
+    {
+        $admin = $this->makeAdmin('admin-products-tab@example.com');
+        $brand = Brand::create(['name' => 'Dashboard Brand Products']);
+        $category = Category::create(['name' => 'Dashboard Category Products']);
+        $this->makeProductForFilters('Dashboard Tab Laptop ZZZ', 'DASH-PROD-001', 20, true, $brand, $category);
+        $this->makeProductForFilters('Dashboard Tab Cable QQQ', 'DASH-PROD-002', 0, true, $brand, $category);
+
+        // Other dashboard tabs (inventory) also list every product, so assert
+        // on the products paginator data directly instead of page HTML.
+        $this->actingAs($admin)->get('/admin?tab=products&p_search=DASH-PROD-002&p_stock=out&p_status=active')
+            ->assertOk()
+            ->assertViewHas('products', function ($products): bool {
+                $skus = $products->pluck('sku')->all();
+
+                return in_array('DASH-PROD-002', $skus, true)
+                    && ! in_array('DASH-PROD-001', $skus, true);
+            });
+    }
+
+    private function makeProductForFilters(string $name, string $sku, int $stock, bool $active, Brand $brand, Category $category): Product
+    {
+        return Product::create([
+            'name' => $name, 'sku' => $sku, 'price' => 1000,
+            'stock_qty' => $stock, 'type' => 'physical', 'is_active' => $active,
+            'brand_id' => $brand->id, 'category_id' => $category->id,
+        ]);
+    }
+
     private function makeAdmin(string $email): User
     {
         return User::create([

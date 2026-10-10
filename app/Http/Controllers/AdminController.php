@@ -14,6 +14,7 @@ use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -28,10 +29,16 @@ class AdminController extends Controller
         $activeProducts = Product::where('is_active', true)->count();
         $lowStockProducts = Product::where('stock_qty', '<=', 5)->count();
         $history = ProductHistory::with(['user', 'product'])->latest()->take(8)->get();
-        $products = Product::with(['brand', 'category'])
+        $productFilters = $this->productFilters($request, 'p_');
+        $products = $this->filteredProductsQuery($productFilters)
+            ->with(['brand', 'category'])
             ->latest('id')
             ->paginate(20)
-            ->appends(['tab' => 'products']);
+            ->appends(array_merge(
+                ['tab' => 'products'],
+                $this->prefixedQuery($productFilters, 'p_')
+            ));
+        $productFilterOptions = $this->productFilterOptions();
         $productsByMonth = Product::query()
             ->where('created_at', '>=', now()->startOfMonth()->subMonths(7))
             ->get(['created_at'])
@@ -83,15 +90,21 @@ class AdminController extends Controller
             'products', 'monthlyProductStats', 'maxMonthlyProductCount', 'stockTotal',
             'stockChartCircumference', 'stockStats', 'users', 'orders', 'inventory', 'reviews',
             'categories',
-            'orderFilters', 'userFilters', 'categoryFilters', 'categoryParents', 'inventoryFilters', 'reviewFilters'
+            'orderFilters', 'productFilters', 'productFilterOptions', 'userFilters', 'categoryFilters', 'categoryParents', 'inventoryFilters', 'reviewFilters'
         ));
     }
 
-    public function products()
+    public function products(Request $request)
     {
-        $products = Product::with(['brand', 'category'])->latest('id')->paginate(20);
+        $productFilters = $this->productFilters($request);
+        $products = $this->filteredProductsQuery($productFilters)
+            ->with(['brand', 'category'])
+            ->latest('id')
+            ->paginate(20)
+            ->withQueryString();
+        $productFilterOptions = $this->productFilterOptions();
 
-        return view('admin.products.index', compact('products'));
+        return view('admin.products.index', compact('products', 'productFilters', 'productFilterOptions'));
     }
 
     public function create()
@@ -1016,6 +1029,101 @@ class AdminController extends Controller
             $query->where(function (Builder $query): void {
                 $query->whereNull('admin_response')->orWhere('admin_response', '');
             });
+        }
+
+        return $query;
+    }
+
+    /**
+     * Shared Products Management filters (search bar + category/brand/status/stock droplists).
+     * Prefix keeps dashboard tab params (p_search/p_category/...) from clashing
+     * with orders/users/category/inventory/review params on the same /admin?tab=... URL.
+     *
+     * @return array{search: string, category: string, brand: string, status: string, stock: string}
+     */
+    private function productFilters(Request $request, string $prefix = ''): array
+    {
+        $category = (string) $request->query($prefix.'category', '');
+        $brand = (string) $request->query($prefix.'brand', '');
+        $status = (string) $request->query($prefix.'status', '');
+        $stock = (string) $request->query($prefix.'stock', '');
+
+        return [
+            'search' => trim((string) $request->query($prefix.'search', '')),
+            'category' => ctype_digit($category) ? $category : '',
+            'brand' => ctype_digit($brand) ? $brand : '',
+            'status' => in_array($status, ['active', 'inactive'], true) ? $status : '',
+            'stock' => in_array($stock, ['in', 'low', 'out'], true) ? $stock : '',
+        ];
+    }
+
+    /**
+     * Base products query with the shared search/category/brand/status/stock
+     * filters applied. Search matches product name or SKU.
+     */
+    private function filteredProductsQuery(array $filters): Builder
+    {
+        $query = Product::query();
+
+        if ($filters['search'] !== '') {
+            $search = $filters['search'];
+            $query->where(function (Builder $query) use ($search): void {
+                $query->where('name', 'like', "%{$search}%")
+                    ->orWhere('sku', 'like', "%{$search}%");
+            });
+        }
+
+        if ($filters['category'] !== '') {
+            $query->where('category_id', (int) $filters['category']);
+        }
+
+        if ($filters['brand'] !== '') {
+            $query->where('brand_id', (int) $filters['brand']);
+        }
+
+        if ($filters['status'] === 'active') {
+            $query->where('is_active', true);
+        } elseif ($filters['status'] === 'inactive') {
+            $query->where('is_active', false);
+        }
+
+        if ($filters['stock'] === 'in') {
+            $query->where('stock_qty', '>', 5);
+        } elseif ($filters['stock'] === 'low') {
+            $query->where('stock_qty', '>', 0)->where('stock_qty', '<=', 5);
+        } elseif ($filters['stock'] === 'out') {
+            $query->where('stock_qty', '<=', 0);
+        }
+
+        return $query;
+    }
+
+    /**
+     * Dropdown options for the products filter bars (shared by dashboard tab
+     * and full products page so both stay in sync).
+     *
+     * @return array{categories: Collection, brands: Collection}
+     */
+    private function productFilterOptions(): array
+    {
+        return [
+            'categories' => Category::orderBy('name')->get(['id', 'name']),
+            'brands' => Brand::orderBy('name')->get(['id', 'name']),
+        ];
+    }
+
+    /**
+     * Re-prefix normalized filter values for dashboard pagination links, e.g.
+     * ['search' => 'x'] + 'p_' => ['p_search' => 'x'] (skips empty values).
+     */
+    private function prefixedQuery(array $filters, string $prefix): array
+    {
+        $query = [];
+
+        foreach ($filters as $key => $value) {
+            if ($value !== '' && $value !== null) {
+                $query[$prefix.$key] = $value;
+            }
         }
 
         return $query;

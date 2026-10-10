@@ -18,11 +18,19 @@
             @endif
 
             <div class="rounded-xl bg-white p-6 shadow">
-                <div class="mb-6 flex items-center justify-between">
-                    <h2 class="text-xl font-bold">Product list</h2>
+                <div class="mb-6 flex flex-wrap items-end justify-between gap-3">
+                    <div>
+                        <h2 class="text-xl font-bold">Product list</h2>
+                        <p class="mt-1 text-sm text-gray-500">Search by name or SKU. Filter by category, brand, status, or stock.</p>
+                    </div>
                     <a href="{{ route('admin.products.create') }}" class="rounded-full bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-500">Add Product</a>
                 </div>
 
+                @include('admin.partials.products-filter', ['productsFilterContext' => 'page'])
+
+                @if ($products->isEmpty())
+                    <p class="text-gray-500">No products match these filters.</p>
+                @else
                 <div class="overflow-x-auto">
                     <table class="min-w-full text-left text-sm">
                         <thead>
@@ -68,6 +76,7 @@
                     <div class="mt-6">
                         {{ $products->links() }}
                     </div>
+                @endif
                 @endif
             </div>
         </main>
