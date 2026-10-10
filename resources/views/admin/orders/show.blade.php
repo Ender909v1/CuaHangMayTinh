@@ -8,16 +8,8 @@
 </head>
 <body class="bg-gray-100 text-gray-800">
     <div class="min-h-screen">
-        <nav class="bg-gray-900 text-white">
-            <div class="mx-auto max-w-7xl px-4 py-4 flex items-center justify-between">
-                <div><h1 class="text-xl font-bold">Order {{ $order->bill_code ?? '#'.$order->id }}</h1></div>
-                <div class="flex items-center gap-4">
-                    <a href="{{ route('admin.orders.index') }}" class="hover:text-red-400">Back</a>
-                    <form method="POST" action="{{ route('logout') }}">@csrf<button type="submit" class="rounded-full bg-red-600 px-4 py-2 text-sm font-semibold hover:bg-red-500">Logout</button></form>
-                </div>
-            </div>
-        </nav>
-        <main class="mx-auto max-w-4xl px-4 py-10">
+        @include('admin.partials.navigation', ['pageTitle' => 'Order '.($order->bill_code ?? '#'.$order->id), 'activeTab' => 'orders'])
+        <main class="mx-auto max-w-4xl px-4 pt-4 pb-10">
             <div class="rounded-xl bg-white p-8 shadow space-y-6">
                 @if (session('success'))
                     <div class="rounded border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">{{ session('success') }}</div>
@@ -40,7 +32,7 @@
                             </select>
                             <span class="text-xs text-gray-400">/ {{ $order->payment_status }}</span>
                         </form>
-                        @if ($order->status !== 'cancelled')
+                        @if ($order->canBeCancelledByCustomer())
                             <form method="POST" action="{{ route('admin.orders.cancel', $order) }}" class="mt-2" onsubmit="return confirm('Cancel this order and return all items to stock?');">
                                 @csrf @method('PUT')
                                 <button type="submit" class="rounded border border-red-300 px-3 py-1 text-xs font-semibold text-red-600 hover:bg-red-50">Cancel order + restock</button>

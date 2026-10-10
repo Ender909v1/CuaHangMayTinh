@@ -8,22 +8,9 @@
 </head>
 <body class="bg-gray-100 text-gray-800">
     <div class="min-h-screen">
-        <nav class="bg-gray-900 text-white">
-            <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4">
-                <div>
-                    <h1 class="text-xl font-bold">Product Detail</h1>
-                </div>
-                <div class="flex items-center gap-4">
-                    <a href="{{ route('admin.products.index') }}" class="hover:text-red-400">Back</a>
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit" class="rounded-full bg-red-600 px-4 py-2 text-sm font-semibold hover:bg-red-500">Logout</button>
-                    </form>
-                </div>
-            </div>
-        </nav>
+        @include('admin.partials.navigation', ['pageTitle' => 'Product Detail', 'activeTab' => 'products'])
 
-        <main class="mx-auto max-w-7xl px-4 py-10">
+        <main class="mx-auto max-w-7xl px-4 pt-4 pb-10">
             @php
                 $productImages = $product->images->sortByDesc('is_primary')->values();
                 $primaryImage = $productImages->first();

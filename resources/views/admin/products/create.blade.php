@@ -8,22 +8,9 @@
 </head>
 <body class="bg-gray-100 text-gray-800">
     <div class="min-h-screen">
-        <nav class="bg-gray-900 text-white">
-            <div class="mx-auto max-w-7xl px-4 py-4 flex items-center justify-between">
-                <div>
-                    <h1 class="text-xl font-bold">Add Product</h1>
-                </div>
-                <div class="flex items-center gap-4">
-                    <a href="{{ route('admin.dashboard', ['tab' => 'products']) }}" class="hover:text-red-400">Back</a>
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit" class="rounded-full bg-red-600 px-4 py-2 text-sm font-semibold hover:bg-red-500">Logout</button>
-                    </form>
-                </div>
-            </div>
-        </nav>
+        @include('admin.partials.navigation', ['pageTitle' => 'Add Product', 'activeTab' => 'products'])
 
-        <main class="mx-auto max-w-4xl px-4 py-10">
+        <main class="mx-auto max-w-4xl px-4 pt-4 pb-10">
             <div class="rounded-xl bg-white p-8 shadow">
                 @if ($errors->any())
                     <div class="mb-6 rounded border border-red-200 bg-red-50 p-4 text-sm text-red-700">
@@ -112,7 +99,7 @@
 
                     <div class="flex gap-3">
                         <button type="submit" class="rounded bg-red-600 px-5 py-2 font-semibold text-white hover:bg-red-500">Save Product</button>
-                        <a href="{{ route('admin.dashboard', ['tab' => 'products']) }}" class="rounded border border-gray-300 px-5 py-2 font-semibold hover:bg-gray-100">Cancel</a>
+                        <a href="{{ route('admin.products.index') }}" class="rounded border border-gray-300 px-5 py-2 font-semibold hover:bg-gray-100">Cancel</a>
                     </div>
                 </form>
             </div>

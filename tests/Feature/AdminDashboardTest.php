@@ -4,10 +4,13 @@ namespace Tests\Feature;
 
 use App\Models\Brand;
 use App\Models\Category;
+use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\ProductHistory;
 use App\Models\ProductImage;
 use App\Models\ProductSpecification;
+use App\Models\Review;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
@@ -75,7 +78,7 @@ class AdminDashboardTest extends TestCase
             'Product statistics',
             'Product additions',
             'Stock health',
-            'Recent product history',
+            'Recent admin history',
         ]);
         $response->assertSee('In stock: 1', false);
         $response->assertSee('Low stock: 1', false);
@@ -172,6 +175,307 @@ class AdminDashboardTest extends TestCase
 
         $response->assertOk();
         $response->assertSee('Admin created product: Test Laptop');
+    }
+
+    public function test_admin_entity_changes_appear_in_history_without_exposing_passwords(): void
+    {
+        $admin = $this->makeAdmin();
+        $customer = User::create([
+            'full_name' => 'History Customer',
+            'email' => 'history-customer@example.com',
+            'password_hash' => Hash::make('secret123'),
+            'role' => 'customer',
+        ]);
+        $product = $this->makeProduct();
+        $category = Category::create(['name' => 'Old Category']);
+        $order = Order::create([
+            'bill_code' => 'BILL-HISTORY-001',
+            'user_id' => $customer->id,
+            'order_date' => '2026-10-01 10:00:00',
+            'total_amount' => 100,
+            'status' => 'pending',
+            'payment_method' => 'cod',
+            'payment_status' => 'pending',
+            'shipping_address' => '123 History Street',
+        ]);
+        $review = Review::create([
+            'user_id' => $customer->id,
+            'product_id' => $product->id,
+            'rating' => 5,
+            'comment' => 'Good product.',
+        ]);
+
+        $this->actingAs($admin)->put('/admin/products/'.$product->id, [
+            'name' => 'Renamed Laptop',
+            'sku' => $product->sku,
+            'price' => 1099.99,
+            'discount_price' => null,
+            'type' => 'laptop',
+            'brand_id' => $product->brand_id,
+            'category_id' => $product->category_id,
+            'is_active' => 1,
+        ])->assertRedirect('/admin/products');
+        $this->actingAs($admin)->put('/admin/categories/'.$category->id, [
+            'name' => 'Updated Category',
+            'parent_id' => null,
+        ])->assertRedirect('/admin/categories');
+        $this->actingAs($admin)->put('/admin/orders/'.$order->id.'/status', [
+            'status' => 'processing',
+        ])->assertRedirect();
+        $this->actingAs($admin)->put('/admin/orders/'.$order->id.'/payment', [
+            'payment_method' => 'e_wallet',
+            'payment_status' => 'paid',
+            'transaction_id' => 'TXN-HISTORY-001',
+        ])->assertRedirect();
+        $this->actingAs($admin)->put('/admin/users/'.$customer->id, [
+            'full_name' => 'Updated History Customer',
+            'email' => 'history-customer@example.com',
+            'phone' => '0900000001',
+            'address' => '456 Updated Street',
+            'role' => 'staff',
+            'is_active' => 1,
+            'password' => 'Changed_Secret_123',
+            'password_confirmation' => 'Changed_Secret_123',
+        ])->assertRedirect('/admin/users');
+        $this->actingAs($admin)->put('/admin/reviews/'.$review->id.'/response', [
+            'admin_response' => 'Thank you for your feedback.',
+        ])->assertRedirect();
+
+        $historyPage = $this->actingAs($admin)->get('/admin/history');
+
+        $historyPage->assertOk();
+        $historyPage->assertSee('Admin History');
+        $historyPage->assertSee('Admin updated product #'.$product->id.' (Renamed Laptop)');
+        $historyPage->assertSee('name: Test Laptop → Renamed Laptop');
+        $historyPage->assertSee('Admin updated category #'.$category->id.' (Updated Category)');
+        $historyPage->assertSee('name: Old Category → Updated Category');
+        $historyPage->assertSee('Admin status_updated order #'.$order->id.' (BILL-HISTORY-001)');
+        $historyPage->assertSee('status: pending → processing');
+        $historyPage->assertSee('Admin payment_updated order #'.$order->id.' (BILL-HISTORY-001)');
+        $historyPage->assertSee('transaction_id: empty → TXN-HISTORY-001');
+        $historyPage->assertSee('Admin updated user #'.$customer->id.' (Updated History Customer)');
+        $historyPage->assertSee('password: unchanged → changed');
+        $historyPage->assertSee('Admin responded_to review #'.$review->id.' (Renamed Laptop)');
+        $historyPage->assertSee('Thank you for your feedback.');
+        $historyPage->assertSee('By Admin User');
+        $historyPage->assertDontSee('Changed_Secret_123');
+    }
+
+    public function test_admin_detail_and_edit_pages_keep_the_full_admin_navigation(): void
+    {
+        $admin = $this->makeAdmin();
+        $customer = User::create([
+            'full_name' => 'Navigation Customer',
+            'email' => 'navigation-customer@example.com',
+            'password_hash' => Hash::make('secret123'),
+            'role' => 'customer',
+        ]);
+        $product = $this->makeProduct();
+        $order = Order::create([
+            'bill_code' => 'BILL-NAV-001',
+            'user_id' => $customer->id,
+            'order_date' => '2026-10-01 10:00:00',
+            'total_amount' => 100,
+            'status' => 'pending',
+            'payment_method' => 'cod',
+            'payment_status' => 'pending',
+            'shipping_address' => '123 Navigation Street',
+        ]);
+
+        foreach ([
+            '/admin',
+            '/admin/products/'.$product->id,
+            '/admin/products/'.$product->id.'/edit',
+            '/admin/orders',
+            '/admin/users/'.$customer->id.'/edit',
+        ] as $path) {
+            $page = $this->actingAs($admin)->get($path);
+            $page->assertOk();
+            $page->assertSee('Home');
+            $page->assertSee(route('cuahangmaytinh'), false);
+            $page->assertSee(route('admin.products.index'), false);
+            $page->assertSee(route('admin.orders.index'), false);
+            $page->assertSee(route('admin.users.index'), false);
+            $page->assertSee(route('admin.history'), false);
+        }
+    }
+
+    public function test_admin_order_detail_renders_all_action_routes(): void
+    {
+        $admin = $this->makeAdmin();
+        $customer = User::create([
+            'full_name' => 'Order Detail Customer',
+            'email' => 'order-detail-customer@example.com',
+            'password_hash' => Hash::make('secret123'),
+            'role' => 'customer',
+        ]);
+        $product = $this->makeProduct();
+        $order = Order::create([
+            'bill_code' => 'BILL-DETAIL-001',
+            'user_id' => $customer->id,
+            'order_date' => '2026-10-01 10:00:00',
+            'total_amount' => 100,
+            'status' => 'pending',
+            'payment_method' => 'cod',
+            'payment_status' => 'pending',
+            'shipping_address' => '123 Detail Street',
+        ]);
+        $item = OrderItem::create([
+            'order_id' => $order->id,
+            'product_id' => $product->id,
+            'quantity' => 1,
+            'unit_price' => 100,
+        ]);
+
+        $response = $this->actingAs($admin)->get('/admin/orders/'.$order->id);
+
+        $response->assertOk();
+        $response->assertSee(route('admin.orders.cancel', $order), false);
+        $response->assertSee(route('admin.order-items.destroy', [$order, $item]), false);
+    }
+
+    public function test_admin_can_cancel_pending_order_and_restock_all_items(): void
+    {
+        $admin = $this->makeAdmin();
+        $customer = User::create([
+            'full_name' => 'Order Cancel Customer',
+            'email' => 'order-cancel-customer@example.com',
+            'password_hash' => Hash::make('secret123'),
+            'role' => 'customer',
+        ]);
+        $product = $this->makeProduct();
+        $order = Order::create([
+            'bill_code' => 'BILL-CANCEL-001',
+            'user_id' => $customer->id,
+            'order_date' => '2026-10-01 10:00:00',
+            'total_amount' => 200,
+            'status' => 'pending',
+            'payment_method' => 'cod',
+            'payment_status' => 'pending',
+            'shipping_address' => '123 Cancel Street',
+        ]);
+        OrderItem::create([
+            'order_id' => $order->id,
+            'product_id' => $product->id,
+            'quantity' => 2,
+            'unit_price' => 100,
+        ]);
+
+        $response = $this->actingAs($admin)->put(route('admin.orders.cancel', $order));
+
+        $response->assertRedirect();
+        $response->assertSessionHas('success');
+        $this->assertSame('cancelled', $order->fresh()->status);
+        $this->assertSame('failed', $order->fresh()->payment_status);
+        $this->assertSame(5, $product->fresh()->stock_qty);
+        $this->assertDatabaseHas('product_histories', [
+            'product_id' => $product->id,
+            'user_id' => $admin->id,
+            'action' => 'order_cancelled',
+            'old_stock_qty' => 3,
+            'new_stock_qty' => 5,
+        ]);
+        $this->assertDatabaseHas('product_histories', [
+            'user_id' => $admin->id,
+            'action' => 'cancelled',
+        ]);
+    }
+
+    public function test_admin_can_remove_order_item_restock_it_and_cancel_when_last_item_is_removed(): void
+    {
+        $admin = $this->makeAdmin();
+        $customer = User::create([
+            'full_name' => 'Order Item Customer',
+            'email' => 'order-item-customer@example.com',
+            'password_hash' => Hash::make('secret123'),
+            'role' => 'customer',
+        ]);
+        $firstProduct = $this->makeProduct();
+        $secondProduct = $this->makeProduct();
+        $order = Order::create([
+            'bill_code' => 'BILL-ITEM-001',
+            'user_id' => $customer->id,
+            'order_date' => '2026-10-01 10:00:00',
+            'total_amount' => 45,
+            'status' => 'pending',
+            'payment_method' => 'cod',
+            'payment_status' => 'pending',
+            'shipping_address' => '123 Item Street',
+        ]);
+        $firstItem = OrderItem::create([
+            'order_id' => $order->id,
+            'product_id' => $firstProduct->id,
+            'quantity' => 2,
+            'unit_price' => 10,
+        ]);
+        $secondItem = OrderItem::create([
+            'order_id' => $order->id,
+            'product_id' => $secondProduct->id,
+            'quantity' => 1,
+            'unit_price' => 25,
+        ]);
+
+        $this->actingAs($admin)
+            ->delete(route('admin.order-items.destroy', [$order, $firstItem]))
+            ->assertRedirect()
+            ->assertSessionHas('success');
+
+        $this->assertDatabaseMissing('order_items', ['id' => $firstItem->id]);
+        $this->assertSame(5, $firstProduct->fresh()->stock_qty);
+        $this->assertSame('25.00', $order->fresh()->total_amount);
+        $this->assertSame('pending', $order->fresh()->status);
+
+        $this->actingAs($admin)
+            ->delete(route('admin.order-items.destroy', [$order, $secondItem]))
+            ->assertRedirect()
+            ->assertSessionHas('success');
+
+        $this->assertDatabaseMissing('order_items', ['id' => $secondItem->id]);
+        $this->assertSame(4, $secondProduct->fresh()->stock_qty);
+        $this->assertSame('0.00', $order->fresh()->total_amount);
+        $this->assertSame('cancelled', $order->fresh()->status);
+        $this->assertSame('failed', $order->fresh()->payment_status);
+        $this->assertDatabaseHas('product_histories', [
+            'product_id' => $firstProduct->id,
+            'user_id' => $admin->id,
+            'action' => 'order_item_removed',
+        ]);
+    }
+
+    public function test_admin_cannot_cancel_a_paid_order_or_restock_it(): void
+    {
+        $admin = $this->makeAdmin();
+        $customer = User::create([
+            'full_name' => 'Paid Order Customer',
+            'email' => 'paid-order-customer@example.com',
+            'password_hash' => Hash::make('secret123'),
+            'role' => 'customer',
+        ]);
+        $product = $this->makeProduct();
+        $order = Order::create([
+            'bill_code' => 'BILL-PAID-001',
+            'user_id' => $customer->id,
+            'order_date' => '2026-10-01 10:00:00',
+            'total_amount' => 100,
+            'status' => 'pending',
+            'payment_method' => 'credit_card',
+            'payment_status' => 'paid',
+            'shipping_address' => '123 Paid Street',
+        ]);
+        OrderItem::create([
+            'order_id' => $order->id,
+            'product_id' => $product->id,
+            'quantity' => 1,
+            'unit_price' => 100,
+        ]);
+
+        $response = $this->actingAs($admin)->put(route('admin.orders.cancel', $order));
+
+        $response->assertRedirect();
+        $response->assertSessionHasErrors('order');
+        $this->assertSame('pending', $order->fresh()->status);
+        $this->assertSame(3, $product->fresh()->stock_qty);
+        $this->assertDatabaseMissing('product_histories', ['action' => 'order_cancelled']);
     }
 
     public function test_admin_can_create_product_from_form(): void
@@ -457,6 +761,12 @@ class AdminDashboardTest extends TestCase
     {
         $admin = $this->makeAdmin();
         $product = $this->makeProduct();
+        ProductHistory::create([
+            'product_id' => $product->id,
+            'user_id' => $admin->id,
+            'action' => 'updated',
+            'details' => 'Earlier change to Test Laptop',
+        ]);
 
         $response = $this->actingAs($admin)->delete('/admin/products/'.$product->id);
 
@@ -466,6 +776,11 @@ class AdminDashboardTest extends TestCase
         $this->assertDatabaseHas('product_histories', [
             'user_id' => $admin->id,
             'action' => 'deleted',
+        ]);
+        $this->assertDatabaseHas('product_histories', [
+            'user_id' => $admin->id,
+            'product_id' => null,
+            'details' => 'Earlier change to Test Laptop',
         ]);
     }
 

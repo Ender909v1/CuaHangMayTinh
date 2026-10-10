@@ -8,16 +8,8 @@
 </head>
 <body class="bg-gray-100 text-gray-800">
     <div class="min-h-screen">
-        <nav class="bg-gray-900 text-white">
-            <div class="mx-auto max-w-7xl px-4 py-4 flex items-center justify-between">
-                <div><h1 class="text-xl font-bold">Edit User #{{ $user->id }}</h1></div>
-                <div class="flex items-center gap-4">
-                    <a href="{{ route('admin.users.index') }}" class="hover:text-red-400">Back</a>
-                    <form method="POST" action="{{ route('logout') }}">@csrf<button type="submit" class="rounded-full bg-red-600 px-4 py-2 text-sm font-semibold hover:bg-red-500">Logout</button></form>
-                </div>
-            </div>
-        </nav>
-        <main class="mx-auto max-w-2xl px-4 py-10">
+        @include('admin.partials.navigation', ['pageTitle' => 'Edit User #'.$user->id, 'activeTab' => 'users'])
+        <main class="mx-auto max-w-2xl px-4 pt-4 pb-10">
             <div class="rounded-xl bg-white p-8 shadow">
                 @if ($errors->any())
                     <div class="mb-6 rounded border border-red-200 bg-red-50 p-4 text-sm text-red-700">

@@ -9,18 +9,34 @@
 </head>
 <body class="bg-gray-100 text-gray-800">
     <div class="min-h-screen">
-        <nav class="bg-gray-900 text-white">
-            <div class="mx-auto max-w-7xl px-4 py-4 flex items-center justify-between">
-                <div><h1 class="text-xl font-bold">Inventory</h1></div>
-                <div class="flex items-center gap-4">
-                    <a href="{{ route('admin.dashboard', ['tab' => 'inventory']) }}" class="hover:text-red-400">Dashboard</a>
-                    <form method="POST" action="{{ route('logout') }}">@csrf<button type="submit" class="rounded-full bg-red-600 px-4 py-2 text-sm font-semibold hover:bg-red-500">Logout</button></form>
-                </div>
-            </div>
-        </nav>
-        <main class="mx-auto max-w-7xl px-4 py-10">
+        @include('admin.partials.navigation', ['pageTitle' => 'Inventory', 'activeTab' => 'inventory'])
+        <main class="mx-auto max-w-7xl px-4 pt-4 pb-10">
             <div class="rounded-xl bg-white p-6 shadow">
-                <h2 class="mb-6 text-xl font-bold">Stock levels (like products, plus quantity left)</h2>
+                <div class="mb-6">
+                    <h2 class="text-xl font-bold">Stock levels (like products, plus quantity left)</h2>
+                    <p class="mt-1 text-sm text-gray-500">Search by name or SKU. Filter by stock status.</p>
+                </div>
+                <form method="GET" action="{{ route('admin.inventory.index') }}" class="mb-6 grid gap-3 rounded-xl border border-gray-200 bg-gray-50 p-4 md:grid-cols-2">
+                    <div>
+                        <label for="inventory-search" class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-500">Search</label>
+                        <input id="inventory-search" type="text" name="search" value="{{ $inventoryFilters['search'] ?? '' }}" placeholder="Product name or SKU…" class="w-full rounded border px-3 py-2 text-sm" oninput="clearTimeout(window._adminFilterT);window._adminFilterT=setTimeout(()=>this.form.submit(),600)">
+                    </div>
+                    <div>
+                        <label for="inventory-stock" class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-500">Stock status</label>
+                        <select id="inventory-stock" name="stock" class="w-full rounded border px-3 py-2 text-sm" onchange="this.form.submit()">
+                            <option value="">All stock levels</option>
+                            <option value="in" {{ ($inventoryFilters['stock'] ?? '') === 'in' ? 'selected' : '' }}>In stock (&gt; 5)</option>
+                            <option value="low" {{ ($inventoryFilters['stock'] ?? '') === 'low' ? 'selected' : '' }}>Low stock (1–5)</option>
+                            <option value="out" {{ ($inventoryFilters['stock'] ?? '') === 'out' ? 'selected' : '' }}>Out of stock (0)</option>
+                        </select>
+                    </div>
+                    <div class="flex gap-2 md:col-span-2">
+                        <a href="{{ route('admin.inventory.index') }}" class="rounded border px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100">Reset</a>
+                    </div>
+                </form>
+                @if ($inventory->isEmpty())
+                    <p class="text-gray-500">No products match these filters.</p>
+                @else
                 @if (session('success'))
                     <div class="mb-6 rounded border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700">{{ session('success') }}</div>
                 @endif
@@ -75,6 +91,7 @@
                     </table>
                 </div>
                 <div class="mt-6">{{ $inventory->links() }}</div>
+                @endif
             </div>
         </main>
     </div>

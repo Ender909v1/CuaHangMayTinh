@@ -161,6 +161,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admin/orders/{order}', [AdminController::class, 'showOrder'])->name('admin.orders.show');
         Route::put('/admin/orders/{order}/status', [AdminController::class, 'updateOrderStatus'])->name('admin.orders.status');
         Route::put('/admin/orders/{order}/payment', [AdminController::class, 'updateOrderPayment'])->name('admin.orders.payment');
+        Route::put('/admin/orders/{order}/cancel', [AdminController::class, 'cancelOrder'])->name('admin.orders.cancel');
+        Route::delete('/admin/orders/{order}/items/{item}', [AdminController::class, 'removeOrderItem'])->name('admin.order-items.destroy');
 
         Route::get('/admin/users', [AdminController::class, 'users'])->name('admin.users.index');
         Route::get('/admin/users/{user}/edit', [AdminController::class, 'editUser'])->name('admin.users.edit');

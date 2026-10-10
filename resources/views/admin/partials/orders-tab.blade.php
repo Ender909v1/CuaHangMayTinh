@@ -6,11 +6,11 @@
     <input type="hidden" name="tab" value="orders">
     <div class="xl:col-span-2">
         <label for="dashboard-order-search" class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-500">Search</label>
-        <input id="dashboard-order-search" type="text" name="search" value="{{ $orderFilters['search'] ?? '' }}" placeholder="Bill code, customer, email, address…" class="w-full rounded border px-3 py-2 text-sm">
+        <input id="dashboard-order-search" type="text" name="search" value="{{ $orderFilters['search'] ?? '' }}" placeholder="Bill code, customer, email, address…" class="w-full rounded border px-3 py-2 text-sm" oninput="clearTimeout(window._adminFilterT);window._adminFilterT=setTimeout(()=>this.form.submit(),600)">
     </div>
     <div>
         <label for="dashboard-order-status" class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-500">Status</label>
-        <select id="dashboard-order-status" name="status" class="w-full rounded border px-3 py-2 text-sm">
+        <select id="dashboard-order-status" name="status" class="w-full rounded border px-3 py-2 text-sm" onchange="this.form.submit()">
             <option value="">All statuses</option>
             @foreach (\App\Models\Order::STATUSES as $statusOption)
                 <option value="{{ $statusOption }}" {{ ($orderFilters['status'] ?? '') === $statusOption ? 'selected' : '' }}>{{ ucfirst($statusOption) }}</option>
@@ -19,14 +19,13 @@
     </div>
     <div>
         <label for="dashboard-order-from" class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-500">Order date from</label>
-        <input id="dashboard-order-from" type="date" name="date_from" value="{{ $orderFilters['date_from'] ?? '' }}" class="w-full rounded border px-3 py-2 text-sm">
+        <input id="dashboard-order-from" type="date" name="date_from" value="{{ $orderFilters['date_from'] ?? '' }}" class="w-full rounded border px-3 py-2 text-sm" onchange="this.form.submit()">
     </div>
     <div>
         <label for="dashboard-order-to" class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-500">Order date to</label>
-        <input id="dashboard-order-to" type="date" name="date_to" value="{{ $orderFilters['date_to'] ?? '' }}" class="w-full rounded border px-3 py-2 text-sm">
+        <input id="dashboard-order-to" type="date" name="date_to" value="{{ $orderFilters['date_to'] ?? '' }}" class="w-full rounded border px-3 py-2 text-sm" onchange="this.form.submit()">
     </div>
     <div class="flex gap-2 md:col-span-2 xl:col-span-5">
-        <button type="submit" class="rounded bg-red-600 px-4 py-2 text-sm font-semibold text-white hover:bg-red-500">Apply Filters</button>
         <a href="{{ route('admin.dashboard', ['tab' => 'orders']) }}" class="rounded border px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100">Reset</a>
     </div>
 </form>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Brand;
 use App\Models\Category;
 use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\ProductHistory;
 use App\Models\Review;
@@ -14,6 +15,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
@@ -61,19 +63,27 @@ class AdminController extends Controller
 
             return $stat;
         })->all();
-        $users = User::orderBy('id')->get();
+        $userFilters = $this->userFilters($request, 'u_');
+        $users = $this->filteredUsersQuery($userFilters)->orderBy('id')->get();
         $orderFilters = $this->orderFilters($request);
         $orders = $this->filteredOrdersQuery($orderFilters)->latest('id')->get();
-        $inventory = Product::with(['brand', 'category', 'histories' => $this->stockHistory()])
+        $categoryFilters = $this->categoryFilters($request, 'c_');
+        $categories = $this->filteredCategoriesQuery($categoryFilters)->with('parent')->orderByDesc('id')->get();
+        $categoryParents = Category::orderBy('name')->get(['id', 'name']);
+        $inventoryFilters = $this->inventoryFilters($request, 'i_');
+        $inventory = $this->filteredInventoryQuery($inventoryFilters)
+            ->with(['brand', 'category', 'histories' => $this->stockHistory()])
             ->orderBy('stock_qty')
             ->get();
-        $reviews = Review::with(['user', 'product'])->latest('id')->get();
+        $reviewFilters = $this->reviewFilters($request, 'r_');
+        $reviews = $this->filteredReviewsQuery($reviewFilters)->with(['user', 'product'])->latest('id')->get();
 
         return view('admin.dashboard', compact(
             'totalProducts', 'activeProducts', 'lowStockProducts', 'history',
             'products', 'monthlyProductStats', 'maxMonthlyProductCount', 'stockTotal',
             'stockChartCircumference', 'stockStats', 'users', 'orders', 'inventory', 'reviews',
-            'orderFilters'
+            'categories',
+            'orderFilters', 'userFilters', 'categoryFilters', 'categoryParents', 'inventoryFilters', 'reviewFilters'
         ));
     }
 
@@ -117,12 +127,14 @@ class AdminController extends Controller
             $this->storeProductImage($product, $request->file('image'));
         }
 
-        ProductHistory::create([
-            'product_id' => $product->id,
-            'user_id' => Auth::id(),
-            'action' => 'created',
-            'details' => 'Admin created product: '.$product->name,
-        ]);
+        $productChanges = $this->changesFromInitial($product->only([
+            'name', 'sku', 'description', 'price', 'discount_price', 'stock_qty',
+            'type', 'brand_id', 'category_id', 'is_active',
+        ]));
+        if ($request->hasFile('image')) {
+            $productChanges['image'] = ['from' => null, 'to' => $product->images()->value('image_url')];
+        }
+        $this->recordAdminChange('created', 'product', $product->id, $product->name, $productChanges, $product->id);
 
         return redirect()->route('admin.products.index')->with('success', 'Product created successfully.');
     }
@@ -162,6 +174,13 @@ class AdminController extends Controller
         $validated['discount_price'] = $this->normalizeDiscountPrice($validated['discount_price'] ?? null);
         $validated['is_active'] = $request->boolean('is_active');
 
+        $trackedFields = [
+            'name', 'sku', 'description', 'price', 'discount_price',
+            'type', 'brand_id', 'category_id', 'is_active',
+        ];
+        $before = $product->only($trackedFields);
+        $previousImages = $product->images()->pluck('image_url')->all();
+
         $product->update($validated);
 
         if ($request->hasFile('image')) {
@@ -169,12 +188,14 @@ class AdminController extends Controller
             $this->storeProductImage($product, $request->file('image'));
         }
 
-        ProductHistory::create([
-            'product_id' => $product->id,
-            'user_id' => Auth::id(),
-            'action' => 'updated',
-            'details' => 'Admin updated product: '.$product->name,
-        ]);
+        $productChanges = $this->changesBetween($before, $product->only($trackedFields));
+        if ($request->hasFile('image')) {
+            $productChanges['image'] = [
+                'from' => implode(', ', $previousImages) ?: null,
+                'to' => $product->images()->pluck('image_url')->implode(', '),
+            ];
+        }
+        $this->recordAdminChange('updated', 'product', $product->id, $product->name, $productChanges, $product->id);
 
         return redirect()->route('admin.products.index')->with('success', 'Product updated successfully.');
     }
@@ -182,23 +203,26 @@ class AdminController extends Controller
     public function destroy(Product $product)
     {
         $productName = $product->name;
+        $productId = $product->id;
         $product->delete();
 
-        ProductHistory::create([
-            'product_id' => null,
-            'user_id' => Auth::id(),
-            'action' => 'deleted',
-            'details' => 'Admin deleted product: '.$productName,
+        $this->recordAdminChange('deleted', 'product', $productId, $productName, [
+            'record' => ['from' => $productName, 'to' => 'deleted'],
         ]);
 
         return redirect()->route('admin.products.index')->with('success', 'Product deleted successfully.');
     }
 
-    public function categories()
+    public function categories(Request $request)
     {
-        $categories = Category::with('parent')->orderByDesc('id')->paginate(12);
+        $categoryFilters = $this->categoryFilters($request);
+        $categories = $this->filteredCategoriesQuery($categoryFilters)
+            ->with('parent')
+            ->orderByDesc('id')
+            ->paginate(12)
+            ->withQueryString();
 
-        return view('admin.categories.index', compact('categories'));
+        return view('admin.categories.index', compact('categories', 'categoryFilters'));
     }
 
     public function createCategory()
@@ -215,7 +239,14 @@ class AdminController extends Controller
             'parent_id' => ['nullable', 'exists:categories,id'],
         ]);
 
-        Category::create($validated);
+        $category = Category::create($validated);
+        $this->recordAdminChange(
+            'created',
+            'category',
+            $category->id,
+            $category->name,
+            $this->changesFromInitial($category->only(['name', 'parent_id']))
+        );
 
         return redirect()->route('admin.categories.index')->with('success', 'Category created successfully.');
     }
@@ -234,14 +265,27 @@ class AdminController extends Controller
             'parent_id' => ['nullable', 'exists:categories,id'],
         ]);
 
+        $before = $category->only(['name', 'parent_id']);
         $category->update($validated);
+        $this->recordAdminChange(
+            'updated',
+            'category',
+            $category->id,
+            $category->name,
+            $this->changesBetween($before, $category->only(['name', 'parent_id']))
+        );
 
         return redirect()->route('admin.categories.index')->with('success', 'Category updated successfully.');
     }
 
     public function destroyCategory(Category $category)
     {
+        $categoryName = $category->name;
+        $categoryId = $category->id;
         $category->delete();
+        $this->recordAdminChange('deleted', 'category', $categoryId, $categoryName, [
+            'record' => ['from' => $categoryName, 'to' => 'deleted'],
+        ]);
 
         return redirect()->route('admin.categories.index')->with('success', 'Category deleted successfully.');
     }
@@ -276,6 +320,7 @@ class AdminController extends Controller
         $validated = $request->validate([
             'status' => ['required', Rule::in(Order::STATUSES)],
         ]);
+        $before = ['status' => $order->status];
 
         // Touch updated_at so customers get the "!" alert on their next visit.
         // +1 second: DB datetimes have 1s precision, so without this an update
@@ -283,6 +328,13 @@ class AdminController extends Controller
         $order->status = $validated['status'];
         $order->updated_at = now()->addSecond();
         $order->save();
+        $this->recordAdminChange(
+            'status_updated',
+            'order',
+            $order->id,
+            $order->bill_code,
+            $this->changesBetween($before, ['status' => $order->status])
+        );
 
         return back()->with('success', "Order {$order->bill_code} marked as {$order->status}.");
     }
@@ -300,12 +352,20 @@ class AdminController extends Controller
             'payment_status' => ['required', Rule::in(Order::PAYMENT_STATUSES)],
             'transaction_id' => ['nullable', 'string', 'max:255'],
         ]);
+        $before = $order->only(['payment_method', 'payment_status', 'transaction_id']);
 
         $order->payment_method = $validated['payment_method'];
         $order->payment_status = $validated['payment_status'];
         $order->transaction_id = $validated['transaction_id'] ?: null;
         $order->updated_at = now()->addSecond();
         $order->save();
+        $this->recordAdminChange(
+            'payment_updated',
+            'order',
+            $order->id,
+            $order->bill_code,
+            $this->changesBetween($before, $order->only(['payment_method', 'payment_status', 'transaction_id']))
+        );
 
         return back()->with(
             'success',
@@ -313,11 +373,156 @@ class AdminController extends Controller
         );
     }
 
-    public function users()
+    public function cancelOrder(Order $order)
     {
-        $users = User::orderBy('id')->paginate(20);
+        $cancelled = DB::transaction(function () use ($order): bool {
+            $lockedOrder = Order::query()->lockForUpdate()->findOrFail($order->id);
+            if (! $lockedOrder->canBeCancelledByCustomer()) {
+                return false;
+            }
 
-        return view('admin.users.index', compact('users'));
+            $lockedOrder->load('items.product');
+            $previousStatus = $lockedOrder->status;
+            $previousPaymentStatus = $lockedOrder->payment_status;
+
+            foreach ($lockedOrder->items as $item) {
+                $product = $item->product;
+                if ($product === null) {
+                    continue;
+                }
+
+                $oldStock = (int) $product->stock_qty;
+                $product->increment('stock_qty', $item->quantity);
+                ProductHistory::create([
+                    'product_id' => $product->id,
+                    'user_id' => Auth::id(),
+                    'action' => 'order_cancelled',
+                    'old_stock_qty' => $oldStock,
+                    'new_stock_qty' => $oldStock + $item->quantity,
+                    'details' => "Admin restocked {$product->name} after cancelling order {$lockedOrder->bill_code}",
+                ]);
+            }
+
+            $lockedOrder->status = 'cancelled';
+            if ($lockedOrder->payment_status === 'pending') {
+                $lockedOrder->payment_status = 'failed';
+            }
+            $lockedOrder->updated_at = now()->addSecond();
+            $lockedOrder->save();
+
+            $this->recordAdminChange(
+                'cancelled',
+                'order',
+                $lockedOrder->id,
+                $lockedOrder->bill_code,
+                $this->changesBetween(
+                    ['status' => $previousStatus, 'payment_status' => $previousPaymentStatus],
+                    ['status' => $lockedOrder->status, 'payment_status' => $lockedOrder->payment_status]
+                )
+            );
+
+            return true;
+        });
+
+        if (! $cancelled) {
+            return back()->withErrors([
+                'order' => 'Only pending, unpaid orders can be cancelled and restocked.',
+            ]);
+        }
+
+        return back()->with('success', "Order {$order->bill_code} cancelled and items returned to stock.");
+    }
+
+    public function removeOrderItem(Order $order, OrderItem $item)
+    {
+        if ($item->order_id !== $order->id) {
+            abort(404);
+        }
+
+        $removed = DB::transaction(function () use ($order, $item): bool {
+            $lockedOrder = Order::query()->lockForUpdate()->findOrFail($order->id);
+            if (! $lockedOrder->canRemoveItems()) {
+                return false;
+            }
+
+            $lockedItem = $lockedOrder->items()->with('product')->lockForUpdate()->findOrFail($item->id);
+            $product = $lockedItem->product;
+            $previousTotal = (float) $lockedOrder->total_amount;
+            $previousStatus = $lockedOrder->status;
+            $previousPaymentStatus = $lockedOrder->payment_status;
+
+            if ($product !== null) {
+                $oldStock = (int) $product->stock_qty;
+                $product->increment('stock_qty', $lockedItem->quantity);
+                ProductHistory::create([
+                    'product_id' => $product->id,
+                    'user_id' => Auth::id(),
+                    'action' => 'order_item_removed',
+                    'old_stock_qty' => $oldStock,
+                    'new_stock_qty' => $oldStock + $lockedItem->quantity,
+                    'details' => "Admin restocked {$product->name} after removing it from order {$lockedOrder->bill_code}",
+                ]);
+            }
+
+            $itemDescription = ($product?->name ?? 'Product #'.$lockedItem->product_id)
+                .' × '.$lockedItem->quantity;
+            $lockedItem->delete();
+
+            $lockedOrder->load('items');
+            $lockedOrder->total_amount = $lockedOrder->items->sum(
+                fn (OrderItem $line): float => (float) $line->unit_price * $line->quantity
+            );
+            if ($lockedOrder->items->isEmpty()) {
+                $lockedOrder->status = 'cancelled';
+                if ($lockedOrder->payment_status === 'pending') {
+                    $lockedOrder->payment_status = 'failed';
+                }
+            }
+            $lockedOrder->updated_at = now()->addSecond();
+            $lockedOrder->save();
+
+            $changes = $this->changesBetween(
+                [
+                    'total_amount' => $previousTotal,
+                    'status' => $previousStatus,
+                    'payment_status' => $previousPaymentStatus,
+                ],
+                [
+                    'total_amount' => (float) $lockedOrder->total_amount,
+                    'status' => $lockedOrder->status,
+                    'payment_status' => $lockedOrder->payment_status,
+                ]
+            );
+            $changes['item'] = ['from' => $itemDescription, 'to' => 'removed'];
+            $this->recordAdminChange(
+                'item_removed',
+                'order',
+                $lockedOrder->id,
+                $lockedOrder->bill_code,
+                $changes
+            );
+
+            return true;
+        });
+
+        if (! $removed) {
+            return back()->withErrors([
+                'order' => 'Items can only be removed from pending, unpaid orders.',
+            ]);
+        }
+
+        return back()->with('success', "Item removed from order {$order->bill_code} and returned to stock.");
+    }
+
+    public function users(Request $request)
+    {
+        $userFilters = $this->userFilters($request);
+        $users = $this->filteredUsersQuery($userFilters)
+            ->orderBy('id')
+            ->paginate(20)
+            ->withQueryString();
+
+        return view('admin.users.index', compact('users', 'userFilters'));
     }
 
     public function editUser(User $user)
@@ -341,6 +546,7 @@ class AdminController extends Controller
             'password' => ['nullable', 'string', 'min:6', 'confirmed'],
         ]);
 
+        $before = $user->only(['full_name', 'email', 'phone', 'address', 'role', 'is_active']);
         $user->full_name = $validated['full_name'];
         $user->email = $validated['email'];
         $user->phone = $validated['phone'] ?? null;
@@ -353,6 +559,13 @@ class AdminController extends Controller
         }
 
         $user->save();
+        $userChanges = $this->changesBetween($before, $user->only([
+            'full_name', 'email', 'phone', 'address', 'role', 'is_active',
+        ]));
+        if (! empty($validated['password'])) {
+            $userChanges['password'] = ['from' => 'unchanged', 'to' => 'changed'];
+        }
+        $this->recordAdminChange('updated', 'user', $user->id, $user->full_name, $userChanges);
 
         return redirect()->route('admin.users.index')->with('success', 'User updated successfully.');
     }
@@ -367,18 +580,26 @@ class AdminController extends Controller
             return redirect()->route('admin.users.index')->withErrors(['user' => 'You cannot delete your own account.']);
         }
 
+        $userName = $user->full_name;
+        $userId = $user->id;
         $user->delete();
+        $this->recordAdminChange('deleted', 'user', $userId, $userName, [
+            'record' => ['from' => $userName, 'to' => 'deleted'],
+        ]);
 
         return redirect()->route('admin.users.index')->with('success', 'User deleted successfully.');
     }
 
-    public function inventory()
+    public function inventory(Request $request)
     {
-        $inventory = Product::with(['brand', 'category', 'histories' => $this->stockHistory()])
+        $inventoryFilters = $this->inventoryFilters($request);
+        $inventory = $this->filteredInventoryQuery($inventoryFilters)
+            ->with(['brand', 'category', 'histories' => $this->stockHistory()])
             ->orderBy('stock_qty')
-            ->paginate(15);
+            ->paginate(15)
+            ->withQueryString();
 
-        return view('admin.inventory.index', compact('inventory'));
+        return view('admin.inventory.index', compact('inventory', 'inventoryFilters'));
     }
 
     /**
@@ -430,10 +651,21 @@ class AdminController extends Controller
             'admin_response.max' => 'The response cannot be longer than 2000 characters.',
         ]);
 
+        $previousResponse = $review->admin_response;
         $review->update([
             'admin_response' => $validated['admin_response'],
             'admin_responded_at' => now(),
         ]);
+        $this->recordAdminChange(
+            'responded_to',
+            'review',
+            $review->id,
+            $review->product?->name,
+            $this->changesBetween(
+                ['admin_response' => $previousResponse],
+                ['admin_response' => $review->admin_response]
+            )
+        );
 
         return redirect()
             ->route('admin.dashboard', ['tab' => 'reviews'])
@@ -445,7 +677,12 @@ class AdminController extends Controller
      */
     public function destroyReview(Review $review)
     {
+        $reviewId = $review->id;
+        $productName = $review->product?->name;
         $review->delete();
+        $this->recordAdminChange('deleted', 'review', $reviewId, $productName, [
+            'record' => ['from' => 'review #'.$reviewId, 'to' => 'deleted'],
+        ]);
 
         return redirect()
             ->route('admin.dashboard', ['tab' => 'reviews'])
@@ -458,6 +695,84 @@ class AdminController extends Controller
     private function stockHistory(): Closure
     {
         return fn ($query) => $query->with('user')->latest('id');
+    }
+
+    /**
+     * @param  array<string, array{from: mixed, to: mixed}>  $changes
+     */
+    private function recordAdminChange(
+        string $action,
+        string $entity,
+        int $entityId,
+        ?string $entityName,
+        array $changes,
+        ?int $productId = null
+    ): void {
+        if ($changes === []) {
+            return;
+        }
+
+        $changeDetails = collect($changes)
+            ->map(fn (array $change, string $field): string => $field.': '
+                .$this->formatHistoryValue($change['from']).' → '
+                .$this->formatHistoryValue($change['to']))
+            ->implode('; ');
+        $entityLabel = $entity.' #'.$entityId.($entityName !== null ? ' ('.$entityName.')' : '');
+
+        ProductHistory::create([
+            'product_id' => $productId,
+            'user_id' => Auth::id(),
+            'action' => $action,
+            'details' => 'Admin '.$action.' '.$entityLabel.': '.$changeDetails,
+        ]);
+    }
+
+    /**
+     * @param  array<string, mixed>  $after
+     * @return array<string, array{from: mixed, to: mixed}>
+     */
+    private function changesFromInitial(array $after): array
+    {
+        return collect($after)
+            ->map(fn (mixed $value): array => ['from' => null, 'to' => $value])
+            ->all();
+    }
+
+    /**
+     * @param  array<string, mixed>  $before
+     * @param  array<string, mixed>  $after
+     * @return array<string, array{from: mixed, to: mixed}>
+     */
+    private function changesBetween(array $before, array $after): array
+    {
+        $changes = [];
+
+        foreach ($after as $field => $newValue) {
+            $oldValue = $before[$field] ?? null;
+
+            if ($oldValue != $newValue) {
+                $changes[$field] = ['from' => $oldValue, 'to' => $newValue];
+            }
+        }
+
+        return $changes;
+    }
+
+    private function formatHistoryValue(mixed $value): string
+    {
+        if ($value === null || $value === '') {
+            return 'empty';
+        }
+
+        if (is_bool($value)) {
+            return $value ? 'yes' : 'no';
+        }
+
+        if (is_array($value)) {
+            return implode(', ', array_map($this->formatHistoryValue(...), $value));
+        }
+
+        return (string) $value;
     }
 
     /**
@@ -511,6 +826,196 @@ class AdminController extends Controller
 
         if ($filters['date_to'] !== '') {
             $query->whereDate('order_date', '<=', $filters['date_to']);
+        }
+
+        return $query;
+    }
+
+    /**
+     * Shared Users Management filters (search bar + role + active droplists).
+     * Prefix keeps dashboard tab params (u_search/u_role/...) from clashing
+     * with orders/inventory/review params on the same /admin?tab=... URL.
+     *
+     * @return array{search: string, role: string, active: string}
+     */
+    private function userFilters(Request $request, string $prefix = ''): array
+    {
+        $role = (string) $request->query($prefix.'role', '');
+        $active = (string) $request->query($prefix.'active', '');
+
+        return [
+            'search' => trim((string) $request->query($prefix.'search', '')),
+            'role' => in_array($role, ['customer', 'staff', 'admin'], true) ? $role : '',
+            'active' => in_array($active, ['yes', 'no'], true) ? $active : '',
+        ];
+    }
+
+    /**
+     * Base users query with the shared search/role/active filters applied.
+     * Search matches name, email, or phone.
+     */
+    private function filteredUsersQuery(array $filters): Builder
+    {
+        $query = User::query();
+
+        if ($filters['search'] !== '') {
+            $search = $filters['search'];
+            $query->where(function (Builder $query) use ($search): void {
+                $query->where('full_name', 'like', "%{$search}%")
+                    ->orWhere('email', 'like', "%{$search}%")
+                    ->orWhere('phone', 'like', "%{$search}%");
+            });
+        }
+
+        if ($filters['role'] !== '') {
+            $query->where('role', $filters['role']);
+        }
+
+        if ($filters['active'] !== '') {
+            $query->where('is_active', $filters['active'] === 'yes');
+        }
+
+        return $query;
+    }
+
+    /**
+     * Shared Categories Management filters (search bar + parent droplist).
+     * Prefix keeps dashboard tab params (c_search/c_parent/...) from clashing
+     * with orders/users/inventory/review params on the same /admin?tab=... URL.
+     *
+     * @return array{search: string, parent: string}
+     */
+    private function categoryFilters(Request $request, string $prefix = ''): array
+    {
+        $parent = (string) $request->query($prefix.'parent', '');
+
+        if ($parent !== '' && $parent !== 'main' && ! ctype_digit($parent)) {
+            $parent = '';
+        }
+
+        return [
+            'search' => trim((string) $request->query($prefix.'search', '')),
+            'parent' => $parent,
+        ];
+    }
+
+    /**
+     * Base categories query with the shared search/parent filters applied.
+     * Search matches category name; parent filters by Main vs a parent id.
+     */
+    private function filteredCategoriesQuery(array $filters): Builder
+    {
+        $query = Category::query();
+
+        if ($filters['search'] !== '') {
+            $query->where('name', 'like', "%{$filters['search']}%");
+        }
+
+        if ($filters['parent'] !== '') {
+            if ($filters['parent'] === 'main') {
+                $query->whereNull('parent_id');
+            } else {
+                $query->where('parent_id', (int) $filters['parent']);
+            }
+        }
+
+        return $query;
+    }
+
+    /**
+     * Shared Inventory Management filters (search bar + stock droplist).
+     * Prefix keeps dashboard tab params (i_search/i_stock/...) from clashing
+     * with orders/users/category/review params on the same /admin?tab=... URL.
+     *
+     * @return array{search: string, stock: string}
+     */
+    private function inventoryFilters(Request $request, string $prefix = ''): array
+    {
+        $stock = (string) $request->query($prefix.'stock', '');
+
+        return [
+            'search' => trim((string) $request->query($prefix.'search', '')),
+            'stock' => in_array($stock, ['in', 'low', 'out'], true) ? $stock : '',
+        ];
+    }
+
+    /**
+     * Base inventory query with the shared search/stock filters applied.
+     * Search matches product name or SKU.
+     */
+    private function filteredInventoryQuery(array $filters): Builder
+    {
+        $query = Product::query();
+
+        if ($filters['search'] !== '') {
+            $search = $filters['search'];
+            $query->where(function (Builder $query) use ($search): void {
+                $query->where('name', 'like', "%{$search}%")
+                    ->orWhere('sku', 'like', "%{$search}%");
+            });
+        }
+
+        if ($filters['stock'] === 'in') {
+            $query->where('stock_qty', '>', 5);
+        } elseif ($filters['stock'] === 'low') {
+            $query->where('stock_qty', '>', 0)->where('stock_qty', '<=', 5);
+        } elseif ($filters['stock'] === 'out') {
+            $query->where('stock_qty', '<=', 0);
+        }
+
+        return $query;
+    }
+
+    /**
+     * Shared Reviews Management filters (search bar + rating + answered droplists).
+     * Prefix keeps dashboard tab params (r_search/r_rating/...) from clashing
+     * with orders/users/category/inventory params on the same /admin?tab=... URL.
+     *
+     * @return array{search: string, rating: string, answered: string}
+     */
+    private function reviewFilters(Request $request, string $prefix = ''): array
+    {
+        $rating = (string) $request->query($prefix.'rating', '');
+        $answered = (string) $request->query($prefix.'answered', '');
+
+        return [
+            'search' => trim((string) $request->query($prefix.'search', '')),
+            'rating' => in_array($rating, ['1', '2', '3', '4', '5'], true) ? $rating : '',
+            'answered' => in_array($answered, ['yes', 'no'], true) ? $answered : '',
+        ];
+    }
+
+    /**
+     * Base reviews query with the shared search/rating/answered filters applied.
+     * Search matches comment, customer name, or product name.
+     */
+    private function filteredReviewsQuery(array $filters): Builder
+    {
+        $query = Review::query();
+
+        if ($filters['search'] !== '') {
+            $search = $filters['search'];
+            $query->where(function (Builder $query) use ($search): void {
+                $query->where('comment', 'like', "%{$search}%")
+                    ->orWhereHas('user', function (Builder $query) use ($search): void {
+                        $query->where('full_name', 'like', "%{$search}%");
+                    })
+                    ->orWhereHas('product', function (Builder $query) use ($search): void {
+                        $query->where('name', 'like', "%{$search}%");
+                    });
+            });
+        }
+
+        if ($filters['rating'] !== '') {
+            $query->where('rating', (int) $filters['rating']);
+        }
+
+        if ($filters['answered'] === 'yes') {
+            $query->whereNotNull('admin_response')->where('admin_response', '!=', '');
+        } elseif ($filters['answered'] === 'no') {
+            $query->where(function (Builder $query): void {
+                $query->whereNull('admin_response')->orWhere('admin_response', '');
+            });
         }
 
         return $query;

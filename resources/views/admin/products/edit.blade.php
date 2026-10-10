@@ -8,22 +8,9 @@
 </head>
 <body class="bg-gray-100 text-gray-800">
     <div class="min-h-screen">
-        <nav class="bg-gray-900 text-white">
-            <div class="mx-auto max-w-7xl px-4 py-4 flex items-center justify-between">
-                <div>
-                    <h1 class="text-xl font-bold">Edit Product</h1>
-                </div>
-                <div class="flex items-center gap-4">
-                    <a href="{{ route('admin.dashboard', ['tab' => 'products']) }}" class="hover:text-red-400">Back</a>
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit" class="rounded-full bg-red-600 px-4 py-2 text-sm font-semibold hover:bg-red-500">Logout</button>
-                    </form>
-                </div>
-            </div>
-        </nav>
+        @include('admin.partials.navigation', ['pageTitle' => 'Edit Product', 'activeTab' => 'products'])
 
-        <main class="mx-auto max-w-4xl px-4 py-10">
+        <main class="mx-auto max-w-4xl px-4 pt-4 pb-10">
             <div class="rounded-xl bg-white p-8 shadow">
                 <form method="POST" action="{{ route('admin.products.update', $product) }}" enctype="multipart/form-data" class="space-y-5">
                     @csrf
@@ -50,7 +37,7 @@
                             <label class="mb-1 block text-sm font-medium">Stock Quantity</label>
                             <div class="flex items-center gap-3">
                                 <span class="rounded-lg border border-gray-200 bg-gray-100 px-3 py-2 font-semibold text-gray-700">{{ $product->stock_qty }}</span>
-                                <a href="{{ route('admin.dashboard', ['tab' => 'inventory']) }}" class="text-sm font-semibold text-red-600 hover:underline">Change in Inventory</a>
+                                <a href="{{ route('admin.inventory.index') }}" class="text-sm font-semibold text-red-600 hover:underline">Change in Inventory</a>
                             </div>
                             <p class="mt-1 text-xs text-gray-500">Stock is read-only here. Use Edit in the Inventory tab so the change is logged with a note.</p>
                         </div>
@@ -102,7 +89,7 @@
 
                     <div class="flex gap-3">
                         <button type="submit" class="rounded bg-red-600 px-5 py-2 font-semibold text-white hover:bg-red-500">Save</button>
-                        <a href="{{ route('admin.dashboard', ['tab' => 'products']) }}" class="rounded border border-gray-300 px-5 py-2 font-semibold hover:bg-gray-100">Cancel</a>
+                        <a href="{{ route('admin.products.index') }}" class="rounded border border-gray-300 px-5 py-2 font-semibold hover:bg-gray-100">Cancel</a>
                     </div>
                 </form>
             </div>
@@ -110,4 +97,3 @@
     </div>
 </body>
 </html>
-

@@ -1,9 +1,37 @@
 <div class="mb-6">
     <h2 class="text-xl font-bold">Reviews Management</h2>
-    <p class="mt-1 text-gray-500">Every review posted from the customer Reviews page shows up here. Answer a review or delete it.</p>
+    <p class="mt-1 text-sm text-gray-500">Search by comment, customer, or product. Filter by rating or answer status.</p>
 </div>
+<form method="GET" action="{{ route('admin.dashboard') }}" class="mb-6 grid gap-3 rounded-xl border border-gray-200 bg-gray-50 p-4 md:grid-cols-2 xl:grid-cols-4">
+    <input type="hidden" name="tab" value="reviews">
+    <div class="xl:col-span-2">
+        <label for="dashboard-review-search" class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-500">Search</label>
+        <input id="dashboard-review-search" type="text" name="r_search" value="{{ $reviewFilters['search'] ?? '' }}" placeholder="Comment, customer, product…" class="w-full rounded border px-3 py-2 text-sm" oninput="clearTimeout(window._adminFilterT);window._adminFilterT=setTimeout(()=>this.form.submit(),600)">
+    </div>
+    <div>
+        <label for="dashboard-review-rating" class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-500">Rating</label>
+        <select id="dashboard-review-rating" name="r_rating" class="w-full rounded border px-3 py-2 text-sm" onchange="this.form.submit()">
+            <option value="">All ratings</option>
+            @foreach (['5' => '5 stars', '4' => '4 stars', '3' => '3 stars', '2' => '2 stars', '1' => '1 star'] as $ratingValue => $ratingLabel)
+                <option value="{{ $ratingValue }}" {{ ($reviewFilters['rating'] ?? '') === (string) $ratingValue ? 'selected' : '' }}>{{ $ratingLabel }}</option>
+            @endforeach
+        </select>
+    </div>
+    <div>
+        <label for="dashboard-review-answered" class="mb-1 block text-xs font-semibold uppercase tracking-wide text-gray-500">Admin response</label>
+        <select id="dashboard-review-answered" name="r_answered" class="w-full rounded border px-3 py-2 text-sm" onchange="this.form.submit()">
+            <option value="">Answered + unanswered</option>
+            <option value="yes" {{ ($reviewFilters['answered'] ?? '') === 'yes' ? 'selected' : '' }}>Answered</option>
+            <option value="no" {{ ($reviewFilters['answered'] ?? '') === 'no' ? 'selected' : '' }}>Needs answer</option>
+        </select>
+    </div>
+    <div class="flex gap-2 md:col-span-2 xl:col-span-4">
+        <a href="{{ route('admin.dashboard', ['tab' => 'reviews']) }}" class="rounded border px-4 py-2 text-sm font-semibold text-gray-600 hover:bg-gray-100">Reset</a>
+    </div>
+</form>
+<p class="mb-6 text-sm text-gray-500">Every review posted from the customer Reviews page shows up here. Answer a review or delete it.</p>
 @if ($reviews->isEmpty())
-    <p class="text-gray-500">No customer reviews yet. Reviews posted from the Reviews page will appear here.</p>
+    <p class="text-gray-500">No reviews match these filters.</p>
 @else
     <div class="overflow-x-auto">
         <table class="min-w-full text-left text-sm">

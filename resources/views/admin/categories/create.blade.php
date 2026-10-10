@@ -8,22 +8,9 @@
 </head>
 <body class="bg-gray-100 text-gray-800">
     <div class="min-h-screen">
-        <nav class="bg-gray-900 text-white">
-            <div class="mx-auto flex max-w-7xl items-center justify-between px-4 py-4">
-                <div>
-                    <h1 class="text-xl font-bold">Add Category</h1>
-                </div>
-                <div class="flex items-center gap-4">
-                    <a href="{{ route('admin.dashboard', ['tab' => 'categories']) }}" class="hover:text-red-400">Back</a>
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit" class="rounded-full bg-red-600 px-4 py-2 text-sm font-semibold hover:bg-red-500">Logout</button>
-                    </form>
-                </div>
-            </div>
-        </nav>
+        @include('admin.partials.navigation', ['pageTitle' => 'Add Category', 'activeTab' => 'categories'])
 
-        <main class="mx-auto max-w-2xl px-4 py-10">
+        <main class="mx-auto max-w-2xl px-4 pt-4 pb-10">
             <div class="rounded-xl bg-white p-8 shadow">
                 <form method="POST" action="{{ route('admin.categories.store') }}" class="space-y-5">
                     @csrf
@@ -47,7 +34,7 @@
 
                     <div class="flex gap-3">
                         <button type="submit" class="rounded bg-red-600 px-5 py-2 font-semibold text-white hover:bg-red-500">Save Category</button>
-                        <a href="{{ route('admin.dashboard', ['tab' => 'categories']) }}" class="rounded border border-gray-300 px-5 py-2 font-semibold hover:bg-gray-100">Cancel</a>
+                        <a href="{{ route('admin.categories.index') }}" class="rounded border border-gray-300 px-5 py-2 font-semibold hover:bg-gray-100">Cancel</a>
                     </div>
                 </form>
             </div>
